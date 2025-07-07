@@ -38,13 +38,21 @@
       margin-left: auto;
       margin-right: auto;
     }
-    .subtitle2 {
-      margin-top: -20px;
-      text-align: right;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
+.subtitle2 {
+  margin-top: -20px;
+  text-align: right;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* For screens up to 600px wide (typical for phones) */
+@media (max-width: 600px) {
+  .subtitle2 {
+    margin-top: 0px;
+  }
+}
+
     hr {
       border: none;
       width: 100%;
