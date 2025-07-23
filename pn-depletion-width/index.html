@@ -35,6 +35,27 @@
             background-color: #f9f9f9;
             border: 1px solid #ccc;
         }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      color: #666;
+    }
+
+    .hero a.button {
+      text-decoration: none;
+      background: #0066cc;
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .hero a.button:hover {
+      background: #004999;
+    }
+
     </style>
 </head>
 <body onload="plot()">
@@ -210,5 +231,8 @@ function help() {
 <tr><td></td><td><p style="text-align:center">x [µm]</p></td></tr></tbody></table>
 </td></tr></tbody></table>
 
+<main class="hero">
+    <a class="button" href="../index.html">Back</a>
+  </main>
 </body>
 </html>
