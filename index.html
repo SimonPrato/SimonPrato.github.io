@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Simon Prato</title>
   <style>
     /* Basic Reset */
@@ -10,6 +10,10 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
     }
 
     body {
@@ -28,14 +32,13 @@
       text-align: center;
     }
 
-    .hero {
+    main {
       flex: 1;
+      padding: 2rem;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      padding: 2rem;
-      text-align: center;
+      justify-content: center;
     }
 
     .hero h1 {
@@ -70,11 +73,12 @@
       font-size: 0.9rem;
       color: #555;
     }
-ul.link-list {
-      list-style-type: none;  /* Remove default list bullets */
+
+    ul.link-list {
+      list-style-type: none;
       padding: 0;
       max-width: 400px;
-      margin: 0 auto; /* Center the list */
+      width: 100%;
     }
 
     ul.link-list li {
@@ -111,10 +115,13 @@ ul.link-list {
     <p>Welcome</p>
   </header>
 
-  <ul class="link-list">
-    <li><a href="cv" target="_blank">CV</a></li>
-    <li><a href="pn-depletion-width" target="_blank">PN Depletion Width Calculator</a></li>
-  </ul>
+  <!-- Content wrapper for proper flex layout -->
+  <main>
+    <ul class="link-list">
+      <li><a href="cv" target="_blank">CV</a></li>
+      <li><a href="pn-depletion-width" target="_blank">PN Depletion Width Calculator</a></li>
+    </ul>
+  </main>
 
   <footer>
     &copy; 2025 Simon Prato – All rights reserved.
