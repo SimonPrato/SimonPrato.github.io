@@ -70,6 +70,38 @@
       font-size: 0.9rem;
       color: #555;
     }
+ul.link-list {
+      list-style-type: none;  /* Remove default list bullets */
+      padding: 0;
+      max-width: 400px;
+      margin: 0 auto; /* Center the list */
+    }
+
+    ul.link-list li {
+      background-color: #fff;
+      margin: 10px 0;
+      padding: 15px 20px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+
+    ul.link-list li:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    ul.link-list a {
+      text-decoration: none;
+      color: #007BFF;
+      font-size: 18px;
+      display: block;
+    }
+
+    ul.link-list a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -79,11 +111,10 @@
     <p>Welcome</p>
   </header>
 
-  <main class="hero">
-    <h1>Hello!</h1>
-    <p>This is my simplistic website.</p>
-    <a class="button" href="cv">CV</a>
-  </main>
+  <ul class="link-list">
+    <li><a href="cv" target="_blank">CV</a></li>
+    <li><a href="pn-depletion-width" target="_blank">PN Depletion Width Calculator</a></li>
+  </ul>
 
   <footer>
     &copy; 2025 Simon Prato – All rights reserved.
