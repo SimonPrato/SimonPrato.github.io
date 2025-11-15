@@ -217,12 +217,15 @@ function calculate_depletion_width(d1, d2){
 		{ data: voltage_depletion_width_p, color: "rgb(255, 0, 0)", shadowSize:0, lines: {show:true}, label: "p-side"},
 		{ data: voltage_depletion_width_n, color: "rgb(0, 0, 255)", shadowSize:0, lines: {show:true}, label: "n-side"}];
 
+		
+		var lastIndex = voltage_depletion_width_tot.length - 1;
 		var options_depletion_width = {
-		yaxis: {
-			min: voltage_depletion_width_tot[0][1],
-			max: voltage_depletion_width_tot[297][1]
-		},
+		  yaxis: {
+		    min: voltage_depletion_width_tot[0][1],
+		    max: voltage_depletion_width_tot[lastIndex][1]  // use last valid element
+		  },
 		};
+
 		var options_doping_profile = {
 		yaxis: {
         tickFormatter: function (val, axis) {
@@ -236,7 +239,8 @@ function calculate_depletion_width(d1, d2){
 		{ data: d1.map((pair, index) => [pair[0], N_tot[index]]), color: "rgb(0, 0, 0)", shadowSize:0, lines: {show:true}, label: "total"}
 		//,{ data: [[d1[junction_index][0], Math.min(...N_tot)], [d1[junction_index][0], Math.max(...N_tot)]], color: "rgb(255, 0, 0)", shadowSize: 0, lines: { show: true, lineWidth: 2 }, label: "Junction"
 		];
-
+		console.log(voltage_depletion_width_tot);
+		console.log("deplwidthtot");
 		$.plot($("#depletion_width"), depletion_width, options_depletion_width);
 		$.plot($("#doping_profile"), doping_profile, options_doping_profile);
 		console.log({firstArray: N_tot, secondArray: d1[0]});
