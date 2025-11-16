@@ -35,27 +35,6 @@
             background-color: #f9f9f9;
             border: 1px solid #ccc;
         }
-
-    .hero p {
-      font-size: 1.2rem;
-      margin-bottom: 2rem;
-      color: #666;
-    }
-
-    .hero a.button {
-      text-decoration: none;
-      background: #0066cc;
-      color: #fff;
-      padding: 0.75rem 1.5rem;
-      border-radius: 5px;
-      font-weight: bold;
-      transition: background 0.3s ease;
-    }
-
-    .hero a.button:hover {
-      background: #004999;
-    }
-
     </style>
 </head>
 <body onload="plot()">
@@ -72,18 +51,19 @@ calculate important properties of pn junctions. The charge density distribution 
 <p>The voltage V then derives from</p><img src="./img/formula_voltage.png" style="display: block; margin: 0 auto; width: 150px; height: auto;">
 
 
+
 <p>
 
 The variables x<sub>n</sub> and x<sub>p</sub> denote the points in space at which the depletion region on the n-doped side
 starts and on the p-doped side ends. N(x) is the total doping concentration depending on the position x in the pn-junction in micrometers. It is calculated by subtracting the density of acceptors
 N<sub>A</sub>(x) from the density of donors N<sub>D</sub>(x).
 The entries below are used to describe this doping profile. Insert two functions dependent on x to plot the doping profiles and the resulting depletion width 
-depending on the reverse-biased voltage. Then choose the interval of x, for which the depletion width shall be plotted.<br><br>
+depending on the reverse-biased voltage. Then choose the interval of x, for which the depletion width shall be plotted. Finally, click on the Plot button, to display the inserted doping profiles and the resulting depletion width depending on the reverse bias voltage.<br><br>
 
 
 
 </p>
-
+    
 	<script type="text/x-mathjax-config;executed=true">
   MathJax.Hub.Config({
     extensions: ["tex2jax.js"],
@@ -186,6 +166,8 @@ function plot() {
     d1[i] = [xt,y1];
     d2[i] = [xt,y2];
   }
+	console.log(d1, d2);
+	console.log("d1,d2");
 	calculate_depletion_width(d1, d2);
 }
 
@@ -231,8 +213,5 @@ function help() {
 <tr><td></td><td><p style="text-align:center">x [µm]</p></td></tr></tbody></table>
 </td></tr></tbody></table>
 
-<main class="hero">
-    <a class="button" href="../index.html">Back</a>
-  </main>
 </body>
 </html>
