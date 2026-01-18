@@ -1,0 +1,197 @@
+/**
+ * Styles for PN Junction Calculator
+ */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    line-height: 1.6;
+}
+
+/* Large screen layout with 350px side margins */
+@media (min-width: 1200px) {
+    body {
+        margin-left: 350px;
+        margin-right: 350px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+/* Introduction text */
+.intro-text {
+    margin: 20px auto;
+    max-width: 800px;
+    text-align: justify;
+}
+
+/* Formula images */
+.formula-image {
+    display: block;
+    margin: 20px auto;
+    width: 300px;
+    height: auto;
+}
+
+.formula-image.small {
+    width: 150px;
+}
+
+/* Input form styling */
+.input-form {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.input-table {
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+.input-table td {
+    padding: 5px;
+}
+
+.input-label {
+    text-align: right;
+    margin: 0;
+    font-style: italic;
+}
+
+.input-field {
+    width: 500px;
+    padding: 5px;
+    border: solid blue 1px;
+    font-family: 'Courier New', monospace;
+}
+
+.help-button {
+    margin-left: 5px;
+}
+
+.plot-controls {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.plot-controls input[type="text"] {
+    width: 80px;
+    padding: 3px;
+    margin: 0 5px;
+}
+
+.preset-buttons {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.preset-buttons input[type="button"] {
+    margin: 5px;
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+/* Plot containers */
+.plots-container {
+    display: table;
+    margin: 0 auto;
+}
+
+.plots-container table {
+    margin: 0 auto;
+}
+
+.plot-section {
+    text-align: center;
+    padding: 10px;
+}
+
+.plot-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.plot-div {
+    width: 400px;
+    height: 300px;
+    padding: 0;
+    position: relative;
+}
+
+.plot-label {
+    text-align: center;
+    margin-top: 5px;
+}
+
+/* Help section */
+#help {
+    display: none; /* Hidden by default */
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#help table {
+    width: 100%;
+}
+
+#help ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+#help li {
+    margin: 5px 0;
+}
+
+/* Subscript and superscript in labels */
+sub {
+    font-size: 0.8em;
+    vertical-align: sub;
+}
+
+sup {
+    font-size: 0.8em;
+    vertical-align: super;
+}
+
+/* Button styling */
+button,
+input[type="button"] {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button:hover,
+input[type="button"]:hover {
+    background-color: #45a049;
+}
+
+.help-button {
+    background-color: #2196F3;
+    padding: 5px 10px;
+    font-size: 12px;
+}
+
+.help-button:hover {
+    background-color: #0b7dda;
+}

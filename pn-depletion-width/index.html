@@ -3,215 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PN junctions with arbitrary doping profiles</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-	<script language="javascript" type="text/javascript" src="./calculations.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        #placeholder {
-            width: 600px;
-            height: 400px;
-            border: 1px solid #ccc;
-            margin-top: 20px;
-        }
-        .input-container {
-            margin-bottom: 10px;
-        }
-        .input-container label {
-            font-weight: bold;
-        }
-        .input-container input {
-            width: 300px;
-            padding: 5px;
-            margin-left: 10px;
-        }
-        #help {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #f9f9f9;
-            border: 1px solid #ccc;
-        }
-    </style>
-</head>
-<body onload="plot()">
-    <h2 style="text-align:center">PN junctions with arbitrary doping profiles</h2>
-<p>
-In a pn junction, the width of a depletion zone depends on the applied voltage on the junction. In this approximation, 
-it is assumed that there is a depletion width W around the transition from p to n where the charge carrier 
-densities are negligible. Outside of the depletion width, the charge carrier densities are equal to the doping concentrations.
-The semiconductor is electrically neutral outside of the depletion width. Using this depletion approximation it is possible to 
-calculate important properties of pn junctions. The charge density distribution for an arbitrarly doped pn-junction is, </p>
-
-<img src="./img/formula_charge_density.png" style="display: block; margin: 0 auto; width: 300px; height: auto;">
-<p>The charge density can be integrated to determine the electric field</p><img src="./img/formula_electric_field.png" style="display: block; margin: 0 auto; width: 150px; height: auto;">
-<p>The voltage V then derives from</p><img src="./img/formula_voltage.png" style="display: block; margin: 0 auto; width: 150px; height: auto;">
-
-
-
-<p>
-
-The variables x<sub>n</sub> and x<sub>p</sub> denote the points in space at which the depletion region on the n-doped side
-starts and on the p-doped side ends. N(x) is the total doping concentration depending on the position x in the pn-junction in micrometers. It is calculated by subtracting the density of acceptors
-N<sub>A</sub>(x) from the density of donors N<sub>D</sub>(x).
-The entries below are used to describe this doping profile. Insert two functions dependent on x to plot the doping profiles and the resulting depletion width 
-depending on the reverse-biased voltage. Then choose the interval of x, for which the depletion width shall be plotted. Finally, click on the Plot button, to display the inserted doping profiles and the resulting depletion width depending on the reverse bias voltage.<br><br>
-
-
-
-</p>
+    <title>PN Junctions with Arbitrary Doping Profiles</title>
     
-	<script type="text/x-mathjax-config;executed=true">
-  MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX","output/HTML-CSS"],
-    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
-  });
-</script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-<script language="javascript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.js"></script>
-<script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.min.js"></script>
-<script>
-
-var d1 = [];
-var d2 = [];
-help_nr = 0;
-
-function replaz(str) {
-  str = str.replace(/x/gi, "qq");
-  str = str.replace(/\bsin/gi, "Math.sin");
-  str = str.replace(/([^a\.])sin/gi, "$1"+"Math.sin");
-  str = str.replace(/\bcos/gi, "Math.cos");
-  str = str.replace(/([^a\.])cos/gi, "$1"+"Math.cos");
-  str = str.replace(/\btan/gi, "Math.tan");
-  str = str.replace(/([^a\.])tan/gi, "$1"+"Math.tan");
-  str = str.replace(/asin/gi, "Math.asin");
-  str = str.replace(/acos/gi, "Math.acos");
-  str = str.replace(/atan/gi, "Math.atan");
-  str = str.replace(/log/gi, "Math.log");
-  str = str.replace(/eqqp/gi, "Math.exp");
-  str = str.replace(/pow/gi, "Math.pow");
-  str = str.replace(/sqrt/gi, "Math.sqrt");
-  str = str.replace(/abs/gi, "Math.abs");
-  str = str.replace(/round/gi, "Math.round");
-
-  str = str.replace(/pi/gi, "Math.PI");
-  return str;
-}
-
-function H(x) {  //Heaviside step function
-  var hv;
-  if (x==0) { hv=0.5;}
-  else {hv = (1+ x/Math.abs(x))/2;}
-  return hv;
-}
-
-function goodn(name,str) { //good number: tests if str is a number
-   if (str.match(/\^/g)) {alert("^ character in "+name+" not allowed.");}
-   str = str.replace(/\s+/g,""); //remove extra white spaces
-   if (str=="") {alert(name+" is not specified.");}
-   return str;
-}
-
-function plot() {
-  str1=data.f1.value;
-   if (str1.match(/\^/g)) {
-     alert("^ character not allowed.");
-     str1 = str1.replace(/\^/gi, "**");
-   }
-
-  str2=data.f2.value;
-   if (str2.match(/\^/g)) {
-     alert("^ character not allowed.");
-     str2 = str2.replace(/\^/gi, "**");
-   }
-
-  try {
-    x1 = eval(replaz(goodn('x1',data.x1.value)));
-  }
-  catch(err) {
-    alert("Error in x1: "+err.message);
-  }
-
-  try {
-    x2 = eval(replaz(goodn('x2',data.x2.value)));
-  }
-  catch(err) {
-    alert("Error in x2: "+err.message);
-  }
-
-  str1=replaz(str1);
-  str2=replaz(str2);
-
-  for (i=0; i<301; i++) {
-    xt = x1 + i*(x2-x1)/300;
-    xtstr="("+xt+")";
-    try {
-      y1 = eval(str1.replace(/qq/gi, xtstr));
-    }
-    catch(err) {
-      alert("Error in y1: "+err.message);
-      break;
-    }
-    try {
-      y2 = eval(str2.replace(/qq/gi, xtstr));
-    }
-    catch(err) {
-      alert("Error in y2: "+err.message);
-      break;
-    }
-    d1[i] = [xt,y1];
-    d2[i] = [xt,y2];
-  }
-	console.log(d1, d2);
-	console.log("d1,d2");
-	calculate_depletion_width(d1, d2);
-}
-
-function help() {
-  if (help_nr==0) {
-    helptxt = "<p><\/p<p>Input two mathematical expressions that may use the variable x into the two blue text boxes. The mathematical functions that can be used are listed below. Multiplication must be "; helptxt = helptxt + "specified with a '*' symbol, 3*cos(x) not 3cos(x). Powers are specified with ** "; 
-    helptxt = helptxt + " x&sup2; is x**2 not x^2.</p>";
-    helptxt = helptxt + "<table align='center'><tr><td><ul><li>abs(<i>x</i>) - absolute value</li><li>acos(<i>x</i>) - inverse cosine</li>";
-    helptxt = helptxt + "<li>asin(<i>x</i>) - inverse sine</li><li>atan(<i>x</i>) - inverse tangent</li><li>cos(<i>x</i>) - cosine</li>";
-    helptxt = helptxt + "<li>exp(<i>x</i>) - <i>e<sup>x</sup></i></li><li>log(<i>x</i>) - natural logarithm</li></ul></td><td><ul>";
-    helptxt = helptxt + "<li>pi = 3.141592653589793</li><li>pow(<i>x,y</i>) or x**y - compute <i>x<sup>y</sup></i></li><li>round(<i>x</i>) - round to the nearest ";     helptxt = helptxt + "integer</li><li>sin(<i>x</i>) - sine</li><li>sqrt(<i>x</i>) - square root</li><li>tan(<i>x</i>) - tangent</li><li>H(<i>x</i>) -   Heaviside function = 0 for <i>x</i>&nbsp;&lt;&nbsp;0,  1 for <i>x</i>&nbsp;&gt;&nbsp;0</li></ul></td></tr></table>";
-    document.getElementById('help').innerHTML=helptxt;
-    document.getElementById('question').value="-?";
-    help_nr = 1;
-  }
-  else {
-    help_nr = 0;
-    document.getElementById('help').innerHTML="";
-    document.getElementById('question').value="?";
-  }
-}
-
+    <!-- External Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+    <!-- Application Scripts -->
+    <script src="./js/constants.js"></script>
+    <script src="./js/mathUtils.js"></script>
+    <script src="./js/dopingProfile.js"></script>
+    <script src="./js/depletionCalculations.js"></script>
+    <script src="./js/plotting.js"></script>
+    <script src="./js/main.js"></script>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="./css/styles.css">
+    
+    <!-- MathJax Configuration -->
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            extensions: ["tex2jax.js"],
+            jax: ["input/TeX","output/HTML-CSS"],
+            tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+        });
     </script>
+</head>
 
-
-
+<body onload="plot()">
+    <h2>PN Junctions with Arbitrary Doping Profiles</h2>
+    
+    <!-- Introduction -->
+    <div class="intro-text">
+        <p>
+            In a pn junction, the width of a depletion zone depends on the applied voltage on the junction. 
+            In this approximation, it is assumed that there is a depletion width W around the transition from 
+            p to n where the charge carrier densities are negligible. Outside of the depletion width, the 
+            charge carrier densities are equal to the doping concentrations. The semiconductor is electrically 
+            neutral outside of the depletion width. Using this depletion approximation it is possible to 
+            calculate important properties of pn junctions.
+        </p>
+        
+        <p>The charge density distribution for an arbitrarily doped pn-junction is:</p>
+        <img src="./img/formula_charge_density.png" class="formula-image" alt="Charge density formula">
+        
+        <p>The charge density can be integrated to determine the electric field:</p>
+        <img src="./img/formula_electric_field.png" class="formula-image small" alt="Electric field formula">
+        
+        <p>The voltage V then derives from:</p>
+        <img src="./img/formula_voltage.png" class="formula-image small" alt="Voltage formula">
+        
+        <p>
+            The variables x<sub>n</sub> and x<sub>p</sub> denote the points in space at which the depletion 
+            region on the n-doped side starts and on the p-doped side ends. N(x) is the total doping 
+            concentration depending on the position x in the pn-junction in micrometers. It is calculated by 
+            subtracting the density of acceptors N<sub>A</sub>(x) from the density of donors N<sub>D</sub>(x).
+        </p>
+        
+        <p>
+            The entries below are used to describe this doping profile. Insert two functions dependent on x 
+            to plot the doping profiles and the resulting depletion width depending on the reverse-biased voltage. 
+            Then choose the interval of x, for which the depletion width shall be plotted. Finally, click on the 
+            Plot button, to display the inserted doping profiles and the resulting depletion width depending on 
+            the reverse bias voltage.
+        </p>
+    </div>
+    
     <!-- Input Form -->
-    <form name="data">
-<table style="border-collapse:collapse" align="center">
-<tbody><tr><td><p style="text-align:right; margin:0cm;"><i>N</i><sub>D</sub>(<i>x</i>)&nbsp;=&nbsp;</p></td><td><input type="text" name="f1" size="60" value="1.1E21*H(x-5)" style="border:solid blue 1px;"> m<sup>-3</sup> <input id="question" type="button" value="?" onclick="help()"></td></tr>
-<tr><td><p style="text-align:right; margin:0cm;"><i>N</i><sub>A</sub>(<i>x</i>)&nbsp;=&nbsp;</p></td><td><input type="text" name="f2" size="60" value="1.1E21 - 1.1E21*H(x-5)" style="border:solid blue 1px;"> m<sup>-3</sup></td></tr>
-</tbody></table>
-<p style="text-align:center">Plot depletion width from&nbsp;x&nbsp;=&nbsp;<input type="text" name="x1" size="10" value="0"> µm to &nbsp;x&nbsp;=&nbsp;<input type="text" name="x2" size="10" value="10"> µm.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" onclick="plot();" value="Plot"></p>
-<p style="text-align:center"><input type= "button" value="abrupt junction" onclick="data.f1.value = '1.1E21*H(x-5)'; data.f2.value = '1.1E21 - 1.1E21*H(x-5)'; data.x1.value='0'; data.x2.value='10'; plot();"><br /><input type= "button" value="linearly graded junction" onclick="data.f1.value = '1E20*x'; data.f2.value = '5E20'; data.x1.value='0'; data.x2.value='10'; plot();">
-
-</form>
-<table align="center"><tbody><tr><td><p class="t" style="text-align:center"><b>Depletion Width</b></p>
-    <table align="center"><tbody><tr><td>[V]</td><td><div id="depletion_width" style="width: 400px; height: 300px; padding: 0px; position: relative;"><canvas class="flot-base" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 400px; height: 300px;" width="800" height="600"></canvas><div class="flot-text" style="position: absolute; inset: 0px; font-size: smaller; color: rgb(84, 84, 84);"><div class="flot-x-axis flot-x1-axis xAxis x1Axis" style="position: absolute; inset: 0px; display: block;"><div style="position: absolute; max-width: 80px; top: 282px; left: 10px; text-align: center;" class="flot-tick-label tickLabel">0.0</div><div style="position: absolute; max-width: 80px; top: 282px; left: 103px; text-align: center;" class="flot-tick-label tickLabel">0.5</div><div style="position: absolute; max-width: 80px; top: 282px; left: 196px; text-align: center;" class="flot-tick-label tickLabel">1.0</div><div style="position: absolute; max-width: 80px; top: 282px; left: 289px; text-align: center;" class="flot-tick-label tickLabel">1.5</div><div style="position: absolute; max-width: 80px; top: 282px; left: 383px; text-align: center;" class="flot-tick-label tickLabel">2.0</div></div><div class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; inset: 0px; display: block;"><div style="position: absolute; top: 135px; left: 6px; text-align: right;" class="flot-tick-label tickLabel">0</div><div style="position: absolute; top: 101px; left: 6px; text-align: right;" class="flot-tick-label tickLabel">1</div><div style="position: absolute; top: 67px; left: 6px; text-align: right;" class="flot-tick-label tickLabel">2</div><div style="position: absolute; top: 34px; left: 6px; text-align: right;" class="flot-tick-label tickLabel">3</div><div style="position: absolute; top: 0px; left: 6px; text-align: right;" class="flot-tick-label tickLabel">4</div><div style="position: absolute; top: 269px; left: 2px; text-align: right;" class="flot-tick-label tickLabel">-4</div><div style="position: absolute; top: 235px; left: 2px; text-align: right;" class="flot-tick-label tickLabel">-3</div><div style="position: absolute; top: 202px; left: 2px; text-align: right;" class="flot-tick-label tickLabel">-2</div><div style="position: absolute; top: 168px; left: 2px; text-align: right;" class="flot-tick-label tickLabel">-1</div></div></div><canvas class="flot-overlay" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 400px; height: 300px;" width="800" height="600"></canvas><div class="legend"><div style="position: absolute; width: 41px; height: 42px; top: 13px; right: 14px; background-color: rgb(255, 255, 255); opacity: 0.85;"> </div><table style="position:absolute;top:13px;right:14px;;font-size:smaller;color:#545454"><tbody><tr><td class="legendColorBox"><div style="border:1px solid #ccc;padding:1px"><div style="width:4px;height:0;border:5px solid rgb(255, 0, 0);overflow:hidden"></div></div></td><td class="legendLabel">y1</td></tr><tr><td class="legendColorBox"><div style="border:1px solid #ccc;padding:1px"><div style="width:4px;height:0;border:5px solid rgb(0, 0, 255);overflow:hidden"></div></div></td><td class="legendLabel">y2</td></tr></tbody></table></div></div></td></tr>
-<tr><td></td><td><p style="text-align:center">[µm]</p></td></tr></tbody></table>
-</td><td>
-<table align="center"><tbody><tr><td><p class="t" style="text-align:center"><b>Doping Concentration</b></p>
-<table align="center"><tbody><tr><td>[m<sup>-3</sup>]</td><td><div id="doping_profile" style="width: 400px; height: 300px; padding: 0px; position: relative;"><canvas class="flot-base" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 400px; height: 300px;" width="800" height="600"></canvas><div class="flot-text" style="position: absolute; inset: 0px; font-size: smaller; color: rgb(84, 84, 84);"><div class="flot-x-axis flot-x1-axis xAxis x1Axis" style="position: absolute; inset: 0px; display: block;"><div style="position: absolute; max-width: 80px; top: 282px; left: 10px; text-align: center;" class="flot-tick-label tickLabel">0.0</div><div style="position: absolute; max-width: 80px; top: 282px; left: 103px; text-align: center;" class="flot-tick-label tickLabel">0.5</div><div style="position: absolute; max-width: 80px; top: 282px; left: 196px; text-align: center;" class="flot-tick-label tickLabel">1.0</div><div style="position: absolute; max-width: 80px; top: 282px; left: 289px; text-align: center;" class="flot-tick-label tickLabel">1.5</div><div style="position: absolute; max-width: 80px; top: 282px; left: 383px; text-align: center;" class="flot-tick-label tickLabel">2.0</div></div><div class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; inset: 0px; display: block;"><div style="position: absolute; top: 135px; left: 6px; text-align: right;" class="flot-tick-label tickLabel">0</div><div style="position: absolute; top: 101px; left: 6px; text-align: right;" class="flot-tick-label tickLabel">1</div><div style="position: absolute; top: 67px; left: 6px; text-align: right;" class="flot-tick-label tickLabel">2</div><div style="position: absolute; top: 34px; left: 6px; text-align: right;" class="flot-tick-label tickLabel">3</div><div style="position: absolute; top: 0px; left: 6px; text-align: right;" class="flot-tick-label tickLabel">4</div><div style="position: absolute; top: 269px; left: 2px; text-align: right;" class="flot-tick-label tickLabel">-4</div><div style="position: absolute; top: 235px; left: 2px; text-align: right;" class="flot-tick-label tickLabel">-3</div><div style="position: absolute; top: 202px; left: 2px; text-align: right;" class="flot-tick-label tickLabel">-2</div><div style="position: absolute; top: 168px; left: 2px; text-align: right;" class="flot-tick-label tickLabel">-1</div></div></div><canvas class="flot-overlay" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 400px; height: 300px;" width="800" height="600"></canvas><div class="legend"><div style="position: absolute; width: 41px; height: 42px; top: 13px; right: 14px; background-color: rgb(255, 255, 255); opacity: 0.85;"> </div><table style="position:absolute;top:13px;right:14px;;font-size:smaller;color:#545454"><tbody><tr><td class="legendColorBox"><div style="border:1px solid #ccc;padding:1px"><div style="width:4px;height:0;border:5px solid rgb(255, 0, 0);overflow:hidden"></div></div></td><td class="legendLabel">y1</td></tr><tr><td class="legendColorBox"><div style="border:1px solid #ccc;padding:1px"><div style="width:4px;height:0;border:5px solid rgb(0, 0, 255);overflow:hidden"></div></div></td><td class="legendLabel">y2</td></tr></tbody></table></div></div></td></tr>
-<tr><td></td><td><p style="text-align:center">x [µm]</p></td></tr></tbody></table>
-</td></tr></tbody></table>
-
+    <form name="data" class="input-form">
+        <table class="input-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <p class="input-label">
+                            <i>N</i><sub>D</sub>(<i>x</i>)&nbsp;=&nbsp;
+                        </p>
+                    </td>
+                    <td>
+                        <input type="text" 
+                               name="f1" 
+                               class="input-field"
+                               value="1.1E21*H(x-5)"> 
+                        m<sup>-3</sup>
+                        <input id="question" 
+                               type="button" 
+                               class="help-button"
+                               value="?" 
+                               onclick="toggleHelp()">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="input-label">
+                            <i>N</i><sub>A</sub>(<i>x</i>)&nbsp;=&nbsp;
+                        </p>
+                    </td>
+                    <td>
+                        <input type="text" 
+                               name="f2" 
+                               class="input-field"
+                               value="1.1E21 - 1.1E21*H(x-5)"> 
+                        m<sup>-3</sup>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="plot-controls">
+            <p>
+                Plot depletion width from&nbsp;x&nbsp;=&nbsp;
+                <input type="text" name="x1" value="0"> µm 
+                to&nbsp;x&nbsp;=&nbsp;
+                <input type="text" name="x2" value="10"> µm
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="button" onclick="plot();" value="Plot">
+            </p>
+        </div>
+        
+        <div class="preset-buttons">
+            <input type="button" 
+                   value="Abrupt Junction" 
+                   onclick="loadPreset('abrupt')">
+            <input type="button" 
+                   value="Linearly Graded Junction" 
+                   onclick="loadPreset('graded')">
+        </div>
+    </form>
+    
+    <!-- Help Section -->
+    <div id="help"></div>
+    
+    <!-- Plots -->
+    <div class="plots-container">
+        <table>
+            <tbody>
+                <tr>
+                    <!-- Depletion Width Plot -->
+                    <td class="plot-section">
+                        <p class="plot-title">Depletion Width</p>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>[V]</td>
+                                    <td>
+                                        <div id="depletion_width" class="plot-div"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td class="plot-label">[µm]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    
+                    <!-- Doping Profile Plot -->
+                    <td class="plot-section">
+                        <p class="plot-title">Doping Concentration</p>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>[m<sup>-3</sup>]</td>
+                                    <td>
+                                        <div id="doping_profile" class="plot-div"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td class="plot-label">x [µm]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>
