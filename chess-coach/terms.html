@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms of Service | Chess Explain</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <script src="./js/theme.js"></script>
+  <style>
+    body { overflow: auto; height: auto; min-height: 100dvh; }
+    .legal-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+    .legal-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      transition: opacity 0.15s;
+    }
+    .legal-back:hover { opacity: 0.75; }
+    .legal-title {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      margin-bottom: 0.4rem;
+    }
+    .legal-updated {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+    }
+    .legal-section {
+      background: var(--card-gradient);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem 2rem;
+      margin-bottom: 1.25rem;
+    }
+    .legal-section h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.85rem;
+      letter-spacing: -0.02em;
+    }
+    .legal-section p, .legal-section li {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 0.6rem;
+    }
+    .legal-section ul, .legal-section ol {
+      padding-left: 1.25rem;
+      margin-bottom: 0.6rem;
+    }
+    .legal-section a { color: var(--accent); }
+    .legal-footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 2.5rem;
+    }
+    .legal-footer a { color: var(--accent); text-decoration: none; }
+    .legal-footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<header>
+  <img class="king-logo king-logo-dark" src="./images/white-king-logo.png" alt="" aria-hidden="true">
+  <img class="king-logo king-logo-light" src="./images/black-king-logo.png" alt="" aria-hidden="true">
+  <h1 class="site-title"><span class="site-title-chess">CHESS</span><span class="site-title-explain">Explain</span></h1>
+  <button class="theme-toggle" id="theme-toggle" title="Toggle dark/light mode" aria-label="Toggle dark/light mode" style="margin-left:auto">&#9790;</button>
+</header>
+
+<div class="legal-wrap">
+  <a href="./" class="legal-back">&#8592; Back to Chess Explain</a>
+
+  <h1 class="legal-title">Terms of Service</h1>
+  <p class="legal-updated">Last updated: 12 June 2026</p>
+
+  <div class="legal-section">
+    <h2>1. Acceptance of Terms</h2>
+    <p>By accessing or using Chess Explain ("Service", "we", "us") you agree to be bound by these Terms of Service ("Terms"). If you do not agree, do not use the Service. These Terms constitute a binding agreement between you and the operator of Chess Explain.</p>
+    <p>We may update these Terms at any time. Continued use of the Service after changes are posted constitutes acceptance of the revised Terms.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>2. Description of Service</h2>
+    <p>Chess Explain is an AI-powered chess analysis tool that provides:</p>
+    <ul>
+      <li>Interactive chess board with move navigation</li>
+      <li>AI commentary on chess positions (powered by Google Gemini)</li>
+      <li>Stockfish engine evaluation (running locally on our servers)</li>
+      <li>Play mode with AI opponents at various skill levels</li>
+      <li>Game collection management and PGN import</li>
+    </ul>
+    <p>The AI analysis is provided for informational and educational purposes only. It does not constitute professional chess coaching advice.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>3. Eligibility and Accounts</h2>
+    <p>You must be at least 16 years old to create an account. By registering, you confirm that you meet this requirement.</p>
+    <p>You are responsible for maintaining the confidentiality of your account credentials and for all activity under your account. Notify us immediately via the contact form on this website if you suspect unauthorised access.</p>
+    <p>You may only register one account per person. We reserve the right to suspend or terminate accounts that violate these Terms.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>4. Plans and Usage Allowances</h2>
+    <p><strong>Free plan:</strong> Registered users with a verified email address receive a monthly AI usage allowance equivalent to approximately 10 AI analyses, at no cost. To prevent abuse, the free allowance is shared across all free accounts registered from the same network (IP address). Anonymous visitors receive a small trial allowance per month.</p>
+    <p><strong>Premium plan:</strong> Approximately 200 AI analyses per calendar month, puzzle hints, persona commentary, and unlimited saved games. Pricing: $7.99 USD/month (billed monthly) or $76.99 USD/year (billed annually).</p>
+    <p><strong>Pro plan:</strong> Approximately 1,000 AI analyses per calendar month plus all Premium features. Pricing: $19.99 USD/month (billed monthly) or $191.99 USD/year (billed annually).</p>
+    <p>Allowances are measured by the underlying AI processing cost of your requests, so the exact number of analyses may vary slightly with the depth and length of each analysis. Unused allowance does not roll over; allowances reset at the start of each calendar month.</p>
+    <p>We reserve the right to change plan limits and pricing with reasonable notice. Existing subscribers will be notified of price changes at least 30 days in advance.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>5. Payments and Billing</h2>
+    <p>All payments are processed by Stripe, Inc. Payment data is handled by Stripe under their <a href="https://stripe.com/privacy" target="_blank" rel="noopener">Privacy Policy</a>.</p>
+    <p><strong>Recurring billing:</strong> Your Premium subscription renews automatically (monthly or annually, depending on the plan you selected) unless cancelled before the renewal date.</p>
+    <p><strong>Cancellation:</strong> You may cancel your subscription at any time via the Billing Portal in Settings → Profile &amp; Plan. Cancellation takes effect at the end of the current billing period; you retain Premium access until that date.</p>
+    <p><strong>Refunds:</strong> We do not offer refunds for partial billing periods. If you cancel mid-cycle, your paid access continues until the period ends and no further charges are made. If you experience a technical billing error, contact us within 14 days for a resolution.</p>
+    <p><strong>EU/EEA right of withdrawal:</strong> If you are a consumer in the EU or EEA, you have a statutory right to withdraw from a contract for digital services within 14 days without giving a reason. By starting your subscription you expressly request immediate performance of the service and acknowledge that, once your AI usage allowance has been fully consumed within the withdrawal period, you lose the right of withdrawal. If you withdraw within 14 days before fully using the service, we will refund the amount paid minus a proportionate charge for the usage already provided. To exercise this right, contact us via the contact form or by email.</p>
+    <p>Prices are shown in USD. Your bank or card issuer may apply currency conversion fees; we are not responsible for these.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>6. Acceptable Use</h2>
+    <p>You agree not to:</p>
+    <ul>
+      <li>Attempt to circumvent rate limits or usage quotas through automated means</li>
+      <li>Reverse-engineer, scrape, or copy the Service or its AI outputs in bulk</li>
+      <li>Use the Service to generate harmful, illegal, or misleading content</li>
+      <li>Share, sell, or transfer your account to another person</li>
+      <li>Interfere with the Service's infrastructure or security</li>
+      <li>Impersonate another person or entity</li>
+    </ul>
+    <p>Violations may result in immediate termination of your account without refund.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>7. Third-Party Services</h2>
+    <p>The Service integrates with the following third parties:</p>
+    <ul>
+      <li><strong>Google Gemini API</strong>: powers AI position commentary. Chess position data is sent to Google's servers. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</li>
+      <li><strong>Stripe</strong>: handles payment processing. Payment details are processed by Stripe and never stored on our servers. See <a href="https://stripe.com/privacy" target="_blank" rel="noopener">Stripe's Privacy Policy</a>.</li>
+      <li><strong>Lichess.org API</strong>: enables game import from Lichess profiles. See <a href="https://lichess.org/privacy" target="_blank" rel="noopener">Lichess Privacy Policy</a>.</li>
+      <li><strong>Resend, Inc.</strong>: sends transactional emails on our behalf. See <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener">Resend Privacy Policy</a>.</li>
+    </ul>
+    <p>We are not responsible for the practices of these third parties.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>8. Intellectual Property</h2>
+    <p>The Service, its design, code, and AI-generated outputs are owned by or licensed to Chess Explain. You are granted a limited, non-exclusive licence to use the Service for personal, non-commercial purposes.</p>
+    <p>Chess positions and PGN game notation you input remain your own. AI-generated commentary produced by the Service is licensed to you for personal use only and may not be resold or republished without permission.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>9. Disclaimers</h2>
+    <p>The Service is provided "as is" and "as available" without warranties of any kind, express or implied, including fitness for a particular purpose or uninterrupted availability.</p>
+    <p>AI-generated chess commentary may contain errors or inaccuracies. Do not rely on it for competitive play without independent verification.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>10. Limitation of Liability</h2>
+    <p>To the fullest extent permitted by law, Chess Explain shall not be liable for any indirect, incidental, consequential, or punitive damages arising from your use of the Service. Our total liability for any claim shall not exceed the amount you paid us in the 30 days preceding the claim.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>11. Termination</h2>
+    <p>You may delete your account at any time via Settings → Security → Delete Account. Upon deletion, your personal data is removed from our systems subject to the retention terms in our <a href="./privacy.html">Privacy Policy</a>.</p>
+    <p>We may suspend or terminate your account for breach of these Terms, at our discretion, with or without notice.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>12. Governing Law</h2>
+    <p>These Terms are governed by the laws of England and Wales. Any disputes shall be resolved in the courts of England and Wales. Regardless of local law, users in the European Union retain all rights granted by EU consumer protection legislation, and users in other jurisdictions retain rights under their applicable local laws.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>13. Contact</h2>
+    <p>For questions about these Terms, billing disputes, or account issues, please use the contact form on this website.</p>
+  </div>
+
+  <div class="legal-footer">
+    <a href="./privacy.html">Privacy Policy</a> &nbsp;&middot;&nbsp;
+    <a href="./terms.html">Terms of Service</a> &nbsp;&middot;&nbsp;
+    <a href="./">Chess Explain</a>
+  </div>
+</div>
+
+</body>
+</html>

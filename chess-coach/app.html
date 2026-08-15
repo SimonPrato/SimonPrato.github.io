@@ -1,0 +1,2910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chess Explain | AI Chess Analysis App: Analyze Games & Solve Puzzles</title>
+  <meta name="description" content="Analyze your chess games with Stockfish and AI-powered explanations. Understand your mistakes, train with 100,000+ puzzles, play AI opponents, and climb the community leaderboard. Free online chess coach.">
+  <meta name="author" content="Chess Explain">
+  <meta name="robots" content="noindex, follow">
+  <meta name="theme-color" content="#10b981">
+  <!-- iOS standalone (Add to Home Screen) appearance -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Chess Explain">
+  <!-- This page is a static portfolio demo of the Chess Explain project;
+       backend-dependent SEO/social metadata from production was removed. -->
+
+  <!-- Favicons (light background for visibility in search results & light/dark UIs) -->
+  <link rel="icon" href="./images/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="48x48" href="./images/favicon-48.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./images/king-logo-light-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="./images/king-logo-light.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./images/king-logo-light-180.png">
+
+  <!-- Fonts -->
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/chessboard.min.css">
+  <link rel="stylesheet" href="./css/style.css?v=15">
+  <script src="./js/theme.js"></script>
+  <!-- Google sign-in intentionally not loaded: this static demo has auth disabled. -->
+</head>
+<body>
+
+<header>
+  <a href="../" style="position:absolute;top:10px;left:10px;z-index:50;font:13px/1 -apple-system,sans-serif;color:inherit;opacity:.65;text-decoration:none;">&larr; Portfolio</a>
+  <!-- Mobile-only hamburger -->
+  <button class="hamburger-btn" id="btn-hamburger" aria-label="Open menu" aria-expanded="false">
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+  </button>
+  <a href="./" class="site-logo-link" title="Chess Explain Home" aria-label="Chess Explain home">
+    <img class="king-logo king-logo-dark" src="./images/white-king-logo.png" alt="" aria-hidden="true">
+    <img class="king-logo king-logo-light" src="./images/black-king-logo.png" alt="" aria-hidden="true">
+    <h1 class="site-title"><span class="site-title-chess">CHESS</span><span class="site-title-explain">Explain</span></h1>
+  </a>
+  <nav class="main-nav" aria-label="Main navigation">
+    <button class="nav-tab active" data-page="analysis">Analysis</button>
+    <button class="nav-tab" data-page="play">Play</button>
+    <button class="nav-tab" data-page="train">Puzzles</button>
+    <button class="nav-tab" data-page="collection">Collection</button>
+    <button class="nav-tab" data-page="settings">Settings</button>
+  </nav>
+  <div class="header-auth">
+    <div id="header-auth-guest">
+      <button class="btn-auth btn-login" id="btn-login">Log in</button>
+      <button class="btn-auth btn-signup" id="btn-signup">Sign up free</button>
+    </div>
+    <div id="header-auth-user" style="display:none">
+      <div class="header-user-identity">
+        <div class="header-avatar-wrap">
+          <div class="header-avatar" id="header-avatar" aria-hidden="true"></div>
+          <span class="header-friend-badge" id="header-friend-badge" style="display:none" aria-label="Pending friend requests"></span>
+        </div>
+        <button class="header-username-btn" id="header-username" aria-label="View profile"></button>
+      </div>
+      <span class="header-plan-badge" id="header-plan-badge">Free</span>
+      <button class="btn-auth btn-logout" id="btn-logout">Log out</button>
+    </div>
+  </div>
+</header>
+
+<main id="page-analysis">
+
+  <!-- Left panel: analysis -->
+  <aside class="left-panel">
+
+    <div class="card card-analysis">
+
+      <!-- Panel switcher header -->
+      <div class="card-panel-header">
+        <div class="panel-tabs" role="tablist" aria-label="Analysis panels">
+          <button class="panel-tab panel-tab--active" id="btn-panel-comments" role="tab" aria-selected="true" aria-controls="comments-subpanel">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Comments
+          </button>
+          <button class="panel-tab" id="btn-panel-opening" role="tab" aria-selected="false" aria-controls="opening-subpanel">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            Opening
+          </button>
+        </div>
+      </div>
+
+      <!-- Comments subpanel -->
+      <div class="card-subpanel" id="comments-subpanel" role="tabpanel" aria-labelledby="btn-panel-comments">
+
+        <!-- Mobile engine bar: horizontal eval + top line (hidden on desktop, shown in mobile analysis panel) -->
+        <div id="mobile-engine-bar" class="mobile-engine-bar" aria-label="Engine evaluation">
+          <div class="mob-engine-line">
+            <span class="mob-eval-score lead-even" id="mob-eval-score" aria-live="polite">0.00</span>
+            <span class="mob-engine-label" id="mob-engine-label">Engine evaluation</span>
+            <button class="mob-engine-eye" id="mob-engine-eye" type="button" aria-pressed="false" aria-label="Hide engine evaluation">
+              <svg class="mob-eye-show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <svg class="mob-eye-hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M10.73 5.08a10.74 10.74 0 0 1 11.2 6.57 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-1.44 2.49"/>
+                <path d="M14.08 14.16a3 3 0 0 1-4.24-4.24"/>
+                <path d="M17.48 17.5A10.75 10.75 0 0 1 2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 4.45-5.14"/>
+                <path d="m2 2 20 20"/>
+              </svg>
+            </button>
+            <button class="mob-engine-toggle" id="mob-engine-toggle" type="button" aria-expanded="false" aria-controls="mob-engine-body" aria-label="Show engine lines">
+              <svg class="mob-engine-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+          <div class="mob-engine-body mob-engine-collapsed" id="mob-engine-body">
+            <div class="mob-engine-lines" id="mob-engine-lines"></div>
+            <span class="mob-engine-depth" id="mob-engine-depth" aria-hidden="true"></span>
+          </div>
+        </div>
+
+        <!-- Scrollable body (mobile: scrolls independently of the pinned Ask footer) -->
+        <div class="subpanel-body">
+
+          <div class="cp-panel-title" id="analysis-card-title">Comments</div>
+
+          <div class="spinner" id="spinner" aria-live="polite" aria-label="Analyzing...">
+            <div class="spinner-ring"></div>
+            <span>Analyzing position&hellip;</span>
+          </div>
+
+          <div class="error-msg" id="error-msg" role="alert"></div>
+
+          <div class="analysis-result" id="analysis-result">
+            <div id="theme-badge" class="theme-badge" style="display:none"></div>
+            <p class="explanation-text" id="explanation-text"></p>
+            <p class="strategic-context" id="strategic-context" style="display:none"></p>
+            <div id="qa-thread"></div>
+          </div>
+
+          <!-- Welcome / onboarding shown when no game is loaded -->
+          <div id="analysis-welcome" class="analysis-welcome" aria-label="Get started">
+            <div class="aw-header">
+              <div class="aw-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              </div>
+              <div class="aw-title">Analyze your game</div>
+              <div class="aw-desc">Import a game to get neural explanations at every move</div>
+            </div>
+            <!-- Mobile quick-import buttons (hidden on desktop) -->
+            <div class="aw-mobile-import">
+              <button class="aw-import-btn" id="aw-btn-import-pgn" aria-label="Import PGN or game">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Import PGN / Game
+              </button>
+              <button class="aw-import-btn aw-import-btn--secondary" id="aw-btn-build-pos" aria-label="Build a position">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+                Build Position
+              </button>
+            </div>
+
+            <div class="aw-steps">
+              <div class="aw-step">
+                <span class="aw-step-num" aria-hidden="true">1</span>
+                <span class="aw-step-text aw-step-desktop">Click <strong>Import PGN</strong> or <strong>Build Position</strong> below the board</span>
+                <span class="aw-step-mobile">Tap the buttons above or use the <strong>⋮</strong> menu below the board</span>
+              </div>
+              <div class="aw-step">
+                <span class="aw-step-num" aria-hidden="true">2</span>
+                <span class="aw-step-text">Navigate moves. The engine explains each one at your level.</span>
+              </div>
+              <div class="aw-step">
+                <span class="aw-step-num" aria-hidden="true">3</span>
+                <span class="aw-step-text">Ask follow-up questions about any position</span>
+              </div>
+            </div>
+            <div class="aw-tip">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a7 7 0 0 1 7 7c0 3.5-2 6-4 8l-1 3H10l-1-3c-2-2-4-4.5-4-8a7 7 0 0 1 7-7z"/><line x1="9" y1="21" x2="15" y2="21"/></svg>
+              Import directly from Lichess with your username
+            </div>
+          </div>
+
+          <!-- Empty state: game loaded but the current move has no comment -->
+          <div id="analysis-empty" class="analysis-empty" style="display:none">
+            <div class="analysis-empty-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div class="analysis-empty-title" id="analysis-empty-title">No notes for this move</div>
+            <div class="analysis-empty-desc" id="analysis-empty-desc">Ask a question below to get a neural explanation of this position.</div>
+          </div>
+
+        </div><!-- /.subpanel-body -->
+
+        <div class="comment-footer">
+          <div class="skill-selector" role="group" aria-label="Skill level">
+            <button class="skill-btn active" data-level="beginner">Beginner</button>
+            <button class="skill-btn" data-level="intermediate">Intermediate</button>
+            <button class="skill-btn" data-level="advanced">Advanced</button>
+          </div>
+          <div class="skill-elo-hint">
+            <span>under 800</span>
+            <span>800 – 1500</span>
+            <span>1500+</span>
+          </div>
+          <div class="question-row" id="question-row">
+            <input type="text" class="question-input" id="question-input"
+                   placeholder="Ask about this position or move…" autocomplete="off">
+            <button class="question-send-btn" id="btn-ask-question" title="Ask a question">&#10148;</button>
+          </div>
+          <button class="mobile-ask-trigger" id="btn-mobile-ask-trigger" aria-label="Ask about this position">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
+            Ask about position
+          </button>
+          <div class="comment-actions" id="comment-actions">
+            <button class="comment-action-btn" id="btn-edit-comment" title="Edit comment"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+            <button class="comment-action-btn comment-action-btn--danger" id="btn-delete-comment" title="Delete comment"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+
+          <div class="comment-edit-form" id="comment-edit-form" style="display:none">
+            <input type="text" class="comment-edit-header" id="comment-edit-header" placeholder="Header (optional)">
+            <textarea class="comment-edit-body" id="comment-edit-body" placeholder="Comment text" rows="5"></textarea>
+            <div class="comment-edit-btns">
+              <button class="btn-primary" id="btn-save-comment">Save</button>
+              <button class="btn-secondary" id="btn-cancel-edit">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Opening subpanel -->
+      <div class="card-subpanel opening-subpanel" id="opening-subpanel" role="tabpanel" aria-labelledby="btn-panel-opening" style="display:none">
+
+        <!-- Scrollable body wrapper (mirrors comments-subpanel structure) -->
+        <div class="subpanel-body">
+
+          <div class="ob-spinner" id="ob-spinner">
+            <div class="spinner-ring"></div>
+            <span>Looking up opening&hellip;</span>
+          </div>
+
+          <div class="ob-content" id="ob-content" style="display:none">
+            <div class="ob-header">
+              <div class="ob-name-row" id="ob-name-row" style="display:none">
+                <span class="ob-eco" id="ob-eco"></span>
+                <span class="ob-opening-name" id="ob-opening-name"></span>
+              </div>
+              <div class="ob-total" id="ob-total"></div>
+            </div>
+            <div class="ob-section-label" id="ob-moves-label">Continuations</div>
+            <div class="ob-moves" id="ob-moves"></div>
+            <div id="ob-games-section" style="display:none">
+              <button class="ob-section-toggle" id="ob-games-toggle" aria-expanded="true">
+                Master Games
+                <svg class="ob-toggle-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <div class="ob-games" id="ob-games"></div>
+            </div>
+            <div class="ob-footer">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              Lichess Masters · ECO opening book
+            </div>
+          </div>
+
+          <div class="ob-empty" id="ob-empty" style="display:none">
+            <svg class="ob-empty-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+            </svg>
+            <p class="ob-empty-title">Out of Opening Book</p>
+            <p class="ob-empty-sub">No master games found for this position.</p>
+          </div>
+
+        </div><!-- /.subpanel-body -->
+
+      </div>
+
+      <!-- Stockfish lines — always visible regardless of active panel -->
+      <div class="stockfish-lines-tool" id="stockfish-lines-tool" aria-label="Stockfish suggestions">
+        <button class="stockfish-lines-toggle" id="stockfish-lines-toggle" aria-expanded="true" aria-controls="stockfish-lines-body" type="button">
+          <span class="stockfish-lines-title">Stockfish lines</span>
+          <span class="stockfish-lines-hint" id="stockfish-lines-hint">Depth —</span>
+          <svg class="stockfish-lines-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="stockfish-lines-body" id="stockfish-lines-body">
+          <div class="stockfish-lines-empty">Waiting for evaluation…</div>
+        </div>
+      </div>
+
+    </div>
+
+  </aside>
+
+  <!-- Center: eval bar + board + controls panel -->
+  <section class="board-section">
+    <div class="board-and-eval">
+
+      <!-- Eval bar column -->
+      <div class="eval-column">
+        <div class="eval-bar-wrap" id="eval-bar-wrap">
+          <span class="eval-score" id="eval-score">0.00</span>
+          <div class="eval-bar" id="eval-bar">
+            <div class="eval-bar-white" id="eval-bar-white"></div>
+            <div class="eval-bar-black" id="eval-bar-black"></div>
+          </div>
+        </div>
+
+        <div class="top-move-chip" id="top-move-chip">
+          <span class="top-move-icon" aria-hidden="true">▸</span>
+          <span class="top-move-san" id="top-move-san"></span>
+        </div>
+
+        <label class="eval-toggle" title="Show / hide eval bar">
+          <input type="checkbox" id="eval-toggle-input" checked>
+          <span class="eval-toggle-track">
+            <span class="eval-toggle-thumb"></span>
+          </span>
+        </label>
+      </div>
+
+      <!-- Board + button bar -->
+      <div class="board-column">
+        <div class="material-bar" id="mat-analysis-top" aria-label="Captured pieces"></div>
+        <div id="board-container">
+          <div id="board"></div>
+          <svg id="board-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8" aria-hidden="true"></svg>
+        </div>
+        <div class="material-bar" id="mat-analysis-bot" aria-label="Captured pieces"></div>
+
+        <div class="button-bar">
+          <div id="variation-strip" role="group" aria-label="Choose continuation" hidden></div>
+          <!-- Mobile section nav — lives here on mobile so it shares one row with prev/next -->
+          <nav class="mobile-panel-nav" id="mobile-panel-nav" aria-label="Panel view">
+            <button class="mpn-btn mpn-btn--active" data-mpanel="right" aria-selected="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3" cy="6" r="1.2"/><circle cx="3" cy="12" r="1.2"/><circle cx="3" cy="18" r="1.2"/></svg>
+              <span>Moves</span>
+            </button>
+            <button class="mpn-btn" data-mpanel="left-comments" aria-selected="false">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              <span>Analysis</span>
+            </button>
+            <button class="mpn-btn" data-mpanel="left-opening" aria-selected="false">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              <span>Opening</span>
+            </button>
+          </nav>
+          <button class="icon-btn" id="btn-flip"  title="Flip board"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 16V4m0 0L3 8m4-4 4 4"/><path d="M17 8v12m0 0 4-4m-4 4-4-4"/></svg></button>
+          <div class="btn-nav-group">
+            <button class="icon-btn" id="btn-first" title="First position" disabled><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="19 20 9 12 19 4 19 20" fill="currentColor" stroke="none"/><line x1="5" y1="19" x2="5" y2="5"/></svg></button>
+            <button class="icon-btn" id="btn-prev"  title="Previous move"  disabled><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
+            <button class="icon-btn" id="btn-next"  title="Next move"       disabled><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>
+            <button class="icon-btn" id="btn-last"  title="Last position"   disabled><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 4 15 12 5 20 5 4" fill="currentColor" stroke="none"/><line x1="19" y1="5" x2="19" y2="19"/></svg></button>
+          </div>
+          <button class="icon-btn" id="btn-reset" title="New game"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+          <!-- Mobile-only: engine eval + options menu -->
+          <span class="mobile-eval-display" id="mobile-eval-display" aria-live="polite"></span>
+          <div class="mobile-options-wrap">
+            <button class="icon-btn mobile-options-btn" id="btn-mobile-options" title="More options" aria-label="More options" aria-haspopup="true" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="1.75"/><circle cx="12" cy="12" r="1.75"/><circle cx="12" cy="19" r="1.75"/></svg></button>
+            <div class="mobile-options-menu" id="mobile-options-menu" role="menu">
+              <button class="mobile-option-item" id="btn-mobile-flip" role="menuitem">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 16V4m0 0L3 8m4-4 4 4"/><path d="M17 8v12m0 0 4-4m-4 4-4-4"/></svg>
+                Flip Board
+              </button>
+              <button class="mobile-option-item" id="btn-mobile-reset" role="menuitem">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                New Game
+              </button>
+              <button class="mobile-option-item" id="btn-mobile-import-pgn" role="menuitem">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Import game
+              </button>
+              <button class="mobile-option-item" id="btn-mobile-build-pos" role="menuitem">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+                Build Position
+              </button>
+              <button class="mobile-option-item" id="btn-mobile-annotate" role="menuitem">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                Annotate
+              </button>
+              <button class="mobile-option-item" id="btn-mobile-save-game" role="menuitem">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                Save Game
+              </button>
+              <button class="mobile-option-item" id="btn-mobile-share-game" role="menuitem">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                Share Game
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Mobile-only: comment hint strip (shown when current move has a comment but Analysis panel is not active) -->
+        <button id="mobile-comment-hint" class="mobile-comment-hint" type="button" aria-label="View comment for this move">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span>Comment on this move</span>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Mobile panel tab bar (phones only) — kept for JS compat, hidden by CSS -->
+  <div class="analysis-tab-bar" id="analysis-tab-bar" role="tablist" aria-label="Panel view" aria-hidden="true">
+    <button class="analysis-tab analysis-tab-active" data-panel="right" role="tab" aria-selected="true" tabindex="-1">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3" cy="6" r="1.2"/><circle cx="3" cy="12" r="1.2"/><circle cx="3" cy="18" r="1.2"/></svg>
+      <span>Moves</span>
+    </button>
+    <button class="analysis-tab" data-panel="left" role="tab" aria-selected="false" tabindex="-1">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <span>Analysis</span>
+    </button>
+  </div>
+
+  <!-- Right panel: move history -->
+  <aside class="right-panel">
+
+    <div class="game-title-bar">
+      <span class="game-title-text" id="game-title">Chess game 1</span>
+      <button class="icon-btn game-title-edit-btn" id="btn-edit-title" title="Rename game"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+      <button class="icon-btn game-title-save-btn" id="btn-save-game" title="Save to collection"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+      <button class="icon-btn game-title-share-btn" id="btn-share-analysis-game" title="Share game">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      </button>
+      <input type="text" class="game-title-input" id="game-title-input" maxlength="100" style="display:none">
+    </div>
+
+    <div class="card card-move-history">
+      <h2>Move history</h2>
+      <div class="move-history" id="move-history">No moves yet.</div>
+      <div class="ann-toolbar" id="ann-toolbar">
+        <button class="ann-toolbar-toggle" id="ann-toolbar-toggle" aria-expanded="false" aria-controls="ann-toolbar-body">
+          <span class="ann-toolbar-title">Annotations</span>
+          <svg class="ann-toolbar-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="ann-toolbar-body ann-toolbar-collapsed" id="ann-toolbar-body">
+          <div class="ann-toolbar-row">
+            <span class="ann-tb-label">Move</span>
+            <button class="ann-tb-btn ann-tb-move" data-ann="!!" title="Brilliant move">!!</button>
+            <button class="ann-tb-btn ann-tb-move" data-ann="!" title="Good move">!</button>
+            <button class="ann-tb-btn ann-tb-move" data-ann="!?" title="Interesting move">!?</button>
+            <button class="ann-tb-btn ann-tb-move" data-ann="?!" title="Dubious move">?!</button>
+            <button class="ann-tb-btn ann-tb-move" data-ann="?" title="Mistake">?</button>
+            <button class="ann-tb-btn ann-tb-move" data-ann="??" title="Blunder">??</button>
+          </div>
+          <div class="ann-toolbar-row">
+            <span class="ann-tb-label">Position</span>
+            <button class="ann-tb-btn ann-tb-pos" data-pos="=" title="Equal position">=</button>
+            <button class="ann-tb-btn ann-tb-pos" data-pos="∞" title="Unclear/Dynamic">∞</button>
+            <button class="ann-tb-btn ann-tb-pos" data-pos="⩲" title="Slight advantage for White">⩲</button>
+            <button class="ann-tb-btn ann-tb-pos" data-pos="⩱" title="Slight advantage for Black">⩱</button>
+            <button class="ann-tb-btn ann-tb-pos" data-pos="±" title="White is better">±</button>
+            <button class="ann-tb-btn ann-tb-pos" data-pos="∓" title="Black is better">∓</button>
+            <button class="ann-tb-btn ann-tb-pos" data-pos="+−" title="White is winning">+−</button>
+            <button class="ann-tb-btn ann-tb-pos" data-pos="−+" title="Black is winning">−+</button>
+          </div>
+          <div class="ann-toolbar-row">
+            <span class="ann-tb-label">Result</span>
+            <button class="ann-tb-btn ann-tb-result" data-result="1-0" title="White wins">1-0</button>
+            <button class="ann-tb-btn ann-tb-result" data-result="1/2-1/2" title="Draw">½-½</button>
+            <button class="ann-tb-btn ann-tb-result" data-result="0-1" title="Black wins">0-1</button>
+          </div>
+          <div class="ann-toolbar-row">
+            <span class="ann-tb-label">Draw</span>
+            <button class="ann-tb-btn ann-tb-draw" data-draw-color="green" title="Green: right-click drag: arrow · right-click: square highlight"><span class="draw-dot draw-dot-green"></span></button>
+            <button class="ann-tb-btn ann-tb-draw" data-draw-color="yellow" title="Yellow: right-click drag: arrow · right-click: square highlight"><span class="draw-dot draw-dot-yellow"></span></button>
+            <button class="ann-tb-btn ann-tb-draw" data-draw-color="red" title="Red: right-click drag: arrow · right-click: square highlight"><span class="draw-dot draw-dot-red"></span></button>
+            <button class="ann-tb-btn ann-tb-draw-erase" id="btn-clear-drawings" title="Clear all arrows and highlights"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="analyze-game-row" id="analyze-game-row">
+      <button class="btn-analyze-game" id="btn-analyze-game" disabled title="Analyze all moves with Stockfish">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2,12 5,8 8,10 11,5 14,7"/><circle cx="14" cy="7" r="1.5" fill="currentColor" stroke="none"/></svg>
+        Analyze game
+      </button>
+      <div class="analyze-game-progress" id="analyze-game-progress" style="display:none">
+        <div class="analyze-game-progress-bar" id="analyze-game-progress-bar"></div>
+      </div>
+      <div class="analysis-live-stats" id="analysis-live-stats" style="display:none">
+        <div class="live-eval-chart-wrap" id="live-eval-chart-wrap"></div>
+        <div class="analysis-live-accuracy">
+          <span class="live-acc-side">White <span class="live-acc-val" id="live-acc-white">—</span></span>
+          <span class="live-acc-sep">·</span>
+          <span class="live-acc-side">Black <span class="live-acc-val" id="live-acc-black">—</span></span>
+        </div>
+        <div class="analysis-live-badges">
+          <span class="live-badge live-badge--brilliant" id="live-cnt-brilliant" style="display:none">!! <span>0</span></span>
+          <span class="live-badge live-badge--excellent"  id="live-cnt-excellent"  style="display:none">! <span>0</span></span>
+          <span class="live-badge live-badge--correct"   id="live-cnt-correct"   style="display:none"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> <span>0</span></span>
+          <span class="live-badge live-badge--inaccuracy" id="live-cnt-inaccuracy" style="display:none">?! <span>0</span></span>
+          <span class="live-badge live-badge--mistake"   id="live-cnt-mistake"   style="display:none">? <span>0</span></span>
+          <span class="live-badge live-badge--blunder"   id="live-cnt-blunder"   style="display:none">?? <span>0</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pgn-action-row">
+      <button class="btn-secondary" id="btn-open-pgn-modal">Import game</button>
+      <button class="btn-secondary" id="btn-open-position-builder">Build Position</button>
+    </div>
+
+  </aside>
+
+</main>
+
+<!-- Play page -->
+<div id="page-play" class="play-main" style="display:none">
+
+  <!-- ── Setup screen ── -->
+  <div id="play-setup-panel" class="play-setup-screen">
+    <div class="play-setup-inner">
+      <div class="play-setup-hero">
+        <h2 class="play-setup-title">Choose Your Opponent</h2>
+        <p class="play-setup-subtitle">Pick a character to play against, from total beginner to chess master</p>
+      </div>
+
+      <div class="persona-roster" id="persona-grid">
+
+        <button class="persona-card persona-card-v2" data-persona="jonas">
+          <div class="persona-avatar-v2 persona-color-jonas"><img class="piece-icon" src="./images/chess_bold_black_pawn.png" alt="" aria-hidden="true"></div>
+          <div class="persona-name-v2">Alex</div>
+          <div class="persona-elo-badge persona-badge-jonas">500 Elo</div>
+          <div class="persona-desc-v2">Just starting out. Still learning how the pieces move.</div>
+          <div class="persona-difficulty">
+            <span class="diff-dot diff-filled"></span><span class="diff-dot"></span><span class="diff-dot"></span><span class="diff-dot"></span><span class="diff-dot"></span>
+          </div>
+        </button>
+
+        <button class="persona-card persona-card-v2" data-persona="clarer">
+          <div class="persona-avatar-v2 persona-color-clarer"><img class="piece-icon" src="./images/chess_bold_black_knight.png" alt="" aria-hidden="true"></div>
+          <div class="persona-name-v2">Sam</div>
+          <div class="persona-elo-badge persona-badge-clarer">900 Elo</div>
+          <div class="persona-desc-v2">Plays on weekends. Knows the basics, occasionally surprises.</div>
+          <div class="persona-difficulty">
+            <span class="diff-dot diff-filled"></span><span class="diff-dot diff-filled"></span><span class="diff-dot"></span><span class="diff-dot"></span><span class="diff-dot"></span>
+          </div>
+        </button>
+
+        <button class="persona-card persona-card-v2" data-persona="rahim">
+          <div class="persona-avatar-v2 persona-color-rahim"><img class="piece-icon" src="./images/chess_bold_black_bishop.png" alt="" aria-hidden="true"></div>
+          <div class="persona-name-v2">Jamie</div>
+          <div class="persona-elo-badge persona-badge-rahim">1400 Elo</div>
+          <div class="persona-desc-v2">Club regular. Tactically sharp and won't miss a blunder.</div>
+          <div class="persona-difficulty">
+            <span class="diff-dot diff-filled"></span><span class="diff-dot diff-filled"></span><span class="diff-dot diff-filled"></span><span class="diff-dot"></span><span class="diff-dot"></span>
+          </div>
+        </button>
+
+        <button class="persona-card persona-card-v2" data-persona="david">
+          <div class="persona-avatar-v2 persona-color-david"><img class="piece-icon" src="./images/chess_bold_black_rook.png" alt="" aria-hidden="true"></div>
+          <div class="persona-name-v2">Morgan</div>
+          <div class="persona-elo-badge persona-badge-david">1900 Elo</div>
+          <div class="persona-desc-v2">Tournament player. Plays precisely and punishes mistakes.</div>
+          <div class="persona-difficulty">
+            <span class="diff-dot diff-filled"></span><span class="diff-dot diff-filled"></span><span class="diff-dot diff-filled"></span><span class="diff-dot diff-filled"></span><span class="diff-dot"></span>
+          </div>
+        </button>
+
+        <button class="persona-card persona-card-v2" data-persona="gert">
+          <div class="persona-avatar-v2 persona-color-gert"><img class="piece-icon" src="./images/chess_bold_black_queen.png" alt="" aria-hidden="true"></div>
+          <div class="persona-name-v2">Casey</div>
+          <div class="persona-elo-badge persona-badge-gert">2400 Elo</div>
+          <div class="persona-desc-v2">Near-master level. Cold, precise, and utterly unforgiving.</div>
+          <div class="persona-difficulty">
+            <span class="diff-dot diff-filled"></span><span class="diff-dot diff-filled"></span><span class="diff-dot diff-filled"></span><span class="diff-dot diff-filled"></span><span class="diff-dot diff-filled"></span>
+          </div>
+        </button>
+
+      </div>
+
+      <div class="play-setup-bottom">
+        <div class="play-color-picker">
+          <span class="play-color-label">Play as</span>
+          <div class="play-color-selector" role="group" aria-label="Choose your color">
+            <button class="play-color-btn active" data-color="white" aria-pressed="true">
+              <span class="play-color-swatch play-color-swatch--white">
+                <img class="play-color-piece" src="./images/chess_bold_white_king.png" alt="" aria-hidden="true">
+              </span>
+              <span class="play-color-text">White</span>
+            </button>
+            <button class="play-color-btn" data-color="black" aria-pressed="false">
+              <span class="play-color-swatch play-color-swatch--black">
+                <img class="play-color-piece" src="./images/chess_bold_black_king.png" alt="" aria-hidden="true">
+              </span>
+              <span class="play-color-text">Black</span>
+            </button>
+            <button class="play-color-btn" data-color="random" aria-pressed="false">
+              <span class="play-color-swatch play-color-swatch--random" aria-hidden="true">&#8646;</span>
+              <span class="play-color-text">Random</span>
+            </button>
+          </div>
+        </div>
+        <button class="btn-primary play-start-btn" id="btn-start-game" disabled>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Let&rsquo;s Play!
+        </button>
+      </div>
+      <div class="play-setup-extras">
+        <button class="btn-secondary play-setup-pos-btn" id="btn-play-set-position">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          Set Starting Position
+        </button>
+        <span id="play-custom-pos-indicator" class="play-custom-pos-indicator" style="display:none">
+          Custom start
+          <button class="play-pos-reset-btn" id="btn-play-reset-position" aria-label="Reset to standard starting position"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        </span>
+      </div>
+      <p class="play-setup-tip">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        Each opponent has a unique personality and banters during the game. After you finish, analyze it on the Analysis tab.
+      </p>
+    </div>
+  </div>
+
+  <!-- ── Game screen ── -->
+  <div id="play-game-panel" class="play-arena" style="display:none">
+
+    <!-- Mobile opponent info bar (phones only) — tap to expand chat log -->
+    <div class="play-mobile-opp-bar" id="play-mobile-opp-bar">
+      <button class="play-mobile-opp-head" id="play-mobile-opp-head" aria-expanded="false" aria-controls="play-mobile-opp-log">
+        <div class="play-mobile-opp-avatar" id="play-mobile-opp-avatar-m"><img class="piece-icon" src="./images/chess_bold_black_queen.png" alt="" aria-hidden="true"></div>
+        <div class="play-mobile-opp-text">
+          <span class="play-mobile-opp-name" id="play-mobile-opp-name-m">Opponent</span>
+          <span class="play-mobile-opp-speech" id="play-mobile-opp-speech-m">Your move!</span>
+        </div>
+        <svg class="play-mobile-opp-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="play-mobile-opp-log" id="play-mobile-opp-log" role="log" aria-label="Opponent chat history">
+        <div class="play-opp-log-empty">No messages yet. Your opponent will chat as you play.</div>
+      </div>
+    </div>
+
+    <!-- Left: character + speech bubble + move history + controls -->
+    <aside class="play-arena-left">
+
+      <div class="play-character-card" id="play-character-card">
+        <div class="play-character-header">
+          <div class="play-character-avatar" id="play-character-avatar"><img class="piece-icon" src="./images/chess_bold_black_pawn.png" alt="" aria-hidden="true"></div>
+          <div class="play-character-meta">
+            <div class="play-character-name" id="play-character-name">Opponent</div>
+            <div class="play-character-elo" id="play-character-elo">— Elo</div>
+          </div>
+        </div>
+        <div class="play-speech-wrap">
+          <div class="play-speech-bubble" id="play-speech-bubble">
+            <div class="play-speech-text" id="play-speech-text">Your move!</div>
+            <div class="play-speech-thinking" id="play-speech-thinking" style="display:none">
+              <span class="think-dot"></span>
+              <span class="think-dot"></span>
+              <span class="think-dot"></span>
+            </div>
+          </div>
+        </div>
+        <div class="play-chat-wrap" id="play-chat-wrap" style="display:none">
+          <div class="play-chat-label">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Chat with your opponent
+          </div>
+          <div class="play-chat-row">
+            <input type="text" class="play-chat-input" id="play-chat-input"
+                   placeholder="Say something…" autocomplete="off">
+            <button class="play-chat-send-btn" id="btn-play-chat-send" title="Send message">&#10148;</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="play-history-card">
+        <div class="play-history-title">Moves</div>
+        <div class="play-move-history-list" id="play-move-history">No moves yet.</div>
+      </div>
+
+      <!-- Mobile chat input (shown when chat icon is tapped) -->
+      <div class="play-mobile-chat-bar" id="play-mobile-chat-bar" style="display:none">
+        <input type="text" class="play-chat-input" id="play-mobile-chat-input" placeholder="Chat with opponent…" autocomplete="off">
+        <button class="play-chat-send-btn" id="btn-play-mobile-chat-send" title="Send message">&#10148;</button>
+      </div>
+
+      <div class="play-game-actions">
+        <button class="btn-secondary" id="btn-play-new">New game</button>
+        <button class="btn-icon-save" id="btn-play-save-game" title="Save game to collection">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Save
+        </button>
+        <button class="btn-danger" id="btn-play-resign">Resign</button>
+      </div>
+
+    </aside>
+
+    <!-- Center: board -->
+    <section class="board-section">
+      <div class="board-and-eval">
+        <div class="board-column">
+          <div class="material-bar" id="mat-play-top" aria-label="Captured pieces"></div>
+          <div id="play-board-container">
+            <div id="play-board"></div>
+            <svg id="play-board-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8" aria-hidden="true"></svg>
+          </div>
+          <div class="material-bar" id="mat-play-bot" aria-label="Captured pieces"></div>
+          <div class="button-bar">
+            <button class="icon-btn" id="play-btn-flip" title="Flip board"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 16V4m0 0L3 8m4-4 4 4"/><path d="M17 8v12m0 0 4-4m-4 4-4-4"/></svg></button>
+            <button class="icon-btn" id="play-btn-undo" title="Take back your last move" disabled><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg></button>
+            <div class="btn-nav-group" id="play-nav-group">
+              <button class="icon-btn" id="play-btn-prev" title="Previous move"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
+              <button class="icon-btn" id="play-btn-next" title="Next move"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>
+            </div>
+            <button class="btn-jump-current" id="play-btn-jump-current" style="display:none">Jump to current</button>
+            <button class="icon-btn play-mobile-ask-toggle" id="btn-play-mobile-ask-toggle" title="Ask the coach" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg></button>
+            <button class="icon-btn play-mobile-chat-toggle" id="btn-play-mobile-chat-toggle" title="Chat with opponent" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+            <button class="icon-btn play-mobile-resign-toggle" id="btn-play-mobile-resign" title="Resign game" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></button>
+            <div class="play-game-status" id="play-game-status"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right: ask-the-coach panel (same Q&A as the Analysis tab) -->
+    <aside class="play-arena-right" id="play-right-panel">
+      <div class="play-ask-card" id="play-ask-card">
+        <div class="play-ask-head">
+          <div class="play-ask-titles">
+            <div class="play-ask-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
+              Ask the coach
+            </div>
+            <div class="play-ask-sub">A neutral coach explains the current position</div>
+          </div>
+          <button class="play-ask-close" id="btn-play-ask-close" aria-label="Close" type="button"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        </div>
+
+        <div class="play-ask-body" id="play-ask-body">
+          <div class="play-ask-empty" id="play-ask-empty">
+            <div class="play-ask-empty-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 1 7 7c0 3.5-2 6-4 8l-1 3H10l-1-3c-2-2-4-4.5-4-8a7 7 0 0 1 7-7z"/><line x1="9" y1="21" x2="15" y2="21"/></svg>
+            </div>
+            <div class="play-ask-empty-title">Stuck? Ask anything</div>
+            <div class="play-ask-empty-desc">Get a hint, understand a threat, or learn the plan, without giving away your opponent's reply.</div>
+            <div class="play-ask-suggestions" id="play-ask-suggestions">
+              <button class="play-ask-chip" type="button">What should I focus on here?</button>
+              <button class="play-ask-chip" type="button">Are any of my pieces in danger?</button>
+              <button class="play-ask-chip" type="button">What's the idea behind this position?</button>
+            </div>
+          </div>
+          <div id="play-qa-thread" class="play-qa-thread"></div>
+        </div>
+
+        <div class="error-msg" id="play-ask-error" role="alert"></div>
+
+        <div class="play-ask-footer">
+          <div class="question-row">
+            <input type="text" class="question-input" id="play-question-input"
+                   placeholder="Ask about this position…" autocomplete="off">
+            <button class="question-send-btn" id="btn-play-ask" title="Ask a question">&#10148;</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Mobile backdrop for the ask sheet -->
+    <div class="play-ask-backdrop" id="play-ask-backdrop"></div>
+
+  </div>
+
+</div>
+
+<!-- Train page -->
+<div id="page-train" class="page-view train-page" style="display:none">
+
+  <!-- Puzzle arena -->
+  <div id="puzzle-arena" class="puzzle-arena" style="display:none">
+
+    <!-- Board side -->
+    <div class="puzzle-board-wrap">
+      <div id="puzzle-board-container">
+        <div id="puzzle-board"></div>
+      </div>
+    </div>
+
+    <!-- Control panel -->
+    <div class="puzzle-panel">
+
+      <!-- Stats bar -->
+      <div class="puzzle-stats-bar">
+        <div class="puzzle-stat-item">
+          <div class="puzzle-stat-label">Rating</div>
+          <div class="puzzle-stat-val" id="puzzle-elo-val">?</div>
+        </div>
+        <div class="puzzle-stat-item">
+          <div class="puzzle-stat-label">Streak</div>
+          <div class="puzzle-stat-val" id="puzzle-streak-val">0</div>
+        </div>
+        <div class="puzzle-stat-item">
+          <div class="puzzle-stat-label">Solved</div>
+          <div class="puzzle-stat-val" id="puzzle-solved-val">0</div>
+        </div>
+        <div class="puzzle-stat-item">
+          <div class="puzzle-stat-label">Accuracy</div>
+          <div class="puzzle-stat-val" id="puzzle-accuracy-val">—</div>
+        </div>
+      </div>
+
+      <!-- Puzzle info / status -->
+      <div class="puzzle-info-area">
+        <div id="puzzle-turn-indicator" class="puzzle-turn-indicator">
+          <div class="puzzle-turn-dot" id="puzzle-turn-dot"></div>
+          <span id="puzzle-turn-text">Find the best move!</span>
+        </div>
+        <div id="puzzle-themes-row" class="puzzle-themes-row"></div>
+      </div>
+
+      <!-- Loading state -->
+      <div id="puzzle-loading" class="puzzle-loading" style="display:none">
+        <div class="puzzle-spinner"></div>
+        <span>Loading puzzle…</span>
+      </div>
+
+      <!-- Ask why button (shown after a wrong move) -->
+      <div id="puzzle-why-wrap" style="display:none">
+        <button id="btn-puzzle-why" class="btn-puzzle-why">Why was this move bad?</button>
+      </div>
+
+      <!-- Hint loading -->
+      <div id="puzzle-hint-loading" class="puzzle-hint-loading" style="display:none">
+        <div class="puzzle-spinner puzzle-spinner--small"></div>
+        <span>Analyzing your move…</span>
+      </div>
+
+      <!-- Wrong-move explanation -->
+      <div id="puzzle-hint-box" class="puzzle-hint-box" style="display:none">
+        <div class="puzzle-hint-header">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Why that doesn't work
+        </div>
+        <p id="puzzle-hint-text" class="puzzle-hint-text"></p>
+        <button class="puzzle-retry-btn" id="btn-puzzle-retry">Try again →</button>
+      </div>
+
+      <!-- Result panel -->
+      <div id="puzzle-result-panel" class="puzzle-result-panel" style="display:none">
+        <div id="puzzle-result-icon" class="puzzle-result-icon"></div>
+        <div id="puzzle-result-title" class="puzzle-result-title"></div>
+        <div id="puzzle-elo-change" class="puzzle-elo-change"></div>
+        <button class="btn-puzzle-next" id="btn-puzzle-next">Next Puzzle <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>
+        <div id="puzzle-ask-wrap" class="puzzle-ask-wrap" style="display:none">
+          <div class="question-row puzzle-ask-row">
+            <input type="text" class="question-input" id="puzzle-ask-input"
+                   placeholder="Ask about puzzle" autocomplete="off">
+            <button class="question-send-btn" id="btn-puzzle-ask" title="Ask">&#10148;</button>
+          </div>
+          <div id="puzzle-ask-response" class="puzzle-ask-response"></div>
+        </div>
+      </div>
+
+      <!-- Bottom actions -->
+      <div class="puzzle-bottom-actions">
+        <button class="btn-puzzle-ghost" id="btn-puzzle-giveup">Give Up</button>
+      </div>
+
+    </div><!-- .puzzle-panel -->
+  </div><!-- #puzzle-arena -->
+
+
+
+</div><!-- #page-train -->
+
+<!-- Profile page -->
+<div id="page-profile" class="page-view profile-page" style="display:none">
+  <div class="profile-inner">
+
+    <!-- Hero -->
+    <div class="profile-hero">
+      <button class="profile-back-btn" id="btn-profile-back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </button>
+
+      <!-- Identity -->
+      <div class="profile-header-section">
+        <div class="profile-avatar" id="profile-avatar"><span>?</span></div>
+        <div class="profile-header-info">
+          <h2 class="profile-username" id="profile-username-display"></h2>
+          <div class="profile-meta">
+            <span class="profile-plan-badge" id="profile-plan-badge-display"></span>
+            <span class="profile-joined" id="profile-joined-display"></span>
+            <span class="profile-friend-count" id="profile-friend-count" style="display:none"></span>
+          </div>
+        </div>
+        <div class="profile-friend-action" id="profile-friend-action" style="display:none">
+          <button class="btn-friend" id="btn-friend-action" data-status="">Add Friend</button>
+        </div>
+      </div>
+
+      <!-- Bio -->
+      <div class="profile-bio-section" id="profile-bio-section" style="display:none">
+        <div class="profile-bio-view" id="profile-bio-view">
+          <blockquote class="profile-bio-quote" id="profile-bio-quote">
+            <p class="profile-bio-text" id="profile-bio-text"></p>
+            <button class="profile-bio-edit-btn" id="btn-bio-edit" aria-label="Edit bio" style="display:none">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              Edit
+            </button>
+          </blockquote>
+          <button class="profile-bio-add-btn" id="btn-bio-add" aria-label="Add bio" style="display:none">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add a short bio
+          </button>
+        </div>
+        <div class="profile-bio-editor-wrap" id="profile-bio-editor-wrap" style="display:none">
+          <textarea class="profile-bio-textarea" id="profile-bio-textarea" maxlength="280" rows="3" placeholder="Tell people a bit about yourself…" spellcheck="true"></textarea>
+          <div class="profile-bio-editor-footer">
+            <span class="profile-bio-charcount" id="profile-bio-charcount">0 / 280</span>
+            <div class="profile-bio-btns">
+              <button class="btn-secondary profile-bio-cancel" id="btn-bio-cancel">Cancel</button>
+              <button class="btn-primary profile-bio-save" id="btn-bio-save">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key stats strip -->
+      <div class="profile-hero-stats" id="profile-stats-section">
+        <div class="phs-item phs-item--primary">
+          <span class="phs-val" id="profile-stat-elo">?</span>
+          <span class="phs-lbl">Rating</span>
+        </div>
+        <div class="phs-item phs-item--streak">
+          <span class="phs-val" id="profile-stat-daily-streak">0</span>
+          <span class="phs-lbl">Day Streak</span>
+        </div>
+        <div class="phs-item">
+          <span class="phs-val" id="profile-stat-accuracy">—</span>
+          <span class="phs-lbl">Accuracy</span>
+        </div>
+        <div class="phs-item">
+          <span class="phs-val" id="profile-stat-solved">0</span>
+          <span class="phs-lbl">Solved</span>
+        </div>
+        <span id="profile-stat-best-streak" style="display:none">0</span>
+      </div>
+
+    </div><!-- /.profile-hero -->
+
+    <!-- Profile content -->
+    <div class="profile-content">
+
+      <!-- Rating history graph -->
+      <section class="profile-section" id="profile-graph-section" style="display:none">
+        <h3 class="profile-section-title">Rating History</h3>
+        <div class="profile-graph-wrap">
+          <canvas id="rating-graph-canvas" class="rating-graph-canvas" aria-label="Rating history chart"></canvas>
+          <div id="rating-graph-empty" class="rating-graph-empty" style="display:none"></div>
+        </div>
+      </section>
+
+      <!-- Next milestones -->
+      <section class="profile-section" id="profile-milestones-section" style="display:none">
+        <h3 class="profile-section-title">Next Milestones</h3>
+        <div class="profile-milestones" id="profile-milestones"></div>
+      </section>
+
+      <!-- Achievements -->
+      <section class="profile-section" id="profile-achievements-section">
+        <h3 class="profile-section-title">Achievements <span class="profile-achiev-count" id="profile-achiev-count"></span></h3>
+        <div class="profile-achievements-grid" id="profile-achievements-grid"></div>
+        <button class="btn-achievements-toggle" id="btn-achievements-toggle" style="display:none" type="button"></button>
+      </section>
+
+      <!-- Friends section (self mode only) -->
+      <section class="profile-section profile-friends-section" id="profile-friends-section" style="display:none">
+        <div class="profile-section-header">
+          <h3 class="profile-section-title">Friends</h3>
+          <button class="btn-find-players" id="btn-find-players" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Find Players
+          </button>
+        </div>
+        <!-- Pending received requests -->
+        <div class="friend-requests-wrap" id="friend-requests-wrap" style="display:none">
+          <div class="friend-requests-label">Friend Requests</div>
+          <div class="friend-requests-list" id="friend-requests-list"></div>
+        </div>
+        <!-- Friends list -->
+        <div class="friends-list" id="friends-list"></div>
+        <div class="friends-empty" id="friends-empty" style="display:none">
+          <span class="friends-empty-icon"><img class="piece-icon" src="./images/chess_bold_black_pawn.png" alt="" aria-hidden="true"></span>
+          <p>No friends yet. Search for players to connect with.</p>
+        </div>
+      </section>
+
+      <!-- Public collections (other user mode only) -->
+      <section class="profile-section profile-pub-collections-section" id="profile-pub-collections-section" style="display:none">
+        <h3 class="profile-section-title">Public Collections</h3>
+        <div class="pub-collections-list" id="pub-collections-list"></div>
+      </section>
+
+      <!-- Leaderboard -->
+      <section class="profile-section" id="profile-leaderboard-section">
+        <h3 class="profile-section-title">Leaderboard</h3>
+        <div class="leaderboard-tabs" id="leaderboard-tabs" role="tablist">
+          <button class="lb-tab active" data-lb-tab="rating" role="tab" aria-selected="true">Rating</button>
+          <button class="lb-tab" data-lb-tab="solved" role="tab" aria-selected="false">Puzzles</button>
+          <button class="lb-tab" data-lb-tab="streak" role="tab" aria-selected="false">Streak</button>
+        </div>
+        <div class="leaderboard-list" id="leaderboard-list">
+          <div class="leaderboard-loading">Loading…</div>
+        </div>
+      </section>
+
+      <!-- Recent history -->
+      <section class="profile-section" id="profile-history-section">
+        <h3 class="profile-section-title">Recent Puzzles</h3>
+        <div class="profile-history" id="profile-history"></div>
+      </section>
+
+      <!-- Guest message -->
+      <div id="profile-guest-msg" class="profile-guest-msg" style="display:none">
+        <div class="profile-guest-icon"><img class="piece-icon" src="./images/chess_bold_black_pawn.png" alt="" aria-hidden="true"></div>
+        <h3>Track your progress</h3>
+        <p>Create a free account to track your puzzle rating, earn achievements, and see your improvement over time.</p>
+        <button class="btn-profile-signup" id="btn-profile-signup">Sign up free</button>
+      </div>
+
+    </div><!-- /.profile-content -->
+
+  </div>
+</div><!-- #page-profile -->
+
+<!-- User search modal -->
+<div id="user-search-modal" class="modal-overlay" style="display:none" role="dialog" aria-modal="true" aria-label="Find Players">
+  <div class="modal-box modal-box--search">
+    <div class="modal-box-header">
+      <h3 class="modal-box-title">Find Players</h3>
+      <button class="modal-close-btn" id="btn-search-modal-close" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="search-input-wrap">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="search" id="user-search-input" class="search-input" placeholder="Search by username…" autocomplete="off" spellcheck="false" maxlength="30">
+    </div>
+    <div id="user-search-results" class="user-search-results" aria-live="polite"></div>
+  </div>
+</div>
+
+<!-- Achievement notification container -->
+<div id="achievement-popup-container" aria-live="polite" aria-label="Achievement notifications"></div>
+
+<!-- Collection page -->
+<div id="page-collection" class="page-view coll-page" style="display:none">
+
+  <!-- ── Collection Hub ───────────────────────────────────────────────────── -->
+  <div id="coll-hub" class="coll-hub">
+
+    <!-- Hub header: title + tab bar -->
+    <div class="coll-hub-header">
+      <div class="coll-hub-title-row">
+        <h2 class="coll-hub-title">Collections</h2>
+      </div>
+      <div class="coll-hub-tabs" role="tablist" aria-label="Collection sections">
+        <button class="coll-hub-tab coll-hub-tab--active" data-coll-tab="mine" role="tab" aria-selected="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+          My Collections
+        </button>
+        <button class="coll-hub-tab" data-coll-tab="all" role="tab" aria-selected="false">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3" cy="6" r="1.2"/><circle cx="3" cy="12" r="1.2"/><circle cx="3" cy="18" r="1.2"/></svg>
+          All Games
+        </button>
+        <button class="coll-hub-tab" data-coll-tab="community" role="tab" aria-selected="false">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          Community
+        </button>
+      </div>
+    </div>
+
+    <!-- ── My Collections panel ─────────────────────────────────────────── -->
+    <div id="coll-panel-mine" class="coll-panel" role="tabpanel">
+
+      <!-- Logged-in view -->
+      <div id="coll-mine-auth" style="display:none">
+        <div class="coll-mine-toolbar">
+          <button class="btn-coll-new" id="btn-coll-new" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Collection
+          </button>
+        </div>
+        <div id="coll-cards-grid" class="coll-cards-grid">
+          <!-- Rendered by JS -->
+        </div>
+        <div id="coll-cards-empty" class="coll-cards-empty" style="display:none">
+          <div class="coll-cards-empty-icon" aria-hidden="true"><img class="piece-icon" src="./images/chess_bold_black_pawn.png" alt="" aria-hidden="true"></div>
+          <p class="coll-cards-empty-title">No collections yet</p>
+          <p class="coll-cards-empty-hint">Create your first collection to organise your best games, studies, and openings.</p>
+          <button class="btn-coll-new" id="btn-coll-new-empty" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Create collection
+          </button>
+        </div>
+
+        <!-- Saved from the community -->
+        <div id="coll-added-section" class="coll-added-section" style="display:none">
+          <div class="collection-library-head">
+            <div>
+              <h3 class="collection-section-title">Saved from the community</h3>
+              <p class="collection-library-hint">Collections you’ve added from other players. Open one to browse or remove it.</p>
+            </div>
+          </div>
+          <div id="coll-added-grid" class="coll-cards-grid"></div>
+        </div>
+      </div>
+
+      <!-- Guest view -->
+      <div id="coll-mine-guest" class="coll-mine-guest" style="display:none">
+        <div class="coll-guest-icon" aria-hidden="true"><img class="piece-icon" src="./images/chess_bold_black_queen.png" alt="" aria-hidden="true"></div>
+        <h3 class="coll-guest-title">Organise your games</h3>
+        <p class="coll-guest-text">Sign in to create named collections, publish them to the community, and keep your best games for ever.</p>
+        <div class="coll-guest-btns">
+          <button class="btn-primary" id="btn-coll-signin">Sign in</button>
+          <button class="btn-secondary" id="btn-coll-signup">Create account</button>
+        </div>
+      </div>
+
+    </div><!-- /coll-panel-mine -->
+
+    <!-- ── All Games panel ──────────────────────────────────────────────── -->
+    <div id="coll-panel-all" class="coll-panel" role="tabpanel" style="display:none">
+      <div class="page-content">
+        <div class="collection-toolbar">
+          <div class="collection-search" aria-label="Search saved games">
+            <div class="collection-search-row">
+              <input class="collection-search-input" id="collection-search" type="text" placeholder="Search saved games…" autocomplete="off"/>
+              <button class="btn-secondary collection-search-clear" id="collection-search-clear" type="button">Clear</button>
+            </div>
+          </div>
+          <div class="collection-toolbar-actions">
+            <div class="collection-results-pill" id="collection-results-count">0 games</div>
+            <div class="collection-import-cta">
+              <button class="collection-import-toggle" id="btn-collection-import-toggle" type="button" aria-haspopup="dialog" aria-controls="collection-import-modal">
+                Import games
+              </button>
+              <span class="collection-import-inline-hint">Lichess, PGN</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="collection-library-head">
+          <div>
+            <h3 class="collection-section-title">Saved games</h3>
+            <p class="collection-library-hint">Load a game instantly, or delete the ones you no longer need.</p>
+          </div>
+        </div>
+
+        <div id="collection-list" class="collection-list"></div>
+        <div id="collection-no-matches" class="collection-empty" style="display:none">
+          <span class="collection-empty-icon">&#9812;</span>
+          <p>No matches.</p>
+          <p class="collection-empty-hint">Try searching by player name, ELO (e.g. 1800), or date (e.g. 2024-03-12).</p>
+        </div>
+        <div id="collection-empty" class="collection-empty">
+          <div class="collection-empty-king" aria-hidden="true"><img class="piece-icon" src="./images/chess_bold_black_king.png" alt="" aria-hidden="true"></div>
+          <h3 class="collection-empty-title">No saved games yet</h3>
+          <p class="collection-empty-hint">Play or import a game, then save it with the <strong class="hint-icon-label"><svg class="hint-inline-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> star icon</strong> beside the board title.</p>
+          <div class="collection-empty-ctas">
+            <button class="collection-empty-cta" id="collection-empty-play-btn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Play a game
+            </button>
+            <button class="collection-empty-cta" id="collection-empty-import-btn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"/></svg>
+              Import games
+            </button>
+          </div>
+        </div>
+      </div>
+    </div><!-- /coll-panel-all -->
+
+    <!-- ── Community panel ──────────────────────────────────────────────── -->
+    <div id="coll-panel-community" class="coll-panel" role="tabpanel" style="display:none">
+      <div class="coll-community-inner">
+        <div class="coll-community-header">
+          <div class="coll-community-heading">
+            <h3 class="coll-community-title">Published by the community</h3>
+            <p class="coll-community-sub">Browse collections shared by other players. Click any collection to explore the games inside.</p>
+          </div>
+          <div class="coll-sort" role="group" aria-label="Sort community collections">
+            <span class="coll-sort-label">Sort</span>
+            <button class="coll-sort-btn coll-sort-btn--active" data-coll-sort="recent" type="button" aria-pressed="true">Newest</button>
+            <button class="coll-sort-btn" data-coll-sort="popular" type="button" aria-pressed="false">Most added</button>
+          </div>
+        </div>
+        <div id="coll-community-grid" class="coll-cards-grid">
+          <!-- Rendered by JS -->
+        </div>
+        <div id="coll-community-empty" class="coll-cards-empty" style="display:none">
+          <div class="coll-cards-empty-icon" aria-hidden="true"><img class="piece-icon" src="./images/chess_bold_black_pawn.png" alt="" aria-hidden="true"></div>
+          <p class="coll-cards-empty-title">No public collections yet</p>
+          <p class="coll-cards-empty-hint">Be the first. Publish one of your collections!</p>
+        </div>
+        <div id="coll-community-loading" class="coll-community-loading">
+          <div class="spinner-ring"></div>
+          <span>Loading…</span>
+        </div>
+        <div id="coll-community-load-more" class="coll-community-load-more" style="display:none">
+          <button class="btn-secondary" id="btn-coll-load-more">Load more</button>
+        </div>
+      </div>
+    </div><!-- /coll-panel-community -->
+
+  </div><!-- /coll-hub -->
+
+  <!-- ── Collection Detail View ───────────────────────────────────────────── -->
+  <div id="coll-detail" class="coll-detail" style="display:none">
+
+    <div id="coll-detail-banner" class="coll-detail-banner" style="display:none"></div>
+
+    <div class="coll-detail-header">
+      <button class="coll-detail-back" id="btn-coll-detail-back" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        Collections
+      </button>
+      <div class="coll-detail-meta" id="coll-detail-meta">
+        <div class="coll-detail-name-row">
+          <h2 class="coll-detail-name" id="coll-detail-name">Collection</h2>
+          <span class="coll-detail-vis-badge" id="coll-detail-vis-badge">Private</span>
+        </div>
+        <p class="coll-detail-desc" id="coll-detail-desc" style="display:none"></p>
+        <p class="coll-detail-stats" id="coll-detail-stats"></p>
+      </div>
+      <div class="coll-detail-actions">
+        <button class="coll-detail-action-btn" id="btn-coll-detail-import" title="Import games into this collection" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Import
+        </button>
+        <button class="coll-detail-action-btn" id="btn-coll-detail-edit" title="Edit collection" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Edit
+        </button>
+        <button class="coll-detail-action-btn coll-detail-action-btn--publish" id="btn-coll-detail-publish" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          <span id="btn-coll-detail-publish-label">Publish</span>
+        </button>
+        <button class="coll-detail-action-btn coll-detail-action-btn--danger" id="btn-coll-detail-delete" title="Delete collection" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+          Delete
+        </button>
+      </div>
+    </div>
+
+    <div class="coll-detail-share-row" id="coll-detail-share-row" style="display:none">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+      <span class="coll-detail-share-label">Public link:</span>
+      <span class="coll-detail-share-url" id="coll-detail-share-url"></span>
+      <button class="coll-detail-copy-btn" id="btn-coll-copy-link" type="button">Copy</button>
+    </div>
+
+    <div id="coll-detail-games" class="coll-detail-games">
+      <!-- Rendered by JS -->
+    </div>
+
+    <div id="coll-detail-empty" class="coll-detail-empty" style="display:none">
+      <div class="coll-cards-empty-icon" aria-hidden="true"><img class="piece-icon" src="./images/chess_bold_black_pawn.png" alt="" aria-hidden="true"></div>
+      <p class="coll-cards-empty-title">No games in this collection</p>
+      <p class="coll-cards-empty-hint">Use the Import button to pull in games from Lichess, PGN, or save a game and choose this collection when saving.</p>
+    </div>
+
+  </div><!-- /coll-detail -->
+
+  <!-- ── Public Collection Detail View ────────────────────────────────────── -->
+  <div id="coll-public-detail" class="coll-detail coll-public-detail" style="display:none">
+
+    <div id="coll-public-banner" class="coll-detail-banner" style="display:none"></div>
+
+    <div class="coll-detail-header">
+      <button class="coll-detail-back" id="btn-coll-public-back" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        Community
+      </button>
+      <div class="coll-detail-meta" id="coll-public-meta">
+        <div class="coll-detail-name-row">
+          <h2 class="coll-detail-name" id="coll-public-name">Collection</h2>
+          <span class="coll-detail-vis-badge coll-detail-vis-badge--public">Public</span>
+        </div>
+        <p class="coll-public-author" id="coll-public-author"></p>
+        <p class="coll-detail-desc" id="coll-public-desc" style="display:none"></p>
+        <p class="coll-detail-stats" id="coll-public-stats"></p>
+      </div>
+      <div class="coll-detail-actions">
+        <button class="coll-add-btn" id="btn-coll-public-add" type="button" aria-pressed="false" style="display:none">
+          <svg class="coll-add-icon-add" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <svg class="coll-add-icon-added" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          <span id="btn-coll-public-add-label">Add to my collections</span>
+          <span class="coll-add-count" id="coll-public-add-count"></span>
+        </button>
+      </div>
+    </div>
+
+    <div id="coll-public-games" class="coll-detail-games">
+      <!-- Rendered by JS -->
+    </div>
+
+    <div id="coll-public-loading" class="coll-community-loading">
+      <div class="spinner-ring"></div>
+      <span>Loading…</span>
+    </div>
+
+  </div><!-- /coll-public-detail -->
+
+</div><!-- /page-collection -->
+
+<!-- About page -->
+<div id="page-about" class="page-view" style="display:none">
+  <div class="page-content about-page-content">
+    <div class="about-hero">
+      <div class="about-hero-glow" aria-hidden="true"></div>
+      <img class="king-logo king-logo-dark about-hero-logo" src="./images/white-king-logo.png" alt="" aria-hidden="true">
+      <img class="king-logo king-logo-light about-hero-logo" src="./images/black-king-logo.png" alt="" aria-hidden="true">
+      <h2 class="page-title about-title">Chess Explain</h2>
+      <p class="page-subtitle about-subtitle">Your neural chess analysis companion. Understand any position, at any skill level.</p>
+      <div class="about-hero-pills">
+        <span class="about-pill"><span class="about-pill-dot about-pill-dot--green"></span>Google Gemini</span>
+        <span class="about-pill"><span class="about-pill-dot about-pill-dot--blue"></span>Stockfish Engine</span>
+        <span class="about-pill"><span class="about-pill-dot about-pill-dot--purple"></span>Free &middot; Premium &middot; Pro</span>
+      </div>
+    </div>
+    <div class="about-grid">
+      <div class="about-card">
+        <div class="about-card-icon">&#9812;</div>
+        <h3>What is Chess Explain?</h3>
+        <p>Chess Explain is an interactive chess analysis tool powered by Google Gemini and Stockfish. It helps players of all levels understand positions, learn from their games, and improve their chess thinking.</p>
+      </div>
+      <div class="about-card">
+        <div class="about-card-icon">&#9658;</div>
+        <h3>How to use it</h3>
+        <ul>
+          <li>Play moves on the board or import a PGN game</li>
+          <li>Select your skill level (Beginner &middot; Intermediate &middot; Advanced)</li>
+          <li>Ask a question about any position to get neural commentary</li>
+          <li>Navigate through moves with arrow buttons or keyboard arrows</li>
+          <li>Right-click moves in the history to annotate, copy, or delete</li>
+        </ul>
+      </div>
+      <div class="about-card about-card--accent">
+        <div class="about-card-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <h3>Features</h3>
+        <ul>
+          <li>Real-time Stockfish evaluation bar</li>
+          <li>Best-move suggestion chip</li>
+          <li>Move tree with annotation support (!!, !, ?!, ??)</li>
+          <li>Neural commentary tailored to your skill level</li>
+          <li>Import &amp; export PGN games</li>
+          <li>Save games to your collection</li>
+          <li>Dark &amp; light themes</li>
+        </ul>
+      </div>
+      <div class="about-card">
+        <div class="about-card-icon">&#9881;</div>
+        <h3>Tech stack</h3>
+        <ul>
+          <li>Google Gemini: position commentary</li>
+          <li>Stockfish: engine evaluation, running on our servers</li>
+          <li>chessboard.js &amp; chess.js: board rendering</li>
+          <li>Node.js + Express: backend server</li>
+        </ul>
+      </div>
+    </div>
+    <div class="contact-hero">
+      <h2 class="contact-title">Get in touch</h2>
+      <p class="contact-subtitle">Have a bug to report, a feature idea, or just want to say hello? Fill out the form below and we'll get back to you.</p>
+    </div>
+    <div class="contact-form-wrap">
+      <form class="contact-form" id="contact-form" novalidate>
+        <div class="contact-field-row">
+          <div class="contact-field">
+            <label class="contact-label" for="contact-name">Your name</label>
+            <input class="contact-input" type="text" id="contact-name" name="name" placeholder="Alex Fischer" autocomplete="name" required maxlength="100">
+          </div>
+          <div class="contact-field">
+            <label class="contact-label" for="contact-email">Email address</label>
+            <input class="contact-input" type="email" id="contact-email" name="email" placeholder="you@example.com" autocomplete="email" required>
+          </div>
+        </div>
+        <div class="contact-field">
+          <label class="contact-label" for="contact-subject">Subject</label>
+          <select class="contact-input contact-select" id="contact-subject" name="subject" required>
+            <option value="" disabled selected>Select a topic...</option>
+            <option value="bug">Bug report</option>
+            <option value="feature">Feature request</option>
+            <option value="account">Account or billing</option>
+            <option value="question">General question</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="contact-field">
+          <label class="contact-label" for="contact-message">Message</label>
+          <textarea class="contact-input contact-textarea" id="contact-message" name="message" placeholder="Describe your issue or idea in detail..." required minlength="20" maxlength="2000" rows="6"></textarea>
+          <div class="contact-char-count"><span id="contact-char-count">0</span> / 2000</div>
+        </div>
+        <!-- Honeypot field — hidden from humans, filled by bots -->
+        <input type="text" name="website" class="contact-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="contact-error" id="contact-error" role="alert" style="display:none"></div>
+        <div class="contact-success" id="contact-success" role="status" style="display:none">
+          <span class="contact-success-icon">&#10003;</span>
+          Your message has been sent. Thank you for reaching out!
+        </div>
+        <button type="submit" class="btn-primary contact-submit" id="btn-contact-submit">Send message</button>
+        <p class="contact-privacy-note">Your information is used only to respond to your message. See our <a href="./privacy.html" class="auth-link" target="_blank">Privacy Policy</a>.</p>
+      </form>
+    </div>
+    <div class="about-footer">
+      <p><strong>Free:</strong> ~10 AI analyses per month with a free account, no credit card required. <strong>Premium ($7.99/month or $76.99/year):</strong> ~200 AI analyses per month. <strong>Pro ($19.99/month or $191.99/year):</strong> ~1,000 AI analyses per month. Upgrade from Settings &rarr; Profile &amp; Plan.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Settings page -->
+<div id="page-settings" class="page-view" style="display:none">
+  <div class="settings-layout">
+
+    <!-- Left sidebar nav -->
+    <nav class="settings-sidebar" aria-label="Settings sections">
+      <div class="settings-sidebar-group">
+        <div class="settings-sidebar-group-label">Customization</div>
+        <button class="settings-sidebar-item active" data-settings-section="board">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Board
+        </button>
+      </div>
+      <div class="settings-sidebar-group">
+        <div class="settings-sidebar-group-label">Play</div>
+        <button class="settings-sidebar-item" data-settings-section="gameplay">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 L12 7 M12 17 L12 22 M4.22 4.22 L7.76 7.76 M16.24 16.24 L19.78 19.78 M2 12 L7 12 M17 12 L22 12 M4.22 19.78 L7.76 16.24 M16.24 7.76 L19.78 4.22"/></svg>
+          Gameplay
+        </button>
+      </div>
+      <div class="settings-sidebar-group">
+        <div class="settings-sidebar-group-label">Info</div>
+        <button class="settings-sidebar-item" data-settings-section="about">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          About &amp; Contact
+        </button>
+      </div>
+      <div class="settings-sidebar-group">
+        <div class="settings-sidebar-group-label">Your Account</div>
+        <button class="settings-sidebar-item" data-settings-section="account">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profile &amp; Plan
+        </button>
+        <button class="settings-sidebar-item" data-settings-section="security">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Security
+        </button>
+      </div>
+    </nav>
+
+    <!-- Right content area -->
+    <div class="settings-main">
+
+      <!-- ── About panel ── -->
+      <div class="settings-panel" id="settings-panel-about" style="display:none">
+        <div class="settings-panel-header">
+          <h2 class="settings-page-title">About &amp; Contact</h2>
+          <p class="settings-page-subtitle">Chess Explain: neural chess analysis and training.</p>
+        </div>
+        <div class="settings-section">
+          <div class="about-pills-row">
+            <span class="about-pill"><span class="about-pill-dot about-pill-dot--green"></span>Google Gemini</span>
+            <span class="about-pill"><span class="about-pill-dot about-pill-dot--blue"></span>Stockfish Engine</span>
+            <span class="about-pill"><span class="about-pill-dot about-pill-dot--purple"></span>Free &middot; Premium &middot; Pro</span>
+          </div>
+        </div>
+        <div class="settings-section">
+          <h3 class="settings-section-title">What is Chess Explain?</h3>
+          <p class="settings-about-text">Chess Explain uses Google Gemini and Stockfish to help players at all levels understand positions, learn from their games, and improve their chess thinking.</p>
+          <ul class="settings-about-list">
+            <li>Real-time Stockfish evaluation and best-move suggestions</li>
+            <li>Neural commentary tailored to Beginner, Intermediate, or Advanced level</li>
+            <li>Tactical puzzle training with adaptive difficulty</li>
+            <li>Game collection, PGN import, and community sharing</li>
+          </ul>
+        </div>
+        <div class="settings-section">
+          <h3 class="settings-section-title">Pricing</h3>
+          <p class="settings-about-text"><strong>Free:</strong> ~10 AI analyses per month with a free account, no credit card required.<br><strong>Premium ($7.99/mo or $76.99/yr):</strong> ~200 AI analyses per month.<br><strong>Pro ($19.99/mo or $191.99/yr):</strong> ~1,000 AI analyses per month. Upgrade from Profile &amp; Plan.</p>
+        </div>
+        <div class="settings-section">
+          <h3 class="settings-section-title">Get in Touch</h3>
+          <form class="contact-form settings-contact-form" id="settings-contact-form" novalidate>
+            <div class="contact-field-row">
+              <div class="contact-field">
+                <label class="contact-label" for="sc-name">Your name</label>
+                <input class="contact-input" type="text" id="sc-name" name="name" placeholder="Alex Fischer" autocomplete="name" required maxlength="100">
+              </div>
+              <div class="contact-field">
+                <label class="contact-label" for="sc-email">Email address</label>
+                <input class="contact-input" type="email" id="sc-email" name="email" placeholder="you@example.com" autocomplete="email" required>
+              </div>
+            </div>
+            <div class="contact-field">
+              <label class="contact-label" for="sc-subject">Subject</label>
+              <select class="contact-input contact-select" id="sc-subject" name="subject" required>
+                <option value="" disabled selected>Select a topic…</option>
+                <option value="bug">Bug report</option>
+                <option value="feature">Feature request</option>
+                <option value="account">Account or billing</option>
+                <option value="question">General question</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="contact-field">
+              <label class="contact-label" for="sc-message">Message</label>
+              <textarea class="contact-input contact-textarea" id="sc-message" name="message" placeholder="Describe your issue or idea…" required minlength="20" maxlength="2000" rows="5"></textarea>
+            </div>
+            <input type="text" name="website" class="contact-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <div class="contact-error" id="sc-error" role="alert" style="display:none"></div>
+            <div class="contact-success" id="sc-success" role="status" style="display:none">
+              <span class="contact-success-icon">&#10003;</span> Message sent. Thank you!
+            </div>
+            <button type="submit" class="btn-primary contact-submit" id="btn-sc-submit">Send message</button>
+          </form>
+        </div>
+        <div class="settings-section">
+          <p class="settings-about-footer"><a href="./terms.html" class="auth-link" target="_blank">Terms of Service</a> · <a href="./privacy.html" class="auth-link" target="_blank">Privacy Policy</a></p>
+        </div>
+      </div><!-- /settings-panel-about -->
+
+      <!-- ── Board panel ── -->
+      <div class="settings-panel" id="settings-panel-board">
+        <div class="settings-panel-header">
+          <h2 class="settings-page-title">Board Settings</h2>
+          <p class="settings-page-subtitle">Customize the look and feel of your chess board.</p>
+        </div>
+
+    <div class="settings-section">
+      <h3 class="settings-section-title">Board Colors</h3>
+      <div class="color-scheme-grid" id="color-scheme-grid">
+        <button class="color-scheme-swatch" data-light="#e8d8ba" data-dark="#4e7249">
+          <div class="color-scheme-preview">
+            <span class="csq csq-light" style="background:#e8d8ba"></span>
+            <span class="csq csq-dark"  style="background:#4e7249"></span>
+            <span class="csq csq-dark"  style="background:#4e7249"></span>
+            <span class="csq csq-light" style="background:#e8d8ba"></span>
+          </div>
+          <span class="color-scheme-name">Classic</span>
+        </button>
+        <button class="color-scheme-swatch" data-light="#f0d9b5" data-dark="#b58863">
+          <div class="color-scheme-preview">
+            <span class="csq csq-light" style="background:#f0d9b5"></span>
+            <span class="csq csq-dark"  style="background:#b58863"></span>
+            <span class="csq csq-dark"  style="background:#b58863"></span>
+            <span class="csq csq-light" style="background:#f0d9b5"></span>
+          </div>
+          <span class="color-scheme-name">Walnut</span>
+        </button>
+        <button class="color-scheme-swatch" data-light="#dee3e6" data-dark="#8ca2ad">
+          <div class="color-scheme-preview">
+            <span class="csq csq-light" style="background:#dee3e6"></span>
+            <span class="csq csq-dark"  style="background:#8ca2ad"></span>
+            <span class="csq csq-dark"  style="background:#8ca2ad"></span>
+            <span class="csq csq-light" style="background:#dee3e6"></span>
+          </div>
+          <span class="color-scheme-name">Blue</span>
+        </button>
+        <button class="color-scheme-swatch" data-light="#cdd6e0" data-dark="#6b8299">
+          <div class="color-scheme-preview">
+            <span class="csq csq-light" style="background:#cdd6e0"></span>
+            <span class="csq csq-dark"  style="background:#6b8299"></span>
+            <span class="csq csq-dark"  style="background:#6b8299"></span>
+            <span class="csq csq-light" style="background:#cdd6e0"></span>
+          </div>
+          <span class="color-scheme-name">Slate</span>
+        </button>
+        <button class="color-scheme-swatch" data-light="#d8e8f0" data-dark="#4a7fa8">
+          <div class="color-scheme-preview">
+            <span class="csq csq-light" style="background:#d8e8f0"></span>
+            <span class="csq csq-dark"  style="background:#4a7fa8"></span>
+            <span class="csq csq-dark"  style="background:#4a7fa8"></span>
+            <span class="csq csq-light" style="background:#d8e8f0"></span>
+          </div>
+          <span class="color-scheme-name">Ice</span>
+        </button>
+        <button class="color-scheme-swatch" data-light="#b0bec5" data-dark="#37474f">
+          <div class="color-scheme-preview">
+            <span class="csq csq-light" style="background:#b0bec5"></span>
+            <span class="csq csq-dark"  style="background:#37474f"></span>
+            <span class="csq csq-dark"  style="background:#37474f"></span>
+            <span class="csq csq-light" style="background:#b0bec5"></span>
+          </div>
+          <span class="color-scheme-name">Midnight</span>
+        </button>
+        <button class="color-scheme-swatch" data-light="#f0d5d5" data-dark="#a04060">
+          <div class="color-scheme-preview">
+            <span class="csq csq-light" style="background:#f0d5d5"></span>
+            <span class="csq csq-dark"  style="background:#a04060"></span>
+            <span class="csq csq-dark"  style="background:#a04060"></span>
+            <span class="csq csq-light" style="background:#f0d5d5"></span>
+          </div>
+          <span class="color-scheme-name">Rose</span>
+        </button>
+        <button class="color-scheme-swatch" data-light="#c8e6c9" data-dark="#2e7d32">
+          <div class="color-scheme-preview">
+            <span class="csq csq-light" style="background:#c8e6c9"></span>
+            <span class="csq csq-dark"  style="background:#2e7d32"></span>
+            <span class="csq csq-dark"  style="background:#2e7d32"></span>
+            <span class="csq csq-light" style="background:#c8e6c9"></span>
+          </div>
+          <span class="color-scheme-name">Emerald</span>
+        </button>
+      </div>
+
+      <div class="custom-color-row">
+        <label class="custom-color-input">
+          <span class="custom-color-label">Light squares</span>
+          <input type="color" id="color-light-picker" value="#e8d8ba">
+        </label>
+        <label class="custom-color-input">
+          <span class="custom-color-label">Dark squares</span>
+          <input type="color" id="color-dark-picker" value="#4e7249">
+        </label>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3 class="settings-section-title">Piece Style</h3>
+      <div class="piece-set-grid" id="piece-set-grid">
+        <button class="piece-set-card" data-piece-set="bold">
+          <div class="piece-set-preview">
+            <img src="./images/chess_bold_white_king.png" alt="Bold king" class="piece-set-king-img" aria-hidden="true">
+          </div>
+          <span class="piece-set-name">Bold</span>
+        </button>
+
+        <button class="piece-set-card" data-piece-set="woodcut">
+          <div class="piece-set-preview">
+            <img src="./images/chess_woodcut_white_king.png" alt="Woodcut king" class="piece-set-king-img" aria-hidden="true">
+          </div>
+          <span class="piece-set-name">Woodcut</span>
+        </button>
+
+        <button class="piece-set-card" data-piece-set="minimal">
+          <div class="piece-set-preview">
+            <img src="./images/chess_minimal_white_king.png" alt="Minimal king" class="piece-set-king-img" aria-hidden="true">
+          </div>
+          <span class="piece-set-name">Minimal</span>
+        </button>
+
+        <button class="piece-set-card" data-piece-set="blind">
+          <div class="piece-set-preview piece-set-preview--blind">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </div>
+          <span class="piece-set-name">Blind</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3 class="settings-section-title">Board Options</h3>
+      <div class="board-options-list">
+        <div class="board-option-row">
+          <span class="board-option-label">Rounded corners</span>
+          <label class="settings-toggle">
+            <input type="checkbox" id="toggle-rounded-corners" checked>
+            <span class="settings-toggle-track">
+              <span class="settings-toggle-thumb"></span>
+            </span>
+          </label>
+        </div>
+        <div class="board-option-row">
+          <span class="board-option-label">Move animation</span>
+          <label class="settings-toggle">
+            <input type="checkbox" id="toggle-move-animation" checked>
+            <span class="settings-toggle-track">
+              <span class="settings-toggle-thumb"></span>
+            </span>
+          </label>
+        </div>
+        <div class="board-option-row">
+          <span class="board-option-label">Highlight legal moves</span>
+          <label class="settings-toggle">
+            <input type="checkbox" id="toggle-highlight-legal" checked>
+            <span class="settings-toggle-track">
+              <span class="settings-toggle-thumb"></span>
+            </span>
+          </label>
+        </div>
+        <div class="board-option-row">
+          <span class="board-option-label">File &amp; rank coordinates</span>
+          <label class="settings-toggle">
+            <input type="checkbox" id="toggle-show-notation" checked>
+            <span class="settings-toggle-track">
+              <span class="settings-toggle-thumb"></span>
+            </span>
+          </label>
+        </div>
+        <div class="board-option-row">
+          <span class="board-option-label">Move sounds</span>
+          <label class="settings-toggle">
+            <input type="checkbox" id="toggle-move-sounds" checked>
+            <span class="settings-toggle-track">
+              <span class="settings-toggle-thumb"></span>
+            </span>
+          </label>
+        </div>
+        <div class="board-option-row">
+          <span class="board-option-label">Best move arrow</span>
+          <label class="settings-toggle">
+            <input type="checkbox" id="toggle-move-arrow">
+            <span class="settings-toggle-track">
+              <span class="settings-toggle-thumb"></span>
+            </span>
+          </label>
+        </div>
+        <div class="board-option-row">
+          <span class="board-option-label">Figurine notation</span>
+          <label class="settings-toggle">
+            <input type="checkbox" id="toggle-figurine-notation">
+            <span class="settings-toggle-track">
+              <span class="settings-toggle-thumb"></span>
+            </span>
+          </label>
+        </div>
+        <div class="board-option-row">
+          <span class="board-option-label">Light mode</span>
+          <label class="settings-toggle">
+            <input type="checkbox" id="toggle-light-mode">
+            <span class="settings-toggle-track">
+              <span class="settings-toggle-thumb"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+      </div><!-- /settings-panel-board -->
+
+      <!-- ── Gameplay panel ── -->
+      <div class="settings-panel" id="settings-panel-gameplay" style="display:none">
+        <div class="settings-panel-header">
+          <h2 class="settings-page-title">Gameplay</h2>
+          <p class="settings-page-subtitle">Configure how you play against opponents.</p>
+        </div>
+
+        <div class="settings-section">
+          <h3 class="settings-section-title">Play Options</h3>
+          <div class="board-options-list">
+            <div class="board-option-row">
+              <div class="board-option-info">
+                <span class="board-option-label">Auto-queen promotion</span>
+                <span class="board-option-desc">Automatically promote pawns to queen without a dialog.</span>
+              </div>
+              <label class="settings-toggle">
+                <input type="checkbox" id="toggle-auto-queen">
+                <span class="settings-toggle-track">
+                  <span class="settings-toggle-thumb"></span>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+
+      </div><!-- /settings-panel-gameplay -->
+
+      <!-- ── Profile & Plan panel ── -->
+      <div class="settings-panel" id="settings-panel-account" style="display:none">
+        <div class="settings-panel-header">
+          <h2 class="settings-page-title">Profile &amp; Plan</h2>
+          <p class="settings-page-subtitle">Manage your account details and subscription.</p>
+        </div>
+
+        <!-- Logged-out state -->
+        <div id="account-logged-out" style="display:none">
+          <div class="settings-section">
+            <div class="account-signin-prompt">
+              <div class="account-signin-icon"><img class="piece-icon" src="./images/chess_bold_black_queen.png" alt="" aria-hidden="true"></div>
+              <h3>Sign in to manage your account</h3>
+              <p>Create a free account to save your progress and upgrade to Premium.</p>
+              <div class="account-signin-btns">
+                <button class="btn-primary" id="account-btn-login">Log in</button>
+                <button class="btn-secondary" id="account-btn-signup">Create account</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Logged-in state -->
+        <div id="account-logged-in" style="display:none">
+          <!-- Profile -->
+          <div class="settings-section">
+            <h3 class="settings-section-title">Profile</h3>
+
+            <!-- Avatar upload -->
+            <div class="account-avatar-section">
+              <div class="account-avatar-wrap">
+                <div class="profile-avatar account-avatar-preview" id="account-avatar-preview"><span id="account-avatar-initial">?</span></div>
+                <div class="account-avatar-controls">
+                  <label class="btn-secondary account-avatar-btn" for="avatar-file-input">Upload photo</label>
+                  <input
+                    type="file"
+                    id="avatar-file-input"
+                    accept="image/jpeg,image/png,image/webp,image/gif"
+                    style="display:none"
+                    aria-label="Upload profile picture"
+                  >
+                  <button class="account-avatar-remove" id="btn-remove-avatar" type="button" style="display:none">Remove photo</button>
+                </div>
+              </div>
+              <p class="account-avatar-hint">JPG, PNG or WebP &middot; max 5 MB</p>
+              <div class="account-avatar-status" id="avatar-upload-status" role="status" aria-live="polite" style="display:none"></div>
+            </div>
+
+            <div class="account-profile-rows">
+              <div class="account-profile-row account-profile-row--username">
+                <span class="account-profile-label">Username</span>
+                <span class="account-profile-value" id="account-username">—</span>
+                <button class="btn-secondary account-username-edit-btn" id="btn-username-edit" type="button">Change</button>
+              </div>
+              <div class="account-username-editor" id="username-editor" style="display:none">
+                <form class="security-form" id="change-username-form" novalidate>
+                  <div class="security-field">
+                    <label class="security-label" for="cu-new">New username</label>
+                    <input
+                      class="security-input"
+                      type="text"
+                      id="cu-new"
+                      autocomplete="off"
+                      autocapitalize="off"
+                      spellcheck="false"
+                      required
+                      minlength="3"
+                      maxlength="30"
+                      placeholder="3–30 letters, numbers or underscores"
+                    >
+                  </div>
+                  <div class="security-error" id="cu-error" role="alert" style="display:none"></div>
+                  <div class="account-username-actions">
+                    <button type="submit" class="btn-primary security-submit">Save username</button>
+                    <button type="button" class="btn-secondary" id="btn-username-cancel">Cancel</button>
+                  </div>
+                  <p class="account-username-hint">You can change your username once every 30 days.</p>
+                </form>
+              </div>
+              <div class="account-username-cooldown" id="username-cooldown-note" style="display:none"></div>
+              <div class="account-profile-row">
+                <span class="account-profile-label">Email</span>
+                <span class="account-profile-value" id="account-email">—</span>
+              </div>
+              <div class="account-profile-row">
+                <span class="account-profile-label">Member since</span>
+                <span class="account-profile-value" id="account-since">—</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /settings-panel-account -->
+
+      <!-- ── Security panel ── -->
+      <div class="settings-panel" id="settings-panel-security" style="display:none">
+        <div class="settings-panel-header">
+          <h2 class="settings-page-title">Security</h2>
+          <p class="settings-page-subtitle">Manage your password and account safety.</p>
+        </div>
+
+        <!-- Logged-out state -->
+        <div id="security-logged-out" style="display:none">
+          <div class="settings-section">
+            <div class="account-signin-prompt">
+              <div class="account-signin-icon"><svg aria-hidden="true" viewBox="0 0 44 56" fill="currentColor" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
+                <!-- shackle -->
+                <path d="M10 24 L10 16 C10 7.2 34 7.2 34 16 L34 24" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <!-- body -->
+                <rect x="5" y="24" width="34" height="26" rx="4" ry="4"/>
+                <!-- keyhole ring -->
+                <circle cx="22" cy="37" r="4" fill="none" stroke="white" stroke-width="2.5"/>
+                <!-- keyhole stem -->
+                <rect x="20" y="39" width="4" height="6" rx="1" fill="white"/>
+              </svg></div>
+              <h3>Sign in to manage security settings</h3>
+              <p>Log in to change your password or delete your account.</p>
+              <div class="account-signin-btns">
+                <button class="btn-primary" id="security-btn-login">Log in</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Logged-in state -->
+        <div id="security-logged-in" style="display:none">
+          <!-- Change password -->
+          <div class="settings-section">
+            <h3 class="settings-section-title">Change Password</h3>
+            <form class="security-form" id="change-password-form" novalidate>
+              <div class="security-field">
+                <label class="security-label" for="cp-current">Current password</label>
+                <input class="security-input" type="password" id="cp-current" autocomplete="current-password" required>
+              </div>
+              <div class="security-field">
+                <label class="security-label" for="cp-new">New password</label>
+                <input class="security-input" type="password" id="cp-new" autocomplete="new-password" required minlength="8" placeholder="At least 8 characters">
+              </div>
+              <div class="security-field">
+                <label class="security-label" for="cp-confirm">Confirm new password</label>
+                <input class="security-input" type="password" id="cp-confirm" autocomplete="new-password" required>
+              </div>
+              <div class="security-error" id="cp-error" role="alert" style="display:none"></div>
+              <div class="security-success" id="cp-success" role="status" style="display:none">Password changed successfully.</div>
+              <button type="submit" class="btn-primary security-submit">Update password</button>
+            </form>
+          </div>
+
+          <!-- Danger zone -->
+          <div class="settings-section settings-section--danger">
+            <h3 class="settings-section-title settings-section-title--danger">Danger Zone</h3>
+            <p class="settings-danger-desc">Permanently delete your account and all associated data. This cannot be undone.</p>
+            <button class="btn-danger-outline" id="btn-delete-account-open">Delete my account</button>
+          </div>
+        </div>
+      </div><!-- /settings-panel-security -->
+
+    </div><!-- /settings-main -->
+  </div><!-- /settings-layout -->
+</div>
+
+<!-- PGN import modal -->
+<div class="modal-overlay" id="pgn-modal" role="dialog" aria-modal="true" aria-labelledby="pgn-modal-title" style="display:none">
+  <div class="modal-box pgn-modal-expanded">
+    <div class="pgn-modal-head">
+      <h2 id="pgn-modal-title">Import Game</h2>
+      <button class="pgn-modal-close-btn" id="btn-cancel-pgn" aria-label="Close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="pgn-import-tabs" role="tablist">
+      <button class="pgn-import-tab pgn-import-tab--active" data-pane="paste" role="tab" aria-selected="true" aria-controls="pgn-pane-paste">Paste PGN</button>
+      <button class="pgn-import-tab" data-pane="provider" role="tab" aria-selected="false" aria-controls="pgn-pane-provider">Lichess</button>
+    </div>
+    <!-- Paste tab -->
+    <div class="pgn-import-pane" id="pgn-pane-paste" role="tabpanel">
+      <textarea
+        class="pgn-textarea"
+        id="pgn-input"
+        placeholder="Paste a PGN game here and click Import..."
+        aria-label="PGN input"
+        spellcheck="false"
+      ></textarea>
+      <div class="error-msg" id="pgn-error" role="alert"></div>
+      <div class="modal-actions">
+        <label class="collection-file-label" style="flex:0 0 auto" title="Upload a PGN file">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Upload file
+          <input type="file" id="pgn-file-input" accept=".pgn,text/plain" />
+        </label>
+        <button class="btn-primary" id="btn-import-pgn">Import PGN</button>
+      </div>
+    </div>
+    <!-- Provider tab -->
+    <div class="pgn-import-pane pgn-import-pane--hidden" id="pgn-pane-provider" role="tabpanel">
+      <div class="pgn-provider-fields">
+        <div class="collection-import-provider">
+          <div class="collection-import-provider-head">
+            <span class="collection-provider-name">Lichess</span>
+            <span class="collection-provider-hint">Recent games</span>
+          </div>
+          <div class="collection-import-row">
+            <input class="collection-import-input" id="pgn-lichess-username" type="text" placeholder="Username" autocomplete="off" />
+            <button class="btn-secondary" id="pgn-btn-import-lichess">Fetch games</button>
+          </div>
+        </div>
+      </div>
+      <div class="import-progress-wrap" id="pgn-provider-progress" hidden>
+        <div class="import-progress-bar"></div>
+      </div>
+      <div class="error-msg" id="pgn-provider-error" role="alert"></div>
+      <div class="pgn-game-list" id="pgn-game-list" hidden></div>
+    </div>
+  </div>
+</div>
+
+<!-- Collection import modal -->
+<div class="modal-overlay" id="collection-import-modal" role="dialog" aria-modal="true" aria-labelledby="collection-import-modal-title" style="display:none">
+  <div class="modal-box collection-import-modal-box">
+    <div class="collection-import-modal-head">
+      <div>
+        <h2 id="collection-import-modal-title">Import games</h2>
+        <p class="collection-import-modal-subtitle">Bring in PGNs or pull recent games from Lichess.</p>
+      </div>
+      <button class="collection-modal-close" id="btn-close-collection-import" type="button" aria-label="Close import modal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+
+    <div class="collection-import">
+      <div class="collection-import-grid">
+        <div class="collection-import-card">
+          <h4 class="collection-import-title">Bulk PGN import</h4>
+          <p class="collection-import-hint">Paste multiple games or upload a PGN file.</p>
+
+          <textarea
+            class="pgn-textarea collection-import-textarea"
+            id="collection-pgn-bulk-input"
+            placeholder="Paste one or more PGNs here…"
+            aria-label="Bulk PGN input"
+            spellcheck="false"
+          ></textarea>
+
+          <div class="collection-import-row">
+            <label class="collection-file-label">
+              <input type="file" id="collection-pgn-file" accept=".pgn,text/plain" multiple />
+              <span>Choose PGN file(s)</span>
+            </label>
+            <button class="btn-primary collection-import-btn" id="btn-collection-import-pgn">Import to collection</button>
+          </div>
+
+          <div class="import-progress-wrap" id="bulk-import-progress" hidden>
+            <div class="import-progress-bar" id="bulk-import-progress-bar"></div>
+          </div>
+          <div class="error-msg" id="collection-import-error" role="alert"></div>
+          <div class="collection-import-status" id="collection-import-status" aria-live="polite"></div>
+        </div>
+
+        <div class="collection-import-card">
+          <h4 class="collection-import-title">Import player games</h4>
+          <p class="collection-import-hint">Fetch recent games by username.</p>
+
+          <div class="collection-import-provider">
+            <div class="collection-import-provider-head">
+              <span class="collection-provider-name">Lichess</span>
+              <span class="collection-provider-hint">Recent games</span>
+            </div>
+            <div class="collection-import-row">
+              <input class="collection-import-input" id="lichess-username" type="text" placeholder="Username" autocomplete="off" />
+              <button class="btn-secondary" id="btn-import-lichess">Import</button>
+            </div>
+          </div>
+
+          <div class="import-progress-wrap" id="provider-import-progress" hidden>
+            <div class="import-progress-bar" id="provider-import-progress-bar"></div>
+          </div>
+          <div class="error-msg" id="collection-provider-error" role="alert"></div>
+          <div class="collection-import-status" id="collection-provider-status" aria-live="polite"></div>
+          <div class="coll-game-picker" id="collection-game-picker" hidden>
+            <div class="coll-game-picker-toolbar">
+              <span class="coll-game-picker-count" id="coll-game-picker-count"></span>
+              <button class="coll-picker-toggle-all" id="btn-coll-picker-toggle-all" type="button">Deselect all</button>
+            </div>
+            <div class="coll-game-picker-list" id="coll-game-picker-list"></div>
+            <div class="coll-game-picker-footer">
+              <button class="btn-primary coll-picker-import-btn" id="btn-coll-picker-import" type="button">Import games</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Collection detail import modal -->
+<div class="modal-overlay" id="cd-import-modal" role="dialog" aria-modal="true" aria-labelledby="cd-import-modal-title" style="display:none">
+  <div class="modal-box collection-import-modal-box">
+    <div class="collection-import-modal-head">
+      <div>
+        <h2 id="cd-import-modal-title">Import into collection</h2>
+        <p class="collection-import-modal-subtitle">Bring in PGNs or pull recent games from Lichess.</p>
+      </div>
+      <button class="collection-modal-close" id="btn-cd-import-close" type="button" aria-label="Close import modal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+
+    <div class="collection-import">
+      <div class="collection-import-grid">
+        <div class="collection-import-card">
+          <h4 class="collection-import-title">Bulk PGN import</h4>
+          <p class="collection-import-hint">Paste multiple games or upload a PGN file.</p>
+
+          <textarea
+            class="pgn-textarea collection-import-textarea"
+            id="cd-pgn-bulk-input"
+            placeholder="Paste one or more PGNs here…"
+            aria-label="Bulk PGN input"
+            spellcheck="false"
+          ></textarea>
+
+          <div class="collection-import-row">
+            <label class="collection-file-label">
+              <input type="file" id="cd-pgn-file" accept=".pgn,text/plain" multiple />
+              <span>Choose PGN file(s)</span>
+            </label>
+            <button class="btn-primary collection-import-btn" id="btn-cd-import-pgn">Import games</button>
+          </div>
+
+          <div class="import-progress-wrap" id="cd-bulk-progress" hidden>
+            <div class="import-progress-bar"></div>
+          </div>
+          <div class="error-msg" id="cd-import-error" role="alert"></div>
+          <div class="collection-import-status" id="cd-import-status" aria-live="polite"></div>
+        </div>
+
+        <div class="collection-import-card">
+          <h4 class="collection-import-title">Import player games</h4>
+          <p class="collection-import-hint">Fetch recent games by username.</p>
+
+          <div class="collection-import-provider">
+            <div class="collection-import-provider-head">
+              <span class="collection-provider-name">Lichess</span>
+              <span class="collection-provider-hint">Recent games</span>
+            </div>
+            <div class="collection-import-row">
+              <input class="collection-import-input" id="cd-lichess-username" type="text" placeholder="Username" autocomplete="off" />
+              <button class="btn-secondary" id="btn-cd-import-lichess">Import</button>
+            </div>
+          </div>
+
+          <div class="import-progress-wrap" id="cd-provider-progress" hidden>
+            <div class="import-progress-bar"></div>
+          </div>
+          <div class="error-msg" id="cd-provider-error" role="alert"></div>
+          <div class="collection-import-status" id="cd-provider-status" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Pawn promotion picker (play mode, auto-queen off) -->
+<div class="modal-overlay" id="promo-picker-modal" role="dialog" aria-modal="true" aria-labelledby="promo-picker-title" style="display:none">
+  <div class="modal-box promo-picker-box">
+    <h2 id="promo-picker-title">Promote pawn</h2>
+    <p class="promo-picker-desc">Choose a piece to promote to</p>
+    <div class="promo-options" id="promo-options">
+      <!-- populated by JS with piece images from current set -->
+    </div>
+    <p class="promo-picker-hint">Press <kbd>Q</kbd> <kbd>R</kbd> <kbd>B</kbd> <kbd>N</kbd></p>
+  </div>
+</div>
+
+<!-- Warning: current game will be lost -->
+<div class="modal-overlay" id="warn-lose-game-modal" role="dialog" aria-modal="true" aria-labelledby="warn-lose-game-title" style="display:none">
+  <div class="modal-box">
+    <h2 id="warn-lose-game-title">Unsaved changes</h2>
+    <p class="warn-modal-text">You have unsaved changes that will be lost. Would you like to save this game first?</p>
+    <div class="modal-actions">
+      <button class="btn-primary" id="btn-warn-save">Save</button>
+      <button class="btn-danger" id="btn-warn-continue">Discard</button>
+      <button class="btn-secondary" id="btn-warn-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Logout confirmation modal -->
+<div class="modal-overlay" id="logout-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="logout-confirm-title" style="display:none">
+  <div class="modal-box">
+    <h2 id="logout-confirm-title">Log out</h2>
+    <p class="warn-modal-text">Are you sure you want to log out?</p>
+    <div class="modal-actions">
+      <button class="btn-danger" id="btn-logout-confirm">Log out</button>
+      <button class="btn-secondary" id="btn-logout-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Analysis-running confirmation modal -->
+<div class="modal-overlay" id="analysis-running-modal" role="dialog" aria-modal="true" aria-labelledby="analysis-running-title" style="display:none">
+  <div class="modal-box">
+    <h2 id="analysis-running-title">Analysis in progress</h2>
+    <p class="warn-modal-text">An analysis is currently running. Leaving now will cancel it.</p>
+    <div class="modal-actions">
+      <button class="btn-danger" id="btn-analysis-continue">Cancel analysis</button>
+      <button class="btn-secondary" id="btn-analysis-stay">Stay</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete comment confirmation modal -->
+<div class="modal-overlay" id="delete-comment-modal" role="dialog" aria-modal="true" aria-labelledby="delete-comment-modal-title" style="display:none">
+  <div class="modal-box">
+    <h2 id="delete-comment-modal-title">Delete comment</h2>
+    <p class="warn-modal-text">Are you sure you want to delete this comment? This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn-danger" id="btn-delete-comment-confirm">Delete</button>
+      <button class="btn-secondary" id="btn-delete-comment-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Position builder modal -->
+<div class="modal-overlay" id="position-builder-modal" role="dialog" aria-modal="true" aria-labelledby="position-builder-title" style="display:none">
+  <div class="modal-box modal-box-builder">
+    <h2 id="position-builder-title">Build Position</h2>
+    <div class="builder-palette-wrap">
+      <div class="builder-palette" id="builder-palette"><!-- populated by JS --></div>
+      <div class="builder-trash" id="builder-trash" title="Remove piece (or right-click on board)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg></div>
+      <button class="builder-flip-btn" id="btn-builder-flip" title="Flip board" aria-label="Flip board"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 16V4m0 0L3 8m4-4l4 4"/><path d="M17 8v12m0 0l4-4m-4 4l-4-4"/></svg></button>
+    </div>
+    <div class="builder-board-wrap">
+      <div id="builder-board"></div>
+    </div>
+    <div class="builder-fen-row">
+      <span class="builder-fen-label">FEN</span>
+      <input type="text" id="builder-fen-input" class="builder-fen-input" spellcheck="false" autocomplete="off" placeholder="Paste a FEN to load…">
+    </div>
+    <div class="builder-controls">
+      <div class="builder-control-group">
+        <span class="builder-control-label">Side to move</span>
+        <label class="builder-radio"><input type="radio" name="builder-side" value="w" checked> White</label>
+        <label class="builder-radio"><input type="radio" name="builder-side" value="b"> Black</label>
+      </div>
+      <div class="builder-control-group">
+        <span class="builder-control-label">Castling</span>
+        <label class="builder-check"><input type="checkbox" id="bc-K" checked> <abbr title="White kingside">K</abbr></label>
+        <label class="builder-check"><input type="checkbox" id="bc-Q" checked> <abbr title="White queenside">Q</abbr></label>
+        <label class="builder-check"><input type="checkbox" id="bc-k" checked> <abbr title="Black kingside">k</abbr></label>
+        <label class="builder-check"><input type="checkbox" id="bc-q" checked> <abbr title="Black queenside">q</abbr></label>
+      </div>
+    </div>
+    <div class="error-msg" id="builder-error" role="alert"></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="btn-builder-clear">Clear</button>
+      <button class="btn-secondary" id="btn-builder-reset">Reset</button>
+      <button class="btn-primary" id="btn-builder-apply">Apply Position</button>
+      <button class="btn-secondary" id="btn-builder-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Context menu for move history right-click actions -->
+<div class="move-context-menu" id="move-context-menu" role="menu" aria-hidden="true">
+  <button class="move-context-item" id="ctx-copy-pgn">Copy PGN up to here</button>
+  <button class="move-context-item" id="ctx-delete-from">Delete moves from here</button>
+  <div class="move-context-separator"></div>
+  <div class="move-context-annotations">
+    <span class="move-context-ann-label">Annotate:</span>
+    <button class="move-ann-btn" data-ann="!!"  title="Brilliant move">!!</button>
+    <button class="move-ann-btn" data-ann="!"   title="Good move">!</button>
+    <button class="move-ann-btn" data-ann="!?"  title="Interesting move">!?</button>
+    <button class="move-ann-btn" data-ann="?!"  title="Dubious move">?!</button>
+    <button class="move-ann-btn" data-ann="?"   title="Mistake">?</button>
+    <button class="move-ann-btn" data-ann="??"  title="Blunder">??</button>
+    <button class="move-ann-btn" data-ann="" title="Clear annotation"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+</div>
+
+<!-- Auth modal -->
+<div class="modal-overlay" id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title" style="display:none">
+  <div class="modal-box auth-modal-box">
+
+    <button class="auth-close-btn" id="btn-close-auth" aria-label="Close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+
+    <div class="auth-header">
+      <span class="auth-king-icon" aria-hidden="true"><img class="piece-icon" src="./images/chess_bold_black_queen.png" alt="" aria-hidden="true"></span>
+      <h2 id="auth-modal-title" class="auth-title">Welcome back</h2>
+      <p class="auth-subtitle" id="auth-subtitle">Sign in to your account</p>
+    </div>
+
+    <div class="auth-tabs" role="tablist">
+      <button class="auth-tab active" data-auth-tab="login" role="tab" aria-selected="true">Log in</button>
+      <button class="auth-tab" data-auth-tab="signup" role="tab" aria-selected="false">Sign up</button>
+    </div>
+
+    <div class="auth-social">
+      <div class="google-btn-slot" id="google-btn-slot" style="display:none"></div>
+      <button class="btn-social btn-google" type="button" id="btn-auth-google" data-client-id="">
+        <svg class="social-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Continue with Google
+      </button>
+    </div>
+
+    <div class="auth-divider"><span>or</span></div>
+
+    <div class="auth-forms-wrap">
+    <!-- Log in form -->
+    <form class="auth-form" id="auth-form-login" novalidate>
+      <div class="auth-field">
+        <label class="auth-label" for="login-email">Email or username</label>
+        <input class="auth-input" type="text" id="login-email" name="email"
+               placeholder="you@example.com or username" autocomplete="username" required>
+      </div>
+      <div class="auth-field">
+        <div class="auth-label-row">
+          <label class="auth-label" for="login-password">Password</label>
+          <a href="#" class="auth-link" id="link-forgot-password">Forgot password?</a>
+        </div>
+        <div class="auth-input-wrap">
+          <input class="auth-input" type="password" id="login-password" name="password"
+                 placeholder="••••••••" autocomplete="current-password" required minlength="6">
+          <button type="button" class="auth-eye-btn" data-target="login-password" aria-label="Toggle password visibility">
+            <svg class="eye-icon eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            <svg class="eye-icon eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="auth-error" id="login-error" role="alert" style="display:none"></div>
+      <button type="submit" class="btn-primary auth-submit">Log in</button>
+    </form>
+
+    <!-- Sign up form -->
+    <form class="auth-form" id="auth-form-signup" novalidate style="display:none">
+      <div class="auth-field">
+        <label class="auth-label" for="signup-username">Username</label>
+        <input class="auth-input" type="text" id="signup-username" name="username"
+               placeholder="chess_master42" autocomplete="username" required minlength="3" maxlength="30">
+      </div>
+      <div class="auth-field">
+        <label class="auth-label" for="signup-email">Email</label>
+        <input class="auth-input" type="email" id="signup-email" name="email"
+               placeholder="you@example.com" autocomplete="email" required>
+      </div>
+      <div class="auth-field">
+        <label class="auth-label" for="signup-password">Password</label>
+        <div class="auth-input-wrap">
+          <input class="auth-input" type="password" id="signup-password" name="password"
+                 placeholder="At least 8 characters" autocomplete="new-password" required minlength="8">
+          <button type="button" class="auth-eye-btn" data-target="signup-password" aria-label="Toggle password visibility">
+            <svg class="eye-icon eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            <svg class="eye-icon eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
+          </button>
+        </div>
+        <div class="auth-password-strength" id="password-strength" aria-live="polite">
+          <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+          <span class="strength-label" id="strength-label"></span>
+        </div>
+      </div>
+      <div class="auth-error" id="signup-error" role="alert" style="display:none"></div>
+      <button type="submit" class="btn-primary auth-submit">Create account</button>
+      <p class="auth-terms">By signing up, you agree to our <a href="./terms.html" class="auth-link" target="_blank">Terms</a> and <a href="./privacy.html" class="auth-link" target="_blank">Privacy Policy</a>.</p>
+    </form>
+
+    <!-- Forgot password step -->
+    <div id="auth-forgot-panel" style="display:none">
+      <form id="auth-form-forgot" novalidate>
+        <p class="auth-forgot-intro">Enter your email and we&rsquo;ll send you a reset link.</p>
+        <div class="auth-field">
+          <label class="auth-label" for="forgot-email">Email</label>
+          <input class="auth-input" type="email" id="forgot-email" name="email"
+                 placeholder="you@example.com" autocomplete="email" required>
+        </div>
+        <div class="auth-error" id="forgot-error" role="alert" style="display:none"></div>
+        <button type="submit" class="btn-primary auth-submit">Send reset link</button>
+      </form>
+      <div id="auth-forgot-sent" class="auth-sent-notice" style="display:none" role="status">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="auth-sent-icon" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.79 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012.68 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.64a16 16 0 006 6l1-1c.55-.55 1.4-.7 2.11-.45.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        <p>Check your inbox. If an account exists for that address, a reset link is on its way.</p>
+        <button type="button" class="auth-link auth-back-btn" id="btn-forgot-back-sent">Back to log in</button>
+      </div>
+      <button type="button" class="auth-link auth-back-btn" id="btn-forgot-back">&#8592; Back to log in</button>
+    </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- Email verification banner -->
+<div id="verify-banner" class="verify-banner" role="status" style="display:none">
+  <span class="verify-banner-text">Please verify your email address to keep your account secure.</span>
+  <button type="button" class="verify-banner-resend" id="btn-resend-verification">Resend email</button>
+  <button type="button" class="verify-banner-dismiss" id="btn-dismiss-verify-banner" aria-label="Dismiss"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+</div>
+
+<!-- Reset password modal (opened when ?action=reset&token=... is in URL) -->
+<div class="modal-overlay" id="reset-modal" role="dialog" aria-modal="true" aria-labelledby="reset-modal-title" style="display:none">
+  <div class="modal-box auth-modal-box">
+    <div class="auth-header">
+      <span class="auth-king-icon" aria-hidden="true"><img class="piece-icon" src="./images/chess_bold_black_queen.png" alt="" aria-hidden="true"></span>
+      <h2 id="reset-modal-title" class="auth-title">Set a new password</h2>
+      <p class="auth-subtitle">Choose a strong password for your account.</p>
+    </div>
+    <form id="reset-password-form" novalidate>
+      <div class="auth-field">
+        <label class="auth-label" for="reset-password-new">New password</label>
+        <div class="auth-input-wrap">
+          <input class="auth-input" type="password" id="reset-password-new" name="newPassword"
+                 placeholder="At least 8 characters" autocomplete="new-password" required minlength="8">
+          <button type="button" class="auth-eye-btn" data-target="reset-password-new" aria-label="Toggle password visibility">
+            <svg class="eye-icon eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            <svg class="eye-icon eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
+          </button>
+        </div>
+        <div class="auth-password-strength" id="reset-strength" aria-live="polite">
+          <div class="strength-bar"><div class="strength-fill" id="reset-strength-fill"></div></div>
+          <span class="strength-label" id="reset-strength-label"></span>
+        </div>
+      </div>
+      <div class="auth-field">
+        <label class="auth-label" for="reset-password-confirm">Confirm password</label>
+        <div class="auth-input-wrap">
+          <input class="auth-input" type="password" id="reset-password-confirm" name="confirmPassword"
+                 placeholder="••••••••" autocomplete="new-password" required minlength="8">
+        </div>
+      </div>
+      <div class="auth-error" id="reset-error" role="alert" style="display:none"></div>
+      <button type="submit" class="btn-primary auth-submit">Set new password</button>
+    </form>
+  </div>
+</div>
+
+<!-- Verify email modal -->
+<div class="modal-overlay" id="verify-email-modal" role="dialog" aria-modal="true" aria-labelledby="verify-email-modal-title" style="display:none">
+  <div class="modal-box verify-email-modal-box">
+    <button class="upgrade-close-btn" id="btn-close-verify-email" aria-label="Close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="upgrade-header">
+      <span class="upgrade-icon" aria-hidden="true">&#9993;</span>
+      <h2 id="verify-email-modal-title">Verify your email</h2>
+      <p class="upgrade-subtitle">You need to verify your email address before using neural analysis.</p>
+    </div>
+    <div class="verify-email-modal-body">
+      <p class="verify-email-modal-desc">We sent a verification link to your email when you signed up. Click the link in that email to activate your account.</p>
+      <button class="btn-primary verify-email-resend-btn" id="btn-resend-verification">Resend verification email</button>
+      <p class="verify-email-modal-note" id="verify-email-modal-note" style="display:none"></p>
+    </div>
+    <p class="upgrade-disclaimer">Check your spam folder if you don&rsquo;t see it.</p>
+  </div>
+</div>
+
+<!-- Upgrade modal -->
+<div class="modal-overlay" id="upgrade-modal" role="dialog" aria-modal="true" aria-labelledby="upgrade-modal-title" style="display:none">
+  <div class="modal-box upgrade-modal-box">
+    <button class="upgrade-close-btn" id="btn-close-upgrade" aria-label="Close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="upgrade-header">
+      <span class="upgrade-icon" aria-hidden="true"><img class="piece-icon" src="./images/chess_bold_black_queen.png" alt="" aria-hidden="true"></span>
+      <h2 id="upgrade-modal-title">Upgrade to Premium</h2>
+      <p id="upgrade-subtitle" class="upgrade-subtitle">You've used all your free analyses today.</p>
+    </div>
+    <div class="upgrade-billing-toggle" role="group" aria-label="Billing period">
+      <button class="upgrade-billing-btn upgrade-billing-btn--active" id="btn-billing-monthly" data-interval="monthly">Monthly</button>
+      <button class="upgrade-billing-btn" id="btn-billing-annual" data-interval="annual">Annual <span class="upgrade-billing-save">Save 20%</span></button>
+    </div>
+    <div class="upgrade-plans">
+      <div class="upgrade-plan upgrade-plan--free">
+        <div class="upgrade-plan-name">Free</div>
+        <div class="upgrade-plan-price">$0</div>
+        <ul class="upgrade-plan-features">
+          <li>10 AI analyses per month</li>
+          <li>Stockfish evaluation</li>
+          <li>Puzzles with rating</li>
+        </ul>
+      </div>
+      <div class="upgrade-plan upgrade-plan--premium">
+        <div class="upgrade-plan-best">Most popular</div>
+        <div class="upgrade-plan-name">Premium</div>
+        <div class="upgrade-plan-price" id="upgrade-plan-price">$7.99<span class="upgrade-plan-period">/month</span></div>
+        <div class="upgrade-plan-annual-note" id="upgrade-plan-annual-note" style="display:none">Billed $76.99/year</div>
+        <ul class="upgrade-plan-features">
+          <li><span class="upgrade-check">&#10003;</span> 200 AI analyses per month</li>
+          <li><span class="upgrade-check">&#10003;</span> AI puzzle hints</li>
+          <li><span class="upgrade-check">&#10003;</span> Persona commentary &amp; chat</li>
+          <li><span class="upgrade-check">&#10003;</span> Unlimited game saves</li>
+        </ul>
+      </div>
+    </div>
+    <div class="upgrade-actions">
+      <button class="btn-primary upgrade-cta-btn" id="btn-upgrade-checkout">Upgrade for $7.99/month</button>
+      <p class="upgrade-login-hint" id="upgrade-login-hint" style="display:none">
+        <a href="#" id="upgrade-login-link">Log in</a> or <a href="#" id="upgrade-signup-link">sign up</a> first, then upgrade.
+      </p>
+    </div>
+    <p class="upgrade-disclaimer">Cancel anytime. No hidden fees.</p>
+  </div>
+</div>
+
+<!-- Delete account confirmation modal -->
+<div class="modal-overlay" id="delete-account-modal" role="dialog" aria-modal="true" aria-labelledby="delete-account-title" style="display:none">
+  <div class="modal-box">
+    <h2 id="delete-account-title">Delete account?</h2>
+    <p class="warn-modal-text">This permanently deletes your account and all data. Enter your password to confirm.</p>
+    <div class="security-field" style="margin-top:1rem">
+      <input class="security-input" type="password" id="delete-account-password" placeholder="Your password" autocomplete="current-password">
+    </div>
+    <div class="security-error" id="delete-account-error" role="alert" style="display:none"></div>
+    <div class="modal-actions">
+      <button class="btn-danger" id="btn-delete-account-confirm">Yes, delete my account</button>
+      <button class="btn-secondary" id="btn-delete-account-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Play: Game over / save prompt modal -->
+<div class="modal-overlay" id="play-game-over-modal" role="dialog" aria-modal="true" aria-labelledby="play-game-over-title" style="display:none">
+  <div class="modal-box play-game-over-box">
+    <div class="play-over-result-badge" id="play-over-result-badge"></div>
+    <h2 id="play-game-over-title" class="play-over-heading">Game over</h2>
+    <p class="play-over-subtitle" id="play-over-subtitle">Save this game to your collection?</p>
+    <div class="play-over-elo" id="play-over-elo" style="display:none"></div>
+    <div class="play-over-title-field">
+      <label class="play-over-label" for="play-over-game-title">Game title</label>
+      <input type="text" class="play-over-input" id="play-over-game-title" maxlength="80">
+    </div>
+    <div class="modal-actions play-over-actions">
+      <button class="btn-rematch" id="btn-play-over-rematch" aria-label="Play a rematch with swapped colors">
+        <span class="rematch-icon" aria-hidden="true">↺</span> Rematch
+      </button>
+      <div class="play-over-divider"><span>or save this game</span></div>
+      <button class="btn-primary" id="btn-play-over-save">Save to collection</button>
+      <button class="btn-secondary" id="btn-play-over-analyze">Analyze game</button>
+      <button class="btn-secondary" id="btn-play-over-skip">No thanks</button>
+    </div>
+  </div>
+</div>
+
+<!-- Play: Save before leaving modal -->
+<div class="modal-overlay" id="play-save-modal" role="dialog" aria-modal="true" aria-labelledby="play-save-modal-title" style="display:none">
+  <div class="modal-box">
+    <h2 id="play-save-modal-title">Save this game?</h2>
+    <p class="warn-modal-text">You have a game in progress. Save it to your collection before leaving?</p>
+    <div class="play-over-title-field">
+      <label class="play-over-label" for="play-save-game-title">Game title</label>
+      <input type="text" class="play-over-input" id="play-save-game-title" maxlength="80">
+    </div>
+    <div class="modal-actions" style="flex-wrap:wrap">
+      <button class="btn-primary" id="btn-play-save-and-go">Save &amp; leave</button>
+      <button class="btn-danger" id="btn-play-discard-and-go">Discard</button>
+      <button class="btn-secondary" id="btn-play-save-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Play: Resign confirmation modal -->
+<div class="modal-overlay" id="play-resign-modal" role="dialog" aria-modal="true" aria-labelledby="play-resign-title" style="display:none">
+  <div class="modal-box">
+    <h2 id="play-resign-title">Resign?</h2>
+    <p class="warn-modal-text">Are you sure you want to resign this game?</p>
+    <div class="modal-actions">
+      <button class="btn-danger" id="btn-play-resign-confirm">Yes, resign</button>
+      <button class="btn-secondary" id="btn-play-resign-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Game insights modal -->
+<div class="modal-overlay" id="game-insights-modal" role="dialog" aria-modal="true" aria-labelledby="insights-modal-title" style="display:none">
+  <div class="modal-box game-insights-box">
+    <div class="insights-modal-head">
+      <div>
+        <h2 id="insights-modal-title">Game Analysis</h2>
+        <p class="insights-modal-subtitle">Here's how this game went</p>
+      </div>
+      <button class="insights-close-btn" id="btn-close-insights" type="button" aria-label="Close">&#215;</button>
+    </div>
+    <div class="insights-content" id="insights-content"></div>
+    <div class="insights-footer">
+      <button class="btn-insights-share" id="btn-insights-share" type="button" aria-label="Share this result">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+        <span>Share result</span>
+      </button>
+      <button class="btn-primary" id="btn-insights-ok">Start reviewing</button>
+    </div>
+  </div>
+</div>
+
+<div id="preview-board-container">
+  <div id="preview-board"></div>
+</div>
+
+<!-- Site footer with legal links -->
+<footer class="site-footer">
+  <a href="./terms.html" class="site-footer-link">Terms of Service</a>
+  <span class="site-footer-sep">&middot;</span>
+  <a href="./privacy.html" class="site-footer-link">Privacy Policy</a>
+</footer>
+
+<!-- Mobile drawer backdrop -->
+<div class="mobile-drawer-backdrop" id="mobile-drawer-backdrop"></div>
+
+<!-- Mobile navigation drawer -->
+<aside class="mobile-drawer" id="mobile-drawer" aria-label="Navigation menu">
+  <div class="drawer-header">
+    <div class="drawer-logo">
+      <img class="king-logo king-logo-dark" src="./images/white-king-logo.png" width="26" height="26" alt="" aria-hidden="true">
+      <img class="king-logo king-logo-light" src="./images/black-king-logo.png" width="26" height="26" alt="" aria-hidden="true">
+      <span class="site-title"><span class="site-title-chess">CHESS</span><span class="site-title-explain">Explain</span></span>
+    </div>
+    <button class="drawer-close-btn" id="btn-drawer-close" aria-label="Close menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <nav class="drawer-nav" aria-label="Main navigation">
+    <button class="drawer-nav-btn active" data-page="analysis">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+      <span>Analysis</span>
+    </button>
+    <button class="drawer-nav-btn" data-page="play">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <span>Play</span>
+    </button>
+    <button class="drawer-nav-btn" data-page="train">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3c0 1.1.6 2 1.5 2.6V9H8a1 1 0 0 0-1 1v2H5a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2v2a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-2h2a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1h-2v-2a1 1 0 0 0-1-1h-2.5V7.6A3 3 0 0 0 12 2z"/></svg>
+      <span>Puzzles</span>
+    </button>
+    <button class="drawer-nav-btn" data-page="collection">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+      <span>Collection</span>
+    </button>
+    <button class="drawer-nav-btn" data-page="settings">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <span>Settings</span>
+    </button>
+  </nav>
+
+  <div class="drawer-footer">
+    <div class="drawer-auth-section" id="drawer-auth-guest">
+      <button class="drawer-auth-btn drawer-btn-login" id="btn-drawer-login">Log in</button>
+      <button class="drawer-auth-btn drawer-btn-signup" id="btn-drawer-signup">Sign up free</button>
+    </div>
+    <div class="drawer-auth-section" id="drawer-auth-user" style="display:none">
+      <button class="drawer-auth-btn drawer-btn-logout" id="btn-drawer-logout">Log out</button>
+    </div>
+  </div>
+</aside>
+
+<!-- Mobile annotation popup -->
+<div class="mobile-ann-overlay" id="mobile-ann-overlay" aria-hidden="true">
+  <div class="mobile-ann-popup" id="mobile-ann-popup" role="dialog" aria-label="Annotations" aria-modal="true">
+    <div class="mobile-ann-popup-header">
+      <span class="mobile-ann-popup-title">Annotations</span>
+      <button class="icon-btn mobile-ann-popup-close" id="btn-mobile-ann-close" aria-label="Close annotations"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="mobile-ann-popup-body">
+      <div class="ann-toolbar-row">
+        <span class="ann-tb-label">Move</span>
+        <button class="ann-tb-btn ann-tb-move" data-ann="!!" title="Brilliant move">!!</button>
+        <button class="ann-tb-btn ann-tb-move" data-ann="!" title="Good move">!</button>
+        <button class="ann-tb-btn ann-tb-move" data-ann="!?" title="Interesting move">!?</button>
+        <button class="ann-tb-btn ann-tb-move" data-ann="?!" title="Dubious move">?!</button>
+        <button class="ann-tb-btn ann-tb-move" data-ann="?" title="Mistake">?</button>
+        <button class="ann-tb-btn ann-tb-move" data-ann="??" title="Blunder">??</button>
+      </div>
+      <div class="ann-toolbar-row">
+        <span class="ann-tb-label">Position</span>
+        <button class="ann-tb-btn ann-tb-pos" data-pos="=" title="Equal position">=</button>
+        <button class="ann-tb-btn ann-tb-pos" data-pos="∞" title="Unclear/Dynamic">∞</button>
+        <button class="ann-tb-btn ann-tb-pos" data-pos="⩲" title="Slight advantage for White">⩲</button>
+        <button class="ann-tb-btn ann-tb-pos" data-pos="⩱" title="Slight advantage for Black">⩱</button>
+        <button class="ann-tb-btn ann-tb-pos" data-pos="±" title="White is better">±</button>
+        <button class="ann-tb-btn ann-tb-pos" data-pos="∓" title="Black is better">∓</button>
+        <button class="ann-tb-btn ann-tb-pos" data-pos="+−" title="White is winning">+−</button>
+        <button class="ann-tb-btn ann-tb-pos" data-pos="−+" title="Black is winning">−+</button>
+      </div>
+      <div class="ann-toolbar-row">
+        <span class="ann-tb-label">Result</span>
+        <button class="ann-tb-btn ann-tb-result" data-result="1-0" title="White wins">1-0</button>
+        <button class="ann-tb-btn ann-tb-result" data-result="1/2-1/2" title="Draw">½-½</button>
+        <button class="ann-tb-btn ann-tb-result" data-result="0-1" title="Black wins">0-1</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile ask-question overlay -->
+<div class="mobile-ask-overlay" id="mobile-ask-overlay" aria-hidden="true">
+  <div class="mobile-ask-popup">
+    <div class="mobile-ask-popup-header">
+      <span class="mobile-ask-popup-title">Ask about this position</span>
+      <button class="mobile-ask-popup-close" id="btn-close-mobile-ask" aria-label="Close">&#10005;</button>
+    </div>
+    <div class="mobile-ask-popup-body">
+      <div class="skill-selector" id="mobile-ask-skill-selector" role="group" aria-label="Skill level">
+        <button class="skill-btn" data-level="beginner">Beginner</button>
+        <button class="skill-btn" data-level="intermediate">Intermediate</button>
+        <button class="skill-btn" data-level="advanced">Advanced</button>
+      </div>
+      <div class="mobile-ask-input-row">
+        <input type="text" class="question-input mobile-ask-input-field" id="mobile-ask-input-field"
+               placeholder="Ask about this position or move…" autocomplete="off">
+        <button class="question-send-btn" id="btn-mobile-ask-send" title="Ask">&#10148;</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile save game modal -->
+<div class="modal-overlay" id="mobile-save-modal" role="dialog" aria-modal="true" aria-labelledby="mobile-save-modal-title" style="display:none">
+  <div class="modal-box">
+    <h2 id="mobile-save-modal-title">Save Game</h2>
+    <p class="mobile-save-modal-hint">Give your game a name</p>
+    <input type="text" class="question-input mobile-save-modal-input" id="mobile-save-modal-input"
+           maxlength="100" autocomplete="off" spellcheck="false">
+    <div class="mobile-save-modal-error" id="mobile-save-modal-error" role="alert" style="display:none"></div>
+    <div class="modal-actions">
+      <button class="btn-primary" id="mobile-save-modal-confirm">Save</button>
+      <button class="btn-secondary" id="mobile-save-modal-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Save to Collection modal (analysis + play pages) -->
+<div class="modal-overlay" id="coll-save-modal" role="dialog" aria-modal="true" aria-labelledby="coll-save-modal-title" style="display:none">
+  <div class="modal-box coll-save-modal-box">
+    <div class="coll-save-modal-head">
+      <h2 id="coll-save-modal-title">Save Game</h2>
+      <button class="auth-close-btn" id="btn-coll-save-close" aria-label="Close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+
+    <!-- Title row -->
+    <div class="coll-save-title-row">
+      <label class="coll-save-label" for="coll-save-title-input">Game title</label>
+      <input class="coll-save-title-input" id="coll-save-title-input" type="text" maxlength="100" autocomplete="off" spellcheck="false">
+    </div>
+
+    <!-- Collections list (only shown when logged in) -->
+    <div id="coll-save-collections-wrap" style="display:none">
+      <div class="coll-save-label coll-save-label--section">Add to collections</div>
+      <div id="coll-save-list" class="coll-save-list">
+        <!-- Rendered by JS -->
+      </div>
+      <button class="coll-save-new-btn" id="btn-coll-save-create-new" type="button">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New collection…
+      </button>
+    </div>
+
+    <div id="coll-save-login-hint" class="coll-save-login-hint" style="display:none">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <a href="#" id="coll-save-login-link">Sign in</a> to organise games into named collections.
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-primary" id="btn-coll-save-confirm">Save game</button>
+      <button class="btn-secondary" id="btn-coll-save-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Create / Edit Collection modal -->
+<div class="modal-overlay" id="coll-create-modal" role="dialog" aria-modal="true" aria-labelledby="coll-create-modal-title" style="display:none">
+  <div class="modal-box coll-create-modal-box">
+    <div class="coll-save-modal-head">
+      <h2 id="coll-create-modal-title">New Collection</h2>
+      <button class="auth-close-btn" id="btn-coll-create-close" aria-label="Close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="coll-save-title-row">
+      <label class="coll-save-label" for="coll-create-name">Name</label>
+      <input class="coll-save-title-input" id="coll-create-name" type="text" maxlength="100" autocomplete="off" placeholder="e.g. Opening Prep, Brilliant Games…">
+    </div>
+    <div class="coll-save-title-row">
+      <label class="coll-save-label" for="coll-create-desc">Description <span class="coll-save-optional">(optional)</span></label>
+      <textarea class="coll-create-desc-input" id="coll-create-desc" maxlength="500" rows="3" placeholder="What's this collection about?"></textarea>
+    </div>
+    <div class="coll-save-title-row" id="coll-banner-section" style="display:none">
+      <label class="coll-save-label">Banner <span class="coll-save-optional">(optional)</span></label>
+      <div class="coll-banner-wrap">
+        <div class="coll-banner-preview" id="coll-banner-preview"></div>
+        <div class="coll-banner-btns">
+          <label class="btn-secondary coll-banner-upload-label" for="coll-banner-file">Upload image</label>
+          <input type="file" id="coll-banner-file" accept="image/*" style="display:none">
+          <button class="btn-secondary coll-banner-remove-btn" id="btn-coll-banner-remove" type="button" style="display:none">Remove</button>
+        </div>
+      </div>
+    </div>
+    <div class="coll-create-error" id="coll-create-error" role="alert" style="display:none"></div>
+    <div class="modal-actions">
+      <button class="btn-primary" id="btn-coll-create-confirm">Create</button>
+      <button class="btn-secondary" id="btn-coll-create-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Collection confirmation modal -->
+<div class="modal-overlay" id="coll-delete-modal" role="dialog" aria-modal="true" aria-labelledby="coll-delete-title" style="display:none">
+  <div class="modal-box">
+    <h2 id="coll-delete-title">Delete collection?</h2>
+    <p class="warn-modal-text">This will remove the collection "<span id="coll-delete-name"></span>" and all its game links. Your saved games will not be deleted.</p>
+    <div class="modal-actions">
+      <button class="btn-danger" id="btn-coll-delete-confirm">Delete collection</button>
+      <button class="btn-secondary" id="btn-coll-delete-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Publish collection confirmation modal -->
+<div class="modal-overlay" id="coll-publish-modal" role="dialog" aria-modal="true" aria-labelledby="coll-publish-title" style="display:none">
+  <div class="modal-box">
+    <div class="coll-save-modal-head">
+      <h2 id="coll-publish-title">Publish collection?</h2>
+      <button class="auth-close-btn" id="btn-coll-publish-close" aria-label="Close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <p class="warn-modal-text">
+      <strong>"<span id="coll-publish-name"></span>"</strong> will become publicly visible to everyone on Chess Explain. Anyone will be able to browse, load, and add its games.<br><br>
+      You can unpublish it at any time to make it private again. Note: after unpublishing, there is a short waiting period before it can be published again.
+    </p>
+    <div class="modal-actions">
+      <button class="btn-primary" id="btn-coll-publish-confirm">Publish collection</button>
+      <button class="btn-secondary" id="btn-coll-publish-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification container -->
+<div id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+<!-- New game confirmation modal -->
+<div class="modal-overlay" id="new-game-modal" role="dialog" aria-modal="true" aria-labelledby="new-game-modal-title" style="display:none">
+  <div class="modal-box">
+    <h2 id="new-game-modal-title">Start new game?</h2>
+    <p class="warn-modal-text">The current game will be lost. Are you sure?</p>
+    <div class="modal-actions">
+      <button class="btn-danger" id="btn-new-game-confirm">Start new game</button>
+      <button class="btn-secondary" id="btn-new-game-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Browse master games modal -->
+<div class="modal-overlay" id="browse-games-modal" role="dialog" aria-modal="true" aria-labelledby="browse-modal-title" style="display:none">
+  <div class="modal-box browse-modal-box">
+    <div class="browse-modal-head">
+      <div class="browse-modal-title-wrap">
+        <h2 id="browse-modal-title">Master Games</h2>
+        <p class="browse-modal-count" id="browse-modal-count"></p>
+      </div>
+      <button class="browse-modal-close" id="browse-modal-close" aria-label="Close dialog"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="browse-modal-filters" id="browse-modal-filters">
+      <select id="bmf-result" class="browse-filter-select">
+        <option value="">Any result</option>
+        <option value="white">White wins</option>
+        <option value="draw">Draw</option>
+        <option value="black">Black wins</option>
+      </select>
+      <select id="bmf-move" class="browse-filter-select">
+        <option value="">Any move played</option>
+      </select>
+    </div>
+    <div class="browse-modal-body" id="browse-modal-body">
+      <div class="browse-modal-loading" id="browse-modal-loading">
+        <div class="spinner-ring"></div>
+        <span>Loading games\u2026</span>
+      </div>
+      <div class="browse-modal-games" id="browse-modal-games" style="display:none"></div>
+      <div class="browse-modal-empty" id="browse-modal-empty" style="display:none">
+        <p id="browse-empty-msg">No games match your filters.</p>
+      </div>
+      <div class="browse-modal-footer" id="browse-modal-footer" style="display:none">
+        <div class="browse-footer-loading" id="browse-footer-loading" style="display:none">
+          <div class="spinner-ring spinner-ring-sm"></div>
+          <span id="browse-footer-loading-text">Loading more games\u2026</span>
+        </div>
+        <div class="browse-footer-done" id="browse-footer-done" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Login-required modal (shown when guest tries to save to collection) -->
+<div class="modal-overlay" id="login-required-modal" role="dialog" aria-modal="true" aria-labelledby="login-required-title" style="display:none">
+  <div class="modal-box login-required-box">
+    <div class="login-required-icon">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    </div>
+    <h2 id="login-required-title">Sign in to save games</h2>
+    <p class="login-required-text">Create a free account to save games to your collection, track your progress, and access your games from any device.</p>
+    <div class="modal-actions">
+      <button class="btn-primary" id="btn-login-required-signin">Sign in / Register</button>
+      <button class="btn-secondary" id="btn-login-required-cancel">Not now</button>
+    </div>
+  </div>
+</div>
+
+<!-- Share game modal -->
+<div class="modal-overlay" id="share-game-modal" role="dialog" aria-modal="true" aria-labelledby="share-game-modal-title" style="display:none">
+  <div class="modal-box--search share-modal-box">
+    <div class="modal-box-header">
+      <h3 class="modal-box-title" id="share-game-modal-title">Share Game</h3>
+      <button class="modal-close-btn" id="btn-share-modal-close" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="share-modal-body">
+      <p class="share-modal-desc">Anyone with this link can view this game with all comments and annotations.</p>
+      <label class="share-ply-row" id="share-ply-row" style="display:none">
+        <input type="checkbox" id="share-ply-check">
+        <span>Open at current position</span>
+      </label>
+      <div class="share-loading" id="share-loading">
+        <div class="spinner-ring spinner-ring--sm"></div>
+        <span>Generating link\u2026</span>
+      </div>
+      <div class="share-link-row" id="share-link-row" style="display:none">
+        <a class="share-link-display" id="share-link-display" href="#" target="_blank" rel="noopener noreferrer" aria-label="Share link (opens in new tab)"></a>
+        <input type="text" class="share-link-input" id="share-link-input" readonly aria-label="Share link" style="display:none">
+        <button class="btn-primary share-copy-btn" id="btn-share-copy">Copy link</button>
+      </div>
+      <div class="share-error" id="share-error" role="alert" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Libraries \u2014 served locally, no CDN dependency -->
+<script src="./js/vendor/marked.min.js"></script>
+<script src="./js/vendor/purify.min.js"></script>
+<script src="./js/vendor/jquery.min.js"></script>
+<script src="./js/vendor/chess.min.js"></script>
+<script src="./js/vendor/chessboard.min.js"></script>
+<script src="./js/api-shim.js" defer></script>
+<script src="./js/app.js" defer></script>
+</body>
+</html>
