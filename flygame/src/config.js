@@ -15,8 +15,10 @@ export const VIEW = Object.freeze({ W: 1920, H: 1080 });
 export const GROUND_Y = 860;
 
 export const PLAYER = Object.freeze({
-  W: 160,
-  H: 160,
+  // Slightly smaller than the original 160x160 so the fixed 1920x1080 stage
+  // reads as a bigger map.
+  W: 136,
+  H: 136,
   SPEED: 950,
   JUMP_V: 1520,
   GRAVITY: 3800,
@@ -24,10 +26,10 @@ export const PLAYER = Object.freeze({
   COYOTE: 0.1,
   /** Jump presses this long before landing are remembered and replayed. */
   JUMP_BUFFER: 0.12,
-  /** Hitbox inset from the 160x160 sprite box: the man does not fill it. */
-  HIT: Object.freeze({ x: 48, y: 22, w: 64, h: 138 }),
+  /** Hitbox inset from the 136x136 sprite box: the man does not fill it. */
+  HIT: Object.freeze({ x: 41, y: 19, w: 54, h: 117 }),
   MIN_X: -70,
-  MAX_X: VIEW.W - 170,
+  MAX_X: VIEW.W - 146,
   /**
    * The original was one-hit-death. Three hits plus a moment of invulnerability
    * makes the ramp readable without making it easy — set LIVES to 1 for the
@@ -38,23 +40,45 @@ export const PLAYER = Object.freeze({
 });
 
 export const ENEMY = Object.freeze({
-  W: 160,
-  H: 160,
+  W: 136,
+  H: 136,
+  /** Fixed for the whole run: flies do not get faster as the score climbs. */
   BASE_SPEED: 330,
-  /** Extra speed per point of difficulty (see Game#difficulty). */
-  SPEED_PER_LEVEL: 55,
   MAX_ALIVE: 8,
   SPAWN_X: 1731,
-  SPAWN_Y: 720,
-  HIT: Object.freeze({ x: 24, y: 38, w: 112, h: 86 }),
+  SPAWN_Y: 745,
+  HIT: Object.freeze({ x: 20, y: 32, w: 95, h: 73 }),
   /** Seconds between spawns at difficulty 0, and the floor it decays to. */
   SPAWN_INTERVAL: 2.6,
   SPAWN_INTERVAL_MIN: 0.85,
-  /** Bomber flies climb to this altitude and then patrol. */
+  /** Airborne types climb to this altitude and then patrol. */
   BOMBER_ALTITUDE: 200,
   BOMBER_CLIMB: 260,
-  BOMB_CHANCE_PER_SEC: 0.55,
+  /** Amplitude and rate of the hover bob once at altitude. */
+  HOVER_AMP: 18,
+  HOVER_RATE: 1.7,
   DEATH_ANIM: 0.45,
+  /** Hits required to kill each type. Types absent from this map die in one. */
+  HP: Object.freeze({ warfly: 3, heli: 4 }),
+  /** How long a damaged enemy flashes white. */
+  HURT_FLASH: 0.14,
+  /** Gunner types: seconds between aimed shots. */
+  GUN_INTERVAL: Object.freeze({ warfly: 2.1, heli: 1.6 }),
+  /**
+   * War flies patrol low enough that a jump still reaches them, so melee-only
+   * players have an answer; the heli stays out of reach and has to be shot.
+   */
+  WARFLY_ALTITUDE: 470,
+  HELI_ALTITUDE: 300,
+});
+
+export const ENEMY_BULLET = Object.freeze({
+  SPEED: 620,
+  W: 26,
+  H: 10,
+  RADIUS: 9,
+  LIFETIME: 4,
+  MAX: 24,
 });
 
 export const BOMB = Object.freeze({
@@ -84,8 +108,21 @@ export const BULLET = Object.freeze({
 export const AXE = Object.freeze({
   COOLDOWN: 0.42,
   SWING_TIME: 0.24,
-  REACH: 165,
-  ARC_H: 190,
+  REACH: 150,
+  ARC_H: 170,
+  /** Damage the blade itself deals on contact. */
+  DAMAGE: 2,
+});
+
+/** The red arc the fire axe throws forward on every swing. */
+export const SHOCKWAVE = Object.freeze({
+  SPEED: 1250,
+  RANGE: 620,
+  /** Half-height of the crescent, and how much it grows over its travel. */
+  H: 110,
+  GROWTH: 0.7,
+  DAMAGE: 1,
+  MAX: 6,
 });
 
 export const COIN = Object.freeze({

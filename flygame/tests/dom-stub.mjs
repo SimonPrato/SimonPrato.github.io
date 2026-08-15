@@ -82,6 +82,16 @@ export class RecordingContext {
     this._tally('rotate');
   }
 
+  moveTo(x, y) {
+    if (!Number.isFinite(x) || !Number.isFinite(y)) throw new TypeError('moveTo() got NaN');
+    this._tally('moveTo');
+  }
+
+  quadraticCurveTo(...args) {
+    if (args.some((n) => !Number.isFinite(n))) throw new TypeError('quadraticCurveTo() got NaN');
+    this._tally('quadraticCurveTo');
+  }
+
   scale = noop;
   beginPath = noop;
   rect = noop;
@@ -89,6 +99,7 @@ export class RecordingContext {
   fillRect = noop;
   fillText = noop;
   strokeText = noop;
+  stroke = noop;
   measureText = () => ({ width: 0 });
   createLinearGradient = () => ({ addColorStop: noop });
 }

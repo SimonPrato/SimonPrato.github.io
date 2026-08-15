@@ -11,9 +11,11 @@ import {
   GROUND_Y,
   PLAYER,
   ENEMY,
+  ENEMY_BULLET,
   BOMB,
   BULLET,
   AXE,
+  SHOCKWAVE,
   COIN,
   SCORE,
   DIFFICULTY_STEP,
@@ -84,6 +86,8 @@ export class Game {
     this.bombs = Array.from({ length: 16 }, () => ({ alive: false }));
     this.blasts = Array.from({ length: 8 }, () => ({ alive: false }));
     this.bullets = Array.from({ length: 40 }, () => ({ alive: false }));
+    this.enemyBullets = Array.from({ length: ENEMY_BULLET.MAX }, () => ({ alive: false }));
+    this.shockwaves = Array.from({ length: SHOCKWAVE.MAX }, () => ({ alive: false }));
     this.coins = Array.from({ length: COIN.MAX }, () => ({ alive: false }));
     this.poofs = Array.from({ length: 12 }, () => ({ alive: false }));
     this.popups = Array.from({ length: 16 }, () => ({ alive: false }));
@@ -119,11 +123,25 @@ export class Game {
     this.newRecord = false;
 
     this.owned = new Set(WEAPONS.filter((w) => w.owned).map((w) => w.id));
-    for (const list of [this.enemies, this.bombs, this.blasts, this.bullets, this.coins, this.poofs, this.popups]) {
+    for (const list of this.pools()) {
       for (const e of list) e.alive = false;
     }
     this.spawnEnemy();
     this._emitHud();
+  }
+
+  pools() {
+    return [
+      this.enemies,
+      this.bombs,
+      this.blasts,
+      this.bullets,
+      this.enemyBullets,
+      this.shockwaves,
+      this.coins,
+      this.poofs,
+      this.popups,
+    ];
   }
 
   /** Kicks off the (lazy) background download for the chosen level art. */
@@ -183,6 +201,8 @@ export class Game {
     this.updateEnemies(dt);
     this.updateBombs(dt);
     this.updateBullets(dt);
+    this.updateEnemyBullets(dt);
+    this.updateShockwaves(dt);
     this.updateCoins(dt);
     this.updateEffects(dt);
 
@@ -213,6 +233,12 @@ export class Game {
 
   leaveShop() {
     this.player.x = 60;
+    // Shopping is a safe pause, so the arena is cleared on the way out: coming
+    // back to a swarm parked on the door was an unavoidable hit.
+    for (const list of [this.enemies, this.bombs, this.blasts, this.bullets, this.enemyBullets, this.shockwaves]) {
+      for (const e of list) e.alive = false;
+    }
+    this.spawnTimer = 1.2;
     this.setState(State.PLAYING);
   }
 
@@ -359,6 +385,7 @@ export class Game {
     p.cooldown = AXE.COOLDOWN;
     p.swing = 0;
     this.r.shake(3, this.hooks.screenShake);
+    audio.play('shot', { volume: 0.3, rate: 0.7 });
 
     const bx = p.facing > 0 ? p.x + PLAYER.W * 0.55 : p.x + PLAYER.W * 0.45 - AXE.REACH;
     const by = p.y + (PLAYER.H - AXE.ARC_H) / 2;
@@ -366,11 +393,52 @@ export class Game {
     for (const e of this.enemies) {
       if (!e.alive || e.dying) continue;
       if (overlaps(bx, by, AXE.REACH, AXE.ARC_H, e.x + ENEMY.HIT.x, e.y + ENEMY.HIT.y, ENEMY.HIT.w, ENEMY.HIT.h)) {
-        this.killEnemy(e, false);
+        this.damageEnemy(e, AXE.DAMAGE);
         hit = true;
       }
     }
     if (hit) this.r.shake(6, this.hooks.screenShake);
+
+    this.spawnShockwave();
+  }
+
+  /** The red crescent the axe throws forward, damaging what it sweeps through. */
+  spawnShockwave() {
+    const p = this.player;
+    const w = this.shockwaves.find((x) => !x.alive);
+    if (!w) return;
+    w.alive = true;
+    w.dir = p.facing;
+    w.x = p.x + PLAYER.W / 2 + p.facing * PLAYER.W * 0.4;
+    w.y = p.y + PLAYER.H * 0.52;
+    w.travelled = 0;
+    // Each wave damages a given fly once, however many frames it overlaps for.
+    w.hitList = w.hitList ?? new Set();
+    w.hitList.clear();
+  }
+
+  updateShockwaves(dt) {
+    for (const w of this.shockwaves) {
+      if (!w.alive) continue;
+      const step = SHOCKWAVE.SPEED * dt;
+      w.x += w.dir * step;
+      w.travelled += step;
+      if (w.travelled >= SHOCKWAVE.RANGE) {
+        w.alive = false;
+        continue;
+      }
+
+      const t = w.travelled / SHOCKWAVE.RANGE;
+      const halfH = (SHOCKWAVE.H * (1 + t * SHOCKWAVE.GROWTH)) / 2;
+      for (const e of this.enemies) {
+        if (!e.alive || e.dying || w.hitList.has(e)) continue;
+        const eh = { x: e.x + ENEMY.HIT.x, y: e.y + ENEMY.HIT.y, w: ENEMY.HIT.w, h: ENEMY.HIT.h };
+        if (overlaps(w.x - 22, w.y - halfH, 44, halfH * 2, eh.x, eh.y, eh.w, eh.h)) {
+          w.hitList.add(e);
+          this.damageEnemy(e, SHOCKWAVE.DAMAGE);
+        }
+      }
+    }
   }
 
   // ------------------------------------------------------------------ enemies
@@ -397,13 +465,42 @@ export class Game {
     e.x = ENEMY.SPAWN_X;
     e.y = ENEMY.SPAWN_Y;
     e.type = this.rollEnemyType();
-    e.vx = -(ENEMY.BASE_SPEED + this.difficulty * ENEMY.SPEED_PER_LEVEL) * rand(0.85, 1.15);
+    // Deliberately not scaled by difficulty: flies keep the same speed all run,
+    // and the ramp comes from what spawns rather than how fast it moves.
+    e.vx = -ENEMY.BASE_SPEED * rand(0.85, 1.15);
+    e.hp = ENEMY.HP[e.type] ?? 1;
+    e.maxHp = e.hp;
+    e.hurt = 0;
     e.bombTimer = rand(0.8, 2.4);
+    e.gunTimer = rand(1.2, 2.6);
+    e.hovering = false;
+    e.bobPhase = rand(0, Math.PI * 2);
     e.spawnFlash = 0.35;
+  }
+
+  /** Cruising height for types that fly rather than walk, or null for walkers. */
+  static altitudeFor(type) {
+    if (type === 'bomber') return ENEMY.BOMBER_ALTITUDE;
+    if (type === 'warfly') return ENEMY.WARFLY_ALTITUDE;
+    if (type === 'heli') return ENEMY.HELI_ALTITUDE;
+    return null;
   }
 
   rollEnemyType() {
     const r = Math.random();
+    if (this.difficulty >= 3) {
+      if (r < 0.1) return 'gold';
+      if (r < 0.26) return 'heli';
+      if (r < 0.46) return 'warfly';
+      if (r < 0.7) return 'bomber';
+      return 'fly';
+    }
+    if (this.difficulty >= 2) {
+      if (r < 0.12) return 'gold';
+      if (r < 0.28) return 'warfly';
+      if (r < 0.58) return 'bomber';
+      return 'fly';
+    }
     if (this.difficulty >= 1) {
       if (r < 0.13) return 'gold';
       if (r < 0.46) return 'bomber';
@@ -414,6 +511,12 @@ export class Game {
 
   updateEnemies(dt) {
     const p = this.player;
+    // Captured before any stomp changes it, so a single fall that overlaps two
+    // stacked flies stomps both instead of squashing one and walking into the
+    // other with the bounce velocity already applied.
+    const fallVy = p.vy;
+    let stomped = false;
+
     for (const e of this.enemies) {
       if (!e.alive) continue;
 
@@ -424,6 +527,7 @@ export class Game {
       }
 
       if (e.spawnFlash > 0) e.spawnFlash -= dt;
+      if (e.hurt > 0) e.hurt -= dt;
 
       e.x += e.vx * dt;
       if (e.x <= 0) {
@@ -434,13 +538,35 @@ export class Game {
         e.vx = -Math.abs(e.vx);
       }
 
-      if (e.type === 'bomber') {
-        if (e.y > ENEMY.BOMBER_ALTITUDE) e.y = Math.max(ENEMY.BOMBER_ALTITUDE, e.y - ENEMY.BOMBER_CLIMB * dt);
-        else e.y = ENEMY.BOMBER_ALTITUDE + Math.sin(this.time * 2 + e.x * 0.01) * 22;
+      const altitude = Game.altitudeFor(e.type);
+      if (altitude !== null) {
+        // The climb and the hover bob are kept strictly apart. Deriving `y`
+        // from a sine while the "still climbing?" test also read `y` made the
+        // two fight each other, and the fly juddered up and down on the spot.
+        if (!e.hovering) {
+          e.y -= ENEMY.BOMBER_CLIMB * dt;
+          if (e.y <= altitude) e.hovering = true;
+        }
+        if (e.hovering) {
+          e.bobPhase += ENEMY.HOVER_RATE * dt;
+          e.y = altitude + Math.sin(e.bobPhase) * ENEMY.HOVER_AMP;
+        }
+      }
+
+      if (e.type === 'bomber' && e.hovering) {
         e.bombTimer -= dt;
-        if (e.bombTimer <= 0 && e.y <= ENEMY.BOMBER_ALTITUDE + 30) {
+        if (e.bombTimer <= 0) {
           e.bombTimer = rand(1.4, 3.4) / (1 + this.difficulty * 0.2);
           this.dropBomb(e);
+        }
+      }
+
+      const gunInterval = ENEMY.GUN_INTERVAL[e.type];
+      if (gunInterval && e.hovering) {
+        e.gunTimer -= dt;
+        if (e.gunTimer <= 0) {
+          e.gunTimer = gunInterval * rand(0.8, 1.2);
+          this.enemyShoot(e);
         }
       }
 
@@ -452,25 +578,48 @@ export class Game {
       // A stomp is "falling, and last frame my feet were above the fly's
       // lower edge". The generous band is deliberate: at full falling speed the
       // player covers 25 px per frame, so a stricter test drops real stomps.
-      const stomping = p.vy > 0 && ph.y + ph.h - p.vy * dt <= eh.y + eh.h * 0.8;
+      const stomping = fallVy > 0 && ph.y + ph.h - fallVy * dt <= eh.y + eh.h * 0.8;
       if (stomping) {
+        // A stomp always kills outright, however armoured the target is.
         this.killEnemy(e, true);
-        p.vy = -PLAYER.JUMP_V * 0.62;
-        p.jumpBuffer = 0;
+        stomped = true;
       } else {
         this.hurtPlayer();
       }
     }
+
+    if (stomped) {
+      p.vy = -PLAYER.JUMP_V * 0.62;
+      p.jumpBuffer = 0;
+    }
+  }
+
+  /**
+   * Applies `amount` damage. Returns true if this was the killing blow.
+   * @param {object} e
+   * @param {number} [amount]
+   */
+  damageEnemy(e, amount = 1) {
+    if (!e.alive || e.dying) return false;
+    e.hp -= amount;
+    if (e.hp > 0) {
+      e.hurt = ENEMY.HURT_FLASH;
+      audio.play('enemyDeath', { volume: 0.3, rate: 1.6 });
+      return false;
+    }
+    this.killEnemy(e, false);
+    return true;
   }
 
   killEnemy(e, stomped) {
+    e.hp = 0;
     e.dying = true;
     e.deathTimer = 0;
     e.vx = 0;
 
     this.comboTimer = SCORE.COMBO_WINDOW;
     this.combo = Math.min(SCORE.COMBO_CAP, this.combo + 1);
-    const gained = (SCORE.KILL + (stomped ? SCORE.STOMP_BONUS : 0)) * this.combo;
+    const gained = (SCORE.KILL + (stomped ? SCORE.STOMP_BONUS : 0)) * this.combo * (e.maxHp ?? 1);
     this.score += gained;
 
     audio.play('enemyDeath', { rate: 1 + this.combo * 0.06 });
@@ -577,6 +726,7 @@ export class Game {
       const ex = e.x + ENEMY.W / 2;
       const ey = e.y + ENEMY.H / 2;
       if (Math.hypot(ex - cx, ey - cy) < BOMB.BLAST_RADIUS) this.killEnemy(e, false);
+      // A direct blast kills outright regardless of armour.
     }
   }
 
@@ -598,9 +748,59 @@ export class Game {
         const cy = e.y + ENEMY.HIT.y + ENEMY.HIT.h / 2;
         if (Math.hypot(b.x - cx, b.y - cy) < BULLET.RADIUS + ENEMY.HIT.w * 0.45) {
           b.alive = false;
-          this.killEnemy(e, false);
+          this.damageEnemy(e, 1);
           break;
         }
+      }
+    }
+  }
+
+  // ------------------------------------------------------------ enemy bullets
+
+  /** Fires one aimed shot from `e` at where the player is right now. */
+  enemyShoot(e) {
+    const b = this.enemyBullets.find((x) => !x.alive);
+    if (!b) return;
+    const p = this.player;
+    const ox = e.x + ENEMY.W / 2 + Math.sign(e.vx || -1) * ENEMY.W * 0.3;
+    const oy = e.y + ENEMY.H * 0.55;
+    const angle = Math.atan2(p.y + PLAYER.H * 0.45 - oy, p.x + PLAYER.W / 2 - ox);
+
+    b.alive = true;
+    b.x = ox;
+    b.y = oy;
+    b.vx = Math.cos(angle) * ENEMY_BULLET.SPEED;
+    b.vy = Math.sin(angle) * ENEMY_BULLET.SPEED;
+    b.angle = angle;
+    b.life = ENEMY_BULLET.LIFETIME;
+    audio.play('shot', { volume: 0.28, rate: 1.5 });
+  }
+
+  updateEnemyBullets(dt) {
+    const p = this.player;
+    for (const b of this.enemyBullets) {
+      if (!b.alive) continue;
+      b.x += b.vx * dt;
+      b.y += b.vy * dt;
+      b.life -= dt;
+      if (b.life <= 0 || b.x < -80 || b.x > VIEW.W + 80 || b.y > GROUND_Y || b.y < -80) {
+        b.alive = false;
+        continue;
+      }
+      if (
+        overlaps(
+          b.x - ENEMY_BULLET.RADIUS,
+          b.y - ENEMY_BULLET.RADIUS,
+          ENEMY_BULLET.RADIUS * 2,
+          ENEMY_BULLET.RADIUS * 2,
+          p.x + PLAYER.HIT.x,
+          p.y + PLAYER.HIT.y,
+          PLAYER.HIT.w,
+          PLAYER.HIT.h,
+        )
+      ) {
+        b.alive = false;
+        this.hurtPlayer();
       }
     }
   }
@@ -734,7 +934,9 @@ export class Game {
     this.drawBombs();
     this.drawPlayer();
     this.drawWeapon();
+    this.drawShockwaves();
     this.drawBullets();
+    this.drawEnemyBullets();
     this.drawBlasts();
     this.drawEffects();
     this.drawShopSignpost();
@@ -815,13 +1017,68 @@ export class Game {
     const p = this.player;
     const t = p.swing >= 0 ? clamp(p.swing / AXE.SWING_TIME, 0, 1) : 0;
     // Idle rest angle, swinging down through the arc while attacking.
-    const angle = p.swing >= 0 ? -1.9 + t * 2.9 : -0.75;
+    const angle = p.swing >= 0 ? -1.5 + t * 2.4 : -0.35;
+    const w = 100;
+    const h = 89;
 
     ctx.save();
-    ctx.translate(p.x + PLAYER.W / 2 + p.facing * 26, p.y + 96);
+    ctx.translate(p.x + PLAYER.W / 2 + p.facing * 22, p.y + 82);
     ctx.scale(p.facing, 1);
     ctx.rotate(angle);
-    ctx.drawImage(img.fireAxe, -18, -18, 150, 134);
+    // The source art has its blade at the top-left and its grip at the
+    // bottom-right, i.e. pointing backwards, so it is mirrored before drawing
+    // and anchored by the grip, which lands in the player's hand.
+    ctx.scale(-1, 1);
+    ctx.drawImage(img.fireAxe, -w + 12, -h + 18, w, h);
+    ctx.restore();
+  }
+
+  drawShockwaves() {
+    const { ctx } = this.r;
+    for (const w of this.shockwaves) {
+      if (!w.alive) continue;
+      const t = w.travelled / SHOCKWAVE.RANGE;
+      const halfH = (SHOCKWAVE.H * (1 + t * SHOCKWAVE.GROWTH)) / 2;
+      const bulge = 26 + t * 16;
+
+      ctx.save();
+      ctx.globalAlpha = clamp(1 - t, 0, 1) * 0.9;
+      ctx.translate(w.x, w.y);
+      ctx.scale(w.dir, 1);
+      ctx.lineCap = 'round';
+
+      // A crescent: a bright core inside a wider, softer red halo.
+      ctx.strokeStyle = 'rgba(255,40,40,.45)';
+      ctx.lineWidth = 20;
+      ctx.beginPath();
+      ctx.moveTo(-bulge * 0.4, -halfH);
+      ctx.quadraticCurveTo(bulge, 0, -bulge * 0.4, halfH);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#ff6a4d';
+      ctx.lineWidth = 8;
+      ctx.beginPath();
+      ctx.moveTo(-bulge * 0.4, -halfH * 0.9);
+      ctx.quadraticCurveTo(bulge * 0.85, 0, -bulge * 0.4, halfH * 0.9);
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+
+  drawEnemyBullets() {
+    const { ctx } = this.r;
+    ctx.save();
+    for (const b of this.enemyBullets) {
+      if (!b.alive) continue;
+      ctx.save();
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.angle);
+      ctx.fillStyle = '#ffd24a';
+      ctx.fillRect(-ENEMY_BULLET.W / 2, -ENEMY_BULLET.H / 2, ENEMY_BULLET.W, ENEMY_BULLET.H);
+      ctx.fillStyle = 'rgba(255,120,40,.55)';
+      ctx.fillRect(-ENEMY_BULLET.W, -ENEMY_BULLET.H / 4, ENEMY_BULLET.W / 2, ENEMY_BULLET.H / 2);
+      ctx.restore();
+    }
     ctx.restore();
   }
 
@@ -846,17 +1103,48 @@ export class Game {
         sprite = left
           ? [img.bomber1L, img.bomber2L, img.bomber3L, img.bomber4L][frame]
           : [img.bomber1, img.bomber2, img.bomber3, img.bomber4][frame];
+      } else if (e.type === 'warfly') {
+        sprite = left ? img.warflyL : img.warfly;
+      } else if (e.type === 'heli') {
+        sprite = left ? img.heliL : img.heli;
       } else {
         sprite = left
           ? [img.fly1L, img.fly2L, img.fly3L, img.fly4L][frame]
           : [img.fly1, img.fly2, img.fly3, img.fly4][frame];
       }
 
-      // Gold flies have no left-facing art, so mirror them instead.
-      const mirror = e.type === 'gold' && left;
+      // The gold fly's only art faces left, so flip it when it heads right.
+      const mirror = e.type === 'gold' && !left;
       const alpha = e.spawnFlash > 0 ? 0.45 + 0.55 * (1 - e.spawnFlash / 0.35) : 1;
       this.r.sprite(sprite, e.x, e.y, ENEMY.W, ENEMY.H, mirror || alpha !== 1 ? { flip: mirror, alpha } : undefined);
+      if (e.hurt > 0) this.drawHurtFlash(e, sprite, mirror);
+      if (e.maxHp > 1) this.drawHealthPips(e);
     }
+  }
+
+  /** A white overlay on a sprite that just took a non-fatal hit. */
+  drawHurtFlash(e, sprite, mirror) {
+    const { ctx } = this.r;
+    ctx.save();
+    ctx.globalAlpha = clamp(e.hurt / ENEMY.HURT_FLASH, 0, 1) * 0.75;
+    ctx.globalCompositeOperation = 'lighter';
+    this.r.sprite(sprite, e.x, e.y, ENEMY.W, ENEMY.H, { flip: mirror });
+    ctx.restore();
+  }
+
+  drawHealthPips(e) {
+    const { ctx } = this.r;
+    const pipW = 13;
+    const gap = 4;
+    const total = e.maxHp * pipW + (e.maxHp - 1) * gap;
+    const x0 = e.x + ENEMY.W / 2 - total / 2;
+    const y = e.y + 14;
+    ctx.save();
+    for (let i = 0; i < e.maxHp; i += 1) {
+      ctx.fillStyle = i < e.hp ? '#ff4d4d' : 'rgba(0,0,0,.45)';
+      ctx.fillRect(x0 + i * (pipW + gap), y, pipW, 5);
+    }
+    ctx.restore();
   }
 
   drawBombs() {

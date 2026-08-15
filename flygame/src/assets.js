@@ -18,31 +18,40 @@ const MANIFEST = {
   player1L: 'img/Mann_1_links.png',
   player2L: 'img/Mann_2_links.png',
 
-  // Common fly
-  fly1: 'img/Fliege_1.png',
-  fly2: 'img/Fliege_2.png',
-  fly3: 'img/Fliege_3.png',
-  fly4: 'img/Fliege_4.png',
-  fly1L: 'img/Fliege_1_links.png',
-  fly2L: 'img/fliege_2_links.png',
-  fly3L: 'img/Fliege_3_links.png',
-  fly4L: 'img/Fliege_4_links.png',
+  // Common fly. The art is named the wrong way round: "Fliege_1.png" faces
+  // left and "Fliege_1_links.png" faces right, so the keys are swapped here to
+  // keep `flyN` = right-facing everywhere else in the code.
+  fly1: 'img/Fliege_1_links.png',
+  fly2: 'img/fliege_2_links.png',
+  fly3: 'img/Fliege_3_links.png',
+  fly4: 'img/Fliege_4_links.png',
+  fly1L: 'img/Fliege_1.png',
+  fly2L: 'img/Fliege_2.png',
+  fly3L: 'img/Fliege_3.png',
+  fly4L: 'img/Fliege_4.png',
 
-  // Gold fly (drops coins) — no left-facing art exists, so it is mirrored
+  // Gold fly (drops coins) — no second orientation exists, so it is mirrored.
+  // The source art faces left, matching the `flyNL` keys.
   gold1: 'img/Gold Fliege 1.png',
   gold2: 'img/Gold Fliege 2.png',
   gold3: 'img/Gold Fliege 3.png',
   gold4: 'img/Gold Fliege 4.png',
 
-  // Bomber fly
-  bomber1: 'img/bomb1.png',
-  bomber2: 'img/bomb2.png',
-  bomber3: 'img/bomb3.png',
-  bomber4: 'img/bomb4.png',
-  bomber1L: 'img/bomb1_left.png',
-  bomber2L: 'img/bomb2_left.png',
-  bomber3L: 'img/bomb3_left.png',
-  bomber4L: 'img/bomb4_left.png',
+  // Bomber fly — same inverted naming as the common fly
+  bomber1: 'img/bomb1_left.png',
+  bomber2: 'img/bomb2_left.png',
+  bomber3: 'img/bomb3_left.png',
+  bomber4: 'img/bomb4_left.png',
+  bomber1L: 'img/bomb1.png',
+  bomber2L: 'img/bomb2.png',
+  bomber3L: 'img/bomb3.png',
+  bomber4L: 'img/bomb4.png',
+
+  // Armoured gunships: tougher, and they shoot back. Same inverted naming.
+  warfly: 'img/Kampffliege_1_links.png',
+  warflyL: 'img/Kampffliege_1.png',
+  heli: 'img/Kampfheli_1_links.png',
+  heliL: 'img/Kampfheli_1.png',
 
   // Effects
   poof1: 'img/Fliege_stirbt_1.png',

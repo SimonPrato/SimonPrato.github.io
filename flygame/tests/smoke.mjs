@@ -17,7 +17,7 @@ installDom();
 const { Game, State } = await import('../src/game.js');
 const { Input } = await import('../src/input.js');
 const { Renderer } = await import('../src/renderer.js');
-const { loadAll } = await import('../src/assets.js');
+const { loadAll, img } = await import('../src/assets.js');
 const { GROUND_Y, PLAYER, ENEMY, VIEW, BULLET } = await import('../src/config.js');
 
 await loadAll();
@@ -96,6 +96,54 @@ check('difficulty raises the roster instead of the entity count', () => {
   for (let i = 0; i < 400; i += 1) kinds.add(g.rollEnemyType());
   if (!kinds.has('bomber')) return 'bombers never appear at high score';
   if (!kinds.has('gold')) return 'gold flies never appear at high score';
+  if (!kinds.has('warfly')) return 'war flies never appear at high score';
+  if (!kinds.has('heli')) return 'combat helis never appear at high score';
+});
+
+check('enemy speed does not scale with the score', () => {
+  const g = make();
+  g.start();
+  const sample = () => {
+    const speeds = [];
+    for (let i = 0; i < 200; i += 1) {
+      for (const e of g.enemies) e.alive = false;
+      g.spawnEnemy();
+      speeds.push(Math.abs(g.enemies.find((e) => e.alive).vx));
+    }
+    return Math.max(...speeds);
+  };
+  g.score = 0;
+  const early = sample();
+  g.score = 50000;
+  const late = sample();
+  // Only the ±15% spawn jitter should separate the two samples.
+  if (late > early * 1.05) return `speed grew from ${early.toFixed(0)} to ${late.toFixed(0)}`;
+});
+
+// ------------------------------------------------------------------- sprites
+
+check('fly art keys face the way the code expects', () => {
+  // The source art is named the wrong way round: "Fliege_1.png" faces left and
+  // "Fliege_1_links.png" faces right. assets.js swaps them so that `flyN` is
+  // always the right-facing key; this pins that down.
+  const facesRight = {
+    fly1: 'Fliege_1_links.png',
+    fly2: 'fliege_2_links.png',
+    bomber1: 'bomb1_left.png',
+    warfly: 'Kampffliege_1_links.png',
+    heli: 'Kampfheli_1_links.png',
+  };
+  const facesLeft = {
+    fly1L: 'Fliege_1.png',
+    fly2L: 'Fliege_2.png',
+    bomber1L: 'bomb1.png',
+    warflyL: 'Kampffliege_1.png',
+    heliL: 'Kampfheli_1.png',
+  };
+  for (const [key, file] of Object.entries({ ...facesRight, ...facesLeft })) {
+    if (!img[key]) return `sprite "${key}" never loaded`;
+    if (!img[key].src.endsWith(file)) return `${key} points at ${img[key].src}, expected ${file}`;
+  }
 });
 
 // -------------------------------------------------------------------- physics
@@ -173,6 +221,24 @@ check('leaving the shop does not bounce straight back into it', () => {
   if (g.state !== State.PLAYING) return 'fell back into the shop on the next frame';
 });
 
+check('leaving the shop clears the arena of flies and projectiles', () => {
+  const g = make();
+  g.start();
+  run(g, 8);
+  const [a, b] = g.enemies;
+  Object.assign(a, { alive: true, dying: false, type: 'bomber', x: 400, y: 200, vx: -100, hovering: true });
+  g.dropBomb(a);
+  g.enemyShoot(a);
+  g.explode(600, 800);
+  Object.assign(b, { alive: true, dying: false, type: 'fly', x: 900, y: 700, vx: -100 });
+  g.enterShop();
+  g.leaveShop();
+  if (g.enemies.some((e) => e.alive)) return 'flies survived the trip to the shop';
+  if (g.bombs.some((x) => x.alive)) return 'bombs survived';
+  if (g.enemyBullets.some((x) => x.alive)) return 'enemy bullets survived';
+  if (g.blasts.some((x) => x.alive)) return 'blasts survived';
+});
+
 check('buying is refused without coins and works with them', () => {
   const g = make();
   g.start();
@@ -215,6 +281,133 @@ check('a stomp kills the enemy, scores, and bounces the player', () => {
   if (!e.dying) return 'the enemy survived the stomp';
   if (g.score <= 0) return 'no score awarded';
   if (g.player.vy >= 0) return 'no bounce after the stomp';
+});
+
+check('stomping two overlapping flies kills both without costing a life', () => {
+  const g = make();
+  g.start();
+  const [a, b] = g.enemies;
+  Object.assign(a, { alive: true, dying: false, type: 'fly', x: 800, y: ENEMY.SPAWN_Y, vx: 0, hp: 1, maxHp: 1, hurt: 0, spawnFlash: 0, bombTimer: 9, gunTimer: 9, hovering: false });
+  Object.assign(b, { alive: true, dying: false, type: 'fly', x: 812, y: ENEMY.SPAWN_Y + 6, vx: 0, hp: 1, maxHp: 1, hurt: 0, spawnFlash: 0, bombTimer: 9, gunTimer: 9, hovering: false });
+  for (const e of g.enemies.slice(2)) e.alive = false;
+  g.player.x = 800;
+  g.player.y = ENEMY.SPAWN_Y - 60;
+  g.player.vy = 900;
+  g.update(1 / 60);
+  if (!a.dying || !b.dying) return 'one of the stacked flies survived';
+  if (g.player.lives !== PLAYER.LIVES) return `lost a life stomping a stack (lives = ${g.player.lives})`;
+  if (g.player.vy >= 0) return 'no bounce after the double stomp';
+});
+
+check('armoured enemies survive a single hit and die to enough of them', () => {
+  const g = make();
+  g.start();
+  const e = g.enemies.find((x) => x.alive);
+  Object.assign(e, { type: 'warfly', hp: ENEMY.HP.warfly, maxHp: ENEMY.HP.warfly, dying: false, hurt: 0 });
+  if (g.damageEnemy(e, 1) !== false) return 'a war fly died to one pellet';
+  if (e.dying) return 'a war fly started dying after one hit';
+  for (let i = 0; i < ENEMY.HP.warfly; i += 1) g.damageEnemy(e, 1);
+  if (!e.dying) return 'a war fly outlived its whole health bar';
+});
+
+check('a stomp kills an armoured enemy outright', () => {
+  const g = make();
+  g.start();
+  const e = g.enemies.find((x) => x.alive);
+  // Airborne types are snapped to their patrol altitude each frame, so the
+  // player has to meet the heli up there.
+  Object.assign(e, { type: 'heli', hp: ENEMY.HP.heli, maxHp: ENEMY.HP.heli, x: 800, y: ENEMY.HELI_ALTITUDE, vx: 0, dying: false, hurt: 0, hovering: true, bobPhase: 0, gunTimer: 999 });
+  for (const other of g.enemies) if (other !== e) other.alive = false;
+  g.player.x = 800;
+  g.player.y = ENEMY.HELI_ALTITUDE - 60;
+  g.player.vy = 900;
+  g.update(1 / 60);
+  if (!e.dying) return 'the heli shrugged off a stomp';
+});
+
+check('gunner enemies fire an aimed shot that can hit the player', () => {
+  const g = make();
+  g.start();
+  const e = g.enemies.find((x) => x.alive);
+  Object.assign(e, { type: 'warfly', x: 1200, y: 300, vx: -100, hovering: true, dying: false, hp: 3, maxHp: 3, hurt: 0 });
+  for (const other of g.enemies) if (other !== e) other.alive = false;
+  g.player.x = 300;
+  g.player.y = GROUND_Y - PLAYER.H;
+  g.enemyShoot(e);
+  const shot = g.enemyBullets.find((b) => b.alive);
+  if (!shot) return 'no bullet was fired';
+  if (shot.vx >= 0) return 'the shot was not aimed back at the player';
+  const before = g.player.lives;
+  for (let i = 0; i < 60 * 4 && g.player.lives === before; i += 1) g.update(1 / 60);
+  if (g.player.lives === before) return 'the aimed shot never hit the player';
+});
+
+check('enemy bullets are recycled rather than accumulating', () => {
+  const g = make();
+  g.start();
+  g.player.lives = 999;
+  const e = g.enemies.find((x) => x.alive);
+  Object.assign(e, { type: 'heli', x: 1400, y: 300, vx: -100, hovering: true, dying: false, hp: 4, maxHp: 4, hurt: 0 });
+  for (let i = 0; i < 200; i += 1) g.enemyShoot(e);
+  if (g.enemyBullets.length !== 24) return `enemy bullet pool grew to ${g.enemyBullets.length}`;
+  // Retire the shooter so only the existing burst is left to expire.
+  for (const x of g.enemies) x.alive = false;
+  run(g, 12);
+  if (g.enemyBullets.some((b) => b.alive)) return 'enemy bullets never expired';
+});
+
+check('airborne enemies settle at their altitude instead of juddering', () => {
+  const g = make();
+  g.start();
+  const e = g.enemies.find((x) => x.alive);
+  Object.assign(e, { type: 'bomber', x: 900, y: ENEMY.SPAWN_Y, vx: 0, dying: false, hovering: false, bobPhase: 0, bombTimer: 999, gunTimer: 999, hp: 1, maxHp: 1, hurt: 0 });
+  for (const other of g.enemies) if (other !== e) other.alive = false;
+  g.player.x = 100;
+  run(g, 4); // long enough to have finished the climb
+  let last = e.y;
+  let biggestStep = 0;
+  for (let i = 0; i < 120; i += 1) {
+    g.update(1 / 60);
+    biggestStep = Math.max(biggestStep, Math.abs(e.y - last));
+    last = e.y;
+    if (Math.abs(e.y - ENEMY.BOMBER_ALTITUDE) > ENEMY.HOVER_AMP + 1) {
+      return `drifted to y = ${e.y.toFixed(1)}, far from its altitude`;
+    }
+  }
+  // A smooth bob moves well under 2 px per frame; the old jitter jumped ~20.
+  if (biggestStep > 2) return `hover jumped ${biggestStep.toFixed(1)} px in one frame`;
+});
+
+check('the axe shockwave damages flies it sweeps through', () => {
+  const g = make();
+  g.start();
+  g.money = 10;
+  g.buy('axe');
+  const e = g.enemies.find((x) => x.alive);
+  for (const other of g.enemies) if (other !== e) other.alive = false;
+  g.player.x = 300;
+  g.player.facing = 1;
+  g.player.lives = 999;
+  // Out of reach of the blade itself, but inside the wave's travel.
+  Object.assign(e, { alive: true, dying: false, type: 'fly', x: 700, y: g.player.y, vx: 0, hp: 1, maxHp: 1, hurt: 0, spawnFlash: 0, bombTimer: 9, gunTimer: 9, hovering: false });
+  g.swingAxe();
+  if (e.dying) return 'the blade reached it directly, so the wave was not tested';
+  if (!g.shockwaves.some((w) => w.alive)) return 'no shockwave was spawned';
+  for (let i = 0; i < 60 && !e.dying; i += 1) g.updateShockwaves(1 / 60);
+  if (!e.dying) return 'the shockwave passed straight through the fly';
+});
+
+check('a shockwave damages each fly only once', () => {
+  const g = make();
+  g.start();
+  const e = g.enemies.find((x) => x.alive);
+  for (const other of g.enemies) if (other !== e) other.alive = false;
+  g.player.x = 300;
+  g.player.facing = 1;
+  Object.assign(e, { alive: true, dying: false, type: 'warfly', x: 620, y: g.player.y, vx: 0, hp: 9, maxHp: 9, hurt: 0, hovering: false });
+  g.spawnShockwave();
+  for (let i = 0; i < 60; i += 1) g.updateShockwaves(1 / 60);
+  if (e.hp !== 8) return `took ${9 - e.hp} hits from one wave`;
 });
 
 check('walking into an enemy costs a life instead of scoring', () => {
@@ -434,11 +627,16 @@ check('rendering draws every live entity kind without a missing sprite', () => {
   g.start();
   g.money = 10;
   g.buy('axe');
-  const [a, b, c] = g.enemies;
-  Object.assign(a, { alive: true, dying: false, type: 'fly', x: 400, y: 700, vx: -100, spawnFlash: 0, bombTimer: 9 });
-  Object.assign(b, { alive: true, dying: false, type: 'gold', x: 800, y: 600, vx: 100, spawnFlash: 0, bombTimer: 9 });
-  Object.assign(c, { alive: true, dying: false, type: 'bomber', x: 1200, y: 220, vx: -100, spawnFlash: 0, bombTimer: 9 });
+  const [a, b, c, d, e] = g.enemies;
+  const base = { alive: true, dying: false, spawnFlash: 0, bombTimer: 9, gunTimer: 9, hurt: 0, hovering: true };
+  Object.assign(a, base, { type: 'fly', x: 400, y: 700, vx: -100, hp: 1, maxHp: 1 });
+  Object.assign(b, base, { type: 'gold', x: 800, y: 600, vx: 100, hp: 1, maxHp: 1 });
+  Object.assign(c, base, { type: 'bomber', x: 1200, y: 220, vx: -100, hp: 1, maxHp: 1 });
+  Object.assign(d, base, { type: 'warfly', x: 600, y: 220, vx: -100, hp: 2, maxHp: 3, hurt: 0.1 });
+  Object.assign(e, base, { type: 'heli', x: 1500, y: 300, vx: 100, hp: 4, maxHp: 4 });
   g.dropBomb(c);
+  g.enemyShoot(d);
+  g.spawnShockwave();
   g.explode(600, 800);
   g.dropCoin(500, 600);
   g.spawnPoof(300, 700);
