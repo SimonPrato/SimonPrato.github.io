@@ -32,7 +32,6 @@
   <link rel="stylesheet" href="./css/chessboard.min.css">
   <link rel="stylesheet" href="./css/style.css?v=15">
   <script src="./js/theme.js"></script>
-  <!-- Google sign-in intentionally not loaded: this static demo has auth disabled. -->
 </head>
 <body>
 
@@ -56,23 +55,6 @@
     <button class="nav-tab" data-page="collection">Collection</button>
     <button class="nav-tab" data-page="settings">Settings</button>
   </nav>
-  <div class="header-auth">
-    <div id="header-auth-guest">
-      <button class="btn-auth btn-login" id="btn-login">Log in</button>
-      <button class="btn-auth btn-signup" id="btn-signup">Sign up free</button>
-    </div>
-    <div id="header-auth-user" style="display:none">
-      <div class="header-user-identity">
-        <div class="header-avatar-wrap">
-          <div class="header-avatar" id="header-avatar" aria-hidden="true"></div>
-          <span class="header-friend-badge" id="header-friend-badge" style="display:none" aria-label="Pending friend requests"></span>
-        </div>
-        <button class="header-username-btn" id="header-username" aria-label="View profile"></button>
-      </div>
-      <span class="header-plan-badge" id="header-plan-badge">Free</span>
-      <button class="btn-auth btn-logout" id="btn-logout">Log out</button>
-    </div>
-  </div>
 </header>
 
 <main id="page-analysis">
@@ -895,7 +877,6 @@
         <div class="profile-header-info">
           <h2 class="profile-username" id="profile-username-display"></h2>
           <div class="profile-meta">
-            <span class="profile-plan-badge" id="profile-plan-badge-display"></span>
             <span class="profile-joined" id="profile-joined-display"></span>
             <span class="profile-friend-count" id="profile-friend-count" style="display:none"></span>
           </div>
@@ -1031,8 +1012,7 @@
       <div id="profile-guest-msg" class="profile-guest-msg" style="display:none">
         <div class="profile-guest-icon"><img class="piece-icon" src="./images/chess_bold_black_pawn.png" alt="" aria-hidden="true"></div>
         <h3>Track your progress</h3>
-        <p>Create a free account to track your puzzle rating, earn achievements, and see your improvement over time.</p>
-        <button class="btn-profile-signup" id="btn-profile-signup">Sign up free</button>
+        <p>Solve puzzles to start tracking your rating, achievements, and improvement over time.</p>
       </div>
 
     </div><!-- /.profile-content -->
@@ -1090,8 +1070,7 @@
     <!-- ── My Collections panel ─────────────────────────────────────────── -->
     <div id="coll-panel-mine" class="coll-panel" role="tabpanel">
 
-      <!-- Logged-in view -->
-      <div id="coll-mine-auth" style="display:none">
+      <div id="coll-mine-auth">
         <div class="coll-mine-toolbar">
           <button class="btn-coll-new" id="btn-coll-new" type="button">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -1120,17 +1099,6 @@
             </div>
           </div>
           <div id="coll-added-grid" class="coll-cards-grid"></div>
-        </div>
-      </div>
-
-      <!-- Guest view -->
-      <div id="coll-mine-guest" class="coll-mine-guest" style="display:none">
-        <div class="coll-guest-icon" aria-hidden="true"><img class="piece-icon" src="./images/chess_bold_black_queen.png" alt="" aria-hidden="true"></div>
-        <h3 class="coll-guest-title">Organise your games</h3>
-        <p class="coll-guest-text">Sign in to create named collections, publish them to the community, and keep your best games for ever.</p>
-        <div class="coll-guest-btns">
-          <button class="btn-primary" id="btn-coll-signin">Sign in</button>
-          <button class="btn-secondary" id="btn-coll-signup">Create account</button>
         </div>
       </div>
 
@@ -1333,7 +1301,6 @@
       <div class="about-hero-pills">
         <span class="about-pill"><span class="about-pill-dot about-pill-dot--green"></span>Google Gemini</span>
         <span class="about-pill"><span class="about-pill-dot about-pill-dot--blue"></span>Stockfish Engine</span>
-        <span class="about-pill"><span class="about-pill-dot about-pill-dot--purple"></span>Free &middot; Premium &middot; Pro</span>
       </div>
     </div>
     <div class="about-grid">
@@ -1399,7 +1366,6 @@
             <option value="" disabled selected>Select a topic...</option>
             <option value="bug">Bug report</option>
             <option value="feature">Feature request</option>
-            <option value="account">Account or billing</option>
             <option value="question">General question</option>
             <option value="other">Other</option>
           </select>
@@ -1417,11 +1383,8 @@
           Your message has been sent. Thank you for reaching out!
         </div>
         <button type="submit" class="btn-primary contact-submit" id="btn-contact-submit">Send message</button>
-        <p class="contact-privacy-note">Your information is used only to respond to your message. See our <a href="./privacy.html" class="auth-link" target="_blank">Privacy Policy</a>.</p>
+        <p class="contact-privacy-note">Your information is used only to respond to your message.</p>
       </form>
-    </div>
-    <div class="about-footer">
-      <p><strong>Free:</strong> ~10 AI analyses per month with a free account, no credit card required. <strong>Premium ($7.99/month or $76.99/year):</strong> ~200 AI analyses per month. <strong>Pro ($19.99/month or $191.99/year):</strong> ~1,000 AI analyses per month. Upgrade from Settings &rarr; Profile &amp; Plan.</p>
     </div>
   </div>
 </div>
@@ -1453,17 +1416,6 @@
           About &amp; Contact
         </button>
       </div>
-      <div class="settings-sidebar-group">
-        <div class="settings-sidebar-group-label">Your Account</div>
-        <button class="settings-sidebar-item" data-settings-section="account">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          Profile &amp; Plan
-        </button>
-        <button class="settings-sidebar-item" data-settings-section="security">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          Security
-        </button>
-      </div>
     </nav>
 
     <!-- Right content area -->
@@ -1479,7 +1431,6 @@
           <div class="about-pills-row">
             <span class="about-pill"><span class="about-pill-dot about-pill-dot--green"></span>Google Gemini</span>
             <span class="about-pill"><span class="about-pill-dot about-pill-dot--blue"></span>Stockfish Engine</span>
-            <span class="about-pill"><span class="about-pill-dot about-pill-dot--purple"></span>Free &middot; Premium &middot; Pro</span>
           </div>
         </div>
         <div class="settings-section">
@@ -1491,10 +1442,6 @@
             <li>Tactical puzzle training with adaptive difficulty</li>
             <li>Game collection, PGN import, and community sharing</li>
           </ul>
-        </div>
-        <div class="settings-section">
-          <h3 class="settings-section-title">Pricing</h3>
-          <p class="settings-about-text"><strong>Free:</strong> ~10 AI analyses per month with a free account, no credit card required.<br><strong>Premium ($7.99/mo or $76.99/yr):</strong> ~200 AI analyses per month.<br><strong>Pro ($19.99/mo or $191.99/yr):</strong> ~1,000 AI analyses per month. Upgrade from Profile &amp; Plan.</p>
         </div>
         <div class="settings-section">
           <h3 class="settings-section-title">Get in Touch</h3>
@@ -1515,7 +1462,6 @@
                 <option value="" disabled selected>Select a topic…</option>
                 <option value="bug">Bug report</option>
                 <option value="feature">Feature request</option>
-                <option value="account">Account or billing</option>
                 <option value="question">General question</option>
                 <option value="other">Other</option>
               </select>
@@ -1531,9 +1477,6 @@
             </div>
             <button type="submit" class="btn-primary contact-submit" id="btn-sc-submit">Send message</button>
           </form>
-        </div>
-        <div class="settings-section">
-          <p class="settings-about-footer"><a href="./terms.html" class="auth-link" target="_blank">Terms of Service</a> · <a href="./privacy.html" class="auth-link" target="_blank">Privacy Policy</a></p>
         </div>
       </div><!-- /settings-panel-about -->
 
@@ -1774,163 +1717,6 @@
 
       </div><!-- /settings-panel-gameplay -->
 
-      <!-- ── Profile & Plan panel ── -->
-      <div class="settings-panel" id="settings-panel-account" style="display:none">
-        <div class="settings-panel-header">
-          <h2 class="settings-page-title">Profile &amp; Plan</h2>
-          <p class="settings-page-subtitle">Manage your account details and subscription.</p>
-        </div>
-
-        <!-- Logged-out state -->
-        <div id="account-logged-out" style="display:none">
-          <div class="settings-section">
-            <div class="account-signin-prompt">
-              <div class="account-signin-icon"><img class="piece-icon" src="./images/chess_bold_black_queen.png" alt="" aria-hidden="true"></div>
-              <h3>Sign in to manage your account</h3>
-              <p>Create a free account to save your progress and upgrade to Premium.</p>
-              <div class="account-signin-btns">
-                <button class="btn-primary" id="account-btn-login">Log in</button>
-                <button class="btn-secondary" id="account-btn-signup">Create account</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Logged-in state -->
-        <div id="account-logged-in" style="display:none">
-          <!-- Profile -->
-          <div class="settings-section">
-            <h3 class="settings-section-title">Profile</h3>
-
-            <!-- Avatar upload -->
-            <div class="account-avatar-section">
-              <div class="account-avatar-wrap">
-                <div class="profile-avatar account-avatar-preview" id="account-avatar-preview"><span id="account-avatar-initial">?</span></div>
-                <div class="account-avatar-controls">
-                  <label class="btn-secondary account-avatar-btn" for="avatar-file-input">Upload photo</label>
-                  <input
-                    type="file"
-                    id="avatar-file-input"
-                    accept="image/jpeg,image/png,image/webp,image/gif"
-                    style="display:none"
-                    aria-label="Upload profile picture"
-                  >
-                  <button class="account-avatar-remove" id="btn-remove-avatar" type="button" style="display:none">Remove photo</button>
-                </div>
-              </div>
-              <p class="account-avatar-hint">JPG, PNG or WebP &middot; max 5 MB</p>
-              <div class="account-avatar-status" id="avatar-upload-status" role="status" aria-live="polite" style="display:none"></div>
-            </div>
-
-            <div class="account-profile-rows">
-              <div class="account-profile-row account-profile-row--username">
-                <span class="account-profile-label">Username</span>
-                <span class="account-profile-value" id="account-username">—</span>
-                <button class="btn-secondary account-username-edit-btn" id="btn-username-edit" type="button">Change</button>
-              </div>
-              <div class="account-username-editor" id="username-editor" style="display:none">
-                <form class="security-form" id="change-username-form" novalidate>
-                  <div class="security-field">
-                    <label class="security-label" for="cu-new">New username</label>
-                    <input
-                      class="security-input"
-                      type="text"
-                      id="cu-new"
-                      autocomplete="off"
-                      autocapitalize="off"
-                      spellcheck="false"
-                      required
-                      minlength="3"
-                      maxlength="30"
-                      placeholder="3–30 letters, numbers or underscores"
-                    >
-                  </div>
-                  <div class="security-error" id="cu-error" role="alert" style="display:none"></div>
-                  <div class="account-username-actions">
-                    <button type="submit" class="btn-primary security-submit">Save username</button>
-                    <button type="button" class="btn-secondary" id="btn-username-cancel">Cancel</button>
-                  </div>
-                  <p class="account-username-hint">You can change your username once every 30 days.</p>
-                </form>
-              </div>
-              <div class="account-username-cooldown" id="username-cooldown-note" style="display:none"></div>
-              <div class="account-profile-row">
-                <span class="account-profile-label">Email</span>
-                <span class="account-profile-value" id="account-email">—</span>
-              </div>
-              <div class="account-profile-row">
-                <span class="account-profile-label">Member since</span>
-                <span class="account-profile-value" id="account-since">—</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div><!-- /settings-panel-account -->
-
-      <!-- ── Security panel ── -->
-      <div class="settings-panel" id="settings-panel-security" style="display:none">
-        <div class="settings-panel-header">
-          <h2 class="settings-page-title">Security</h2>
-          <p class="settings-page-subtitle">Manage your password and account safety.</p>
-        </div>
-
-        <!-- Logged-out state -->
-        <div id="security-logged-out" style="display:none">
-          <div class="settings-section">
-            <div class="account-signin-prompt">
-              <div class="account-signin-icon"><svg aria-hidden="true" viewBox="0 0 44 56" fill="currentColor" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg">
-                <!-- shackle -->
-                <path d="M10 24 L10 16 C10 7.2 34 7.2 34 16 L34 24" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <!-- body -->
-                <rect x="5" y="24" width="34" height="26" rx="4" ry="4"/>
-                <!-- keyhole ring -->
-                <circle cx="22" cy="37" r="4" fill="none" stroke="white" stroke-width="2.5"/>
-                <!-- keyhole stem -->
-                <rect x="20" y="39" width="4" height="6" rx="1" fill="white"/>
-              </svg></div>
-              <h3>Sign in to manage security settings</h3>
-              <p>Log in to change your password or delete your account.</p>
-              <div class="account-signin-btns">
-                <button class="btn-primary" id="security-btn-login">Log in</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Logged-in state -->
-        <div id="security-logged-in" style="display:none">
-          <!-- Change password -->
-          <div class="settings-section">
-            <h3 class="settings-section-title">Change Password</h3>
-            <form class="security-form" id="change-password-form" novalidate>
-              <div class="security-field">
-                <label class="security-label" for="cp-current">Current password</label>
-                <input class="security-input" type="password" id="cp-current" autocomplete="current-password" required>
-              </div>
-              <div class="security-field">
-                <label class="security-label" for="cp-new">New password</label>
-                <input class="security-input" type="password" id="cp-new" autocomplete="new-password" required minlength="8" placeholder="At least 8 characters">
-              </div>
-              <div class="security-field">
-                <label class="security-label" for="cp-confirm">Confirm new password</label>
-                <input class="security-input" type="password" id="cp-confirm" autocomplete="new-password" required>
-              </div>
-              <div class="security-error" id="cp-error" role="alert" style="display:none"></div>
-              <div class="security-success" id="cp-success" role="status" style="display:none">Password changed successfully.</div>
-              <button type="submit" class="btn-primary security-submit">Update password</button>
-            </form>
-          </div>
-
-          <!-- Danger zone -->
-          <div class="settings-section settings-section--danger">
-            <h3 class="settings-section-title settings-section-title--danger">Danger Zone</h3>
-            <p class="settings-danger-desc">Permanently delete your account and all associated data. This cannot be undone.</p>
-            <button class="btn-danger-outline" id="btn-delete-account-open">Delete my account</button>
-          </div>
-        </div>
-      </div><!-- /settings-panel-security -->
-
     </div><!-- /settings-main -->
   </div><!-- /settings-layout -->
 </div>
@@ -2155,18 +1941,6 @@
   </div>
 </div>
 
-<!-- Logout confirmation modal -->
-<div class="modal-overlay" id="logout-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="logout-confirm-title" style="display:none">
-  <div class="modal-box">
-    <h2 id="logout-confirm-title">Log out</h2>
-    <p class="warn-modal-text">Are you sure you want to log out?</p>
-    <div class="modal-actions">
-      <button class="btn-danger" id="btn-logout-confirm">Log out</button>
-      <button class="btn-secondary" id="btn-logout-cancel">Cancel</button>
-    </div>
-  </div>
-</div>
-
 <!-- Analysis-running confirmation modal -->
 <div class="modal-overlay" id="analysis-running-modal" role="dialog" aria-modal="true" aria-labelledby="analysis-running-title" style="display:none">
   <div class="modal-box">
@@ -2248,245 +2022,6 @@
   </div>
 </div>
 
-<!-- Auth modal -->
-<div class="modal-overlay" id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title" style="display:none">
-  <div class="modal-box auth-modal-box">
-
-    <button class="auth-close-btn" id="btn-close-auth" aria-label="Close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-
-    <div class="auth-header">
-      <span class="auth-king-icon" aria-hidden="true"><img class="piece-icon" src="./images/chess_bold_black_queen.png" alt="" aria-hidden="true"></span>
-      <h2 id="auth-modal-title" class="auth-title">Welcome back</h2>
-      <p class="auth-subtitle" id="auth-subtitle">Sign in to your account</p>
-    </div>
-
-    <div class="auth-tabs" role="tablist">
-      <button class="auth-tab active" data-auth-tab="login" role="tab" aria-selected="true">Log in</button>
-      <button class="auth-tab" data-auth-tab="signup" role="tab" aria-selected="false">Sign up</button>
-    </div>
-
-    <div class="auth-social">
-      <div class="google-btn-slot" id="google-btn-slot" style="display:none"></div>
-      <button class="btn-social btn-google" type="button" id="btn-auth-google" data-client-id="">
-        <svg class="social-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-        </svg>
-        Continue with Google
-      </button>
-    </div>
-
-    <div class="auth-divider"><span>or</span></div>
-
-    <div class="auth-forms-wrap">
-    <!-- Log in form -->
-    <form class="auth-form" id="auth-form-login" novalidate>
-      <div class="auth-field">
-        <label class="auth-label" for="login-email">Email or username</label>
-        <input class="auth-input" type="text" id="login-email" name="email"
-               placeholder="you@example.com or username" autocomplete="username" required>
-      </div>
-      <div class="auth-field">
-        <div class="auth-label-row">
-          <label class="auth-label" for="login-password">Password</label>
-          <a href="#" class="auth-link" id="link-forgot-password">Forgot password?</a>
-        </div>
-        <div class="auth-input-wrap">
-          <input class="auth-input" type="password" id="login-password" name="password"
-                 placeholder="••••••••" autocomplete="current-password" required minlength="6">
-          <button type="button" class="auth-eye-btn" data-target="login-password" aria-label="Toggle password visibility">
-            <svg class="eye-icon eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-            <svg class="eye-icon eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
-          </button>
-        </div>
-      </div>
-      <div class="auth-error" id="login-error" role="alert" style="display:none"></div>
-      <button type="submit" class="btn-primary auth-submit">Log in</button>
-    </form>
-
-    <!-- Sign up form -->
-    <form class="auth-form" id="auth-form-signup" novalidate style="display:none">
-      <div class="auth-field">
-        <label class="auth-label" for="signup-username">Username</label>
-        <input class="auth-input" type="text" id="signup-username" name="username"
-               placeholder="chess_master42" autocomplete="username" required minlength="3" maxlength="30">
-      </div>
-      <div class="auth-field">
-        <label class="auth-label" for="signup-email">Email</label>
-        <input class="auth-input" type="email" id="signup-email" name="email"
-               placeholder="you@example.com" autocomplete="email" required>
-      </div>
-      <div class="auth-field">
-        <label class="auth-label" for="signup-password">Password</label>
-        <div class="auth-input-wrap">
-          <input class="auth-input" type="password" id="signup-password" name="password"
-                 placeholder="At least 8 characters" autocomplete="new-password" required minlength="8">
-          <button type="button" class="auth-eye-btn" data-target="signup-password" aria-label="Toggle password visibility">
-            <svg class="eye-icon eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-            <svg class="eye-icon eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
-          </button>
-        </div>
-        <div class="auth-password-strength" id="password-strength" aria-live="polite">
-          <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
-          <span class="strength-label" id="strength-label"></span>
-        </div>
-      </div>
-      <div class="auth-error" id="signup-error" role="alert" style="display:none"></div>
-      <button type="submit" class="btn-primary auth-submit">Create account</button>
-      <p class="auth-terms">By signing up, you agree to our <a href="./terms.html" class="auth-link" target="_blank">Terms</a> and <a href="./privacy.html" class="auth-link" target="_blank">Privacy Policy</a>.</p>
-    </form>
-
-    <!-- Forgot password step -->
-    <div id="auth-forgot-panel" style="display:none">
-      <form id="auth-form-forgot" novalidate>
-        <p class="auth-forgot-intro">Enter your email and we&rsquo;ll send you a reset link.</p>
-        <div class="auth-field">
-          <label class="auth-label" for="forgot-email">Email</label>
-          <input class="auth-input" type="email" id="forgot-email" name="email"
-                 placeholder="you@example.com" autocomplete="email" required>
-        </div>
-        <div class="auth-error" id="forgot-error" role="alert" style="display:none"></div>
-        <button type="submit" class="btn-primary auth-submit">Send reset link</button>
-      </form>
-      <div id="auth-forgot-sent" class="auth-sent-notice" style="display:none" role="status">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="auth-sent-icon" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.79 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012.68 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.64a16 16 0 006 6l1-1c.55-.55 1.4-.7 2.11-.45.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-        <p>Check your inbox. If an account exists for that address, a reset link is on its way.</p>
-        <button type="button" class="auth-link auth-back-btn" id="btn-forgot-back-sent">Back to log in</button>
-      </div>
-      <button type="button" class="auth-link auth-back-btn" id="btn-forgot-back">&#8592; Back to log in</button>
-    </div>
-
-    </div>
-
-  </div>
-</div>
-
-<!-- Email verification banner -->
-<div id="verify-banner" class="verify-banner" role="status" style="display:none">
-  <span class="verify-banner-text">Please verify your email address to keep your account secure.</span>
-  <button type="button" class="verify-banner-resend" id="btn-resend-verification">Resend email</button>
-  <button type="button" class="verify-banner-dismiss" id="btn-dismiss-verify-banner" aria-label="Dismiss"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-</div>
-
-<!-- Reset password modal (opened when ?action=reset&token=... is in URL) -->
-<div class="modal-overlay" id="reset-modal" role="dialog" aria-modal="true" aria-labelledby="reset-modal-title" style="display:none">
-  <div class="modal-box auth-modal-box">
-    <div class="auth-header">
-      <span class="auth-king-icon" aria-hidden="true"><img class="piece-icon" src="./images/chess_bold_black_queen.png" alt="" aria-hidden="true"></span>
-      <h2 id="reset-modal-title" class="auth-title">Set a new password</h2>
-      <p class="auth-subtitle">Choose a strong password for your account.</p>
-    </div>
-    <form id="reset-password-form" novalidate>
-      <div class="auth-field">
-        <label class="auth-label" for="reset-password-new">New password</label>
-        <div class="auth-input-wrap">
-          <input class="auth-input" type="password" id="reset-password-new" name="newPassword"
-                 placeholder="At least 8 characters" autocomplete="new-password" required minlength="8">
-          <button type="button" class="auth-eye-btn" data-target="reset-password-new" aria-label="Toggle password visibility">
-            <svg class="eye-icon eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-            <svg class="eye-icon eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
-          </button>
-        </div>
-        <div class="auth-password-strength" id="reset-strength" aria-live="polite">
-          <div class="strength-bar"><div class="strength-fill" id="reset-strength-fill"></div></div>
-          <span class="strength-label" id="reset-strength-label"></span>
-        </div>
-      </div>
-      <div class="auth-field">
-        <label class="auth-label" for="reset-password-confirm">Confirm password</label>
-        <div class="auth-input-wrap">
-          <input class="auth-input" type="password" id="reset-password-confirm" name="confirmPassword"
-                 placeholder="••••••••" autocomplete="new-password" required minlength="8">
-        </div>
-      </div>
-      <div class="auth-error" id="reset-error" role="alert" style="display:none"></div>
-      <button type="submit" class="btn-primary auth-submit">Set new password</button>
-    </form>
-  </div>
-</div>
-
-<!-- Verify email modal -->
-<div class="modal-overlay" id="verify-email-modal" role="dialog" aria-modal="true" aria-labelledby="verify-email-modal-title" style="display:none">
-  <div class="modal-box verify-email-modal-box">
-    <button class="upgrade-close-btn" id="btn-close-verify-email" aria-label="Close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div class="upgrade-header">
-      <span class="upgrade-icon" aria-hidden="true">&#9993;</span>
-      <h2 id="verify-email-modal-title">Verify your email</h2>
-      <p class="upgrade-subtitle">You need to verify your email address before using neural analysis.</p>
-    </div>
-    <div class="verify-email-modal-body">
-      <p class="verify-email-modal-desc">We sent a verification link to your email when you signed up. Click the link in that email to activate your account.</p>
-      <button class="btn-primary verify-email-resend-btn" id="btn-resend-verification">Resend verification email</button>
-      <p class="verify-email-modal-note" id="verify-email-modal-note" style="display:none"></p>
-    </div>
-    <p class="upgrade-disclaimer">Check your spam folder if you don&rsquo;t see it.</p>
-  </div>
-</div>
-
-<!-- Upgrade modal -->
-<div class="modal-overlay" id="upgrade-modal" role="dialog" aria-modal="true" aria-labelledby="upgrade-modal-title" style="display:none">
-  <div class="modal-box upgrade-modal-box">
-    <button class="upgrade-close-btn" id="btn-close-upgrade" aria-label="Close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div class="upgrade-header">
-      <span class="upgrade-icon" aria-hidden="true"><img class="piece-icon" src="./images/chess_bold_black_queen.png" alt="" aria-hidden="true"></span>
-      <h2 id="upgrade-modal-title">Upgrade to Premium</h2>
-      <p id="upgrade-subtitle" class="upgrade-subtitle">You've used all your free analyses today.</p>
-    </div>
-    <div class="upgrade-billing-toggle" role="group" aria-label="Billing period">
-      <button class="upgrade-billing-btn upgrade-billing-btn--active" id="btn-billing-monthly" data-interval="monthly">Monthly</button>
-      <button class="upgrade-billing-btn" id="btn-billing-annual" data-interval="annual">Annual <span class="upgrade-billing-save">Save 20%</span></button>
-    </div>
-    <div class="upgrade-plans">
-      <div class="upgrade-plan upgrade-plan--free">
-        <div class="upgrade-plan-name">Free</div>
-        <div class="upgrade-plan-price">$0</div>
-        <ul class="upgrade-plan-features">
-          <li>10 AI analyses per month</li>
-          <li>Stockfish evaluation</li>
-          <li>Puzzles with rating</li>
-        </ul>
-      </div>
-      <div class="upgrade-plan upgrade-plan--premium">
-        <div class="upgrade-plan-best">Most popular</div>
-        <div class="upgrade-plan-name">Premium</div>
-        <div class="upgrade-plan-price" id="upgrade-plan-price">$7.99<span class="upgrade-plan-period">/month</span></div>
-        <div class="upgrade-plan-annual-note" id="upgrade-plan-annual-note" style="display:none">Billed $76.99/year</div>
-        <ul class="upgrade-plan-features">
-          <li><span class="upgrade-check">&#10003;</span> 200 AI analyses per month</li>
-          <li><span class="upgrade-check">&#10003;</span> AI puzzle hints</li>
-          <li><span class="upgrade-check">&#10003;</span> Persona commentary &amp; chat</li>
-          <li><span class="upgrade-check">&#10003;</span> Unlimited game saves</li>
-        </ul>
-      </div>
-    </div>
-    <div class="upgrade-actions">
-      <button class="btn-primary upgrade-cta-btn" id="btn-upgrade-checkout">Upgrade for $7.99/month</button>
-      <p class="upgrade-login-hint" id="upgrade-login-hint" style="display:none">
-        <a href="#" id="upgrade-login-link">Log in</a> or <a href="#" id="upgrade-signup-link">sign up</a> first, then upgrade.
-      </p>
-    </div>
-    <p class="upgrade-disclaimer">Cancel anytime. No hidden fees.</p>
-  </div>
-</div>
-
-<!-- Delete account confirmation modal -->
-<div class="modal-overlay" id="delete-account-modal" role="dialog" aria-modal="true" aria-labelledby="delete-account-title" style="display:none">
-  <div class="modal-box">
-    <h2 id="delete-account-title">Delete account?</h2>
-    <p class="warn-modal-text">This permanently deletes your account and all data. Enter your password to confirm.</p>
-    <div class="security-field" style="margin-top:1rem">
-      <input class="security-input" type="password" id="delete-account-password" placeholder="Your password" autocomplete="current-password">
-    </div>
-    <div class="security-error" id="delete-account-error" role="alert" style="display:none"></div>
-    <div class="modal-actions">
-      <button class="btn-danger" id="btn-delete-account-confirm">Yes, delete my account</button>
-      <button class="btn-secondary" id="btn-delete-account-cancel">Cancel</button>
-    </div>
-  </div>
-</div>
-
 <!-- Play: Game over / save prompt modal -->
 <div class="modal-overlay" id="play-game-over-modal" role="dialog" aria-modal="true" aria-labelledby="play-game-over-title" style="display:none">
   <div class="modal-box play-game-over-box">
@@ -2564,13 +2099,6 @@
   <div id="preview-board"></div>
 </div>
 
-<!-- Site footer with legal links -->
-<footer class="site-footer">
-  <a href="./terms.html" class="site-footer-link">Terms of Service</a>
-  <span class="site-footer-sep">&middot;</span>
-  <a href="./privacy.html" class="site-footer-link">Privacy Policy</a>
-</footer>
-
 <!-- Mobile drawer backdrop -->
 <div class="mobile-drawer-backdrop" id="mobile-drawer-backdrop"></div>
 
@@ -2610,15 +2138,6 @@
     </button>
   </nav>
 
-  <div class="drawer-footer">
-    <div class="drawer-auth-section" id="drawer-auth-guest">
-      <button class="drawer-auth-btn drawer-btn-login" id="btn-drawer-login">Log in</button>
-      <button class="drawer-auth-btn drawer-btn-signup" id="btn-drawer-signup">Sign up free</button>
-    </div>
-    <div class="drawer-auth-section" id="drawer-auth-user" style="display:none">
-      <button class="drawer-auth-btn drawer-btn-logout" id="btn-drawer-logout">Log out</button>
-    </div>
-  </div>
 </aside>
 
 <!-- Mobile annotation popup -->
@@ -2720,11 +2239,6 @@
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         New collection…
       </button>
-    </div>
-
-    <div id="coll-save-login-hint" class="coll-save-login-hint" style="display:none">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      <a href="#" id="coll-save-login-link">Sign in</a> to organise games into named collections.
     </div>
 
     <div class="modal-actions">
@@ -2850,21 +2364,6 @@
         </div>
         <div class="browse-footer-done" id="browse-footer-done" style="display:none"></div>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- Login-required modal (shown when guest tries to save to collection) -->
-<div class="modal-overlay" id="login-required-modal" role="dialog" aria-modal="true" aria-labelledby="login-required-title" style="display:none">
-  <div class="modal-box login-required-box">
-    <div class="login-required-icon">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-    </div>
-    <h2 id="login-required-title">Sign in to save games</h2>
-    <p class="login-required-text">Create a free account to save games to your collection, track your progress, and access your games from any device.</p>
-    <div class="modal-actions">
-      <button class="btn-primary" id="btn-login-required-signin">Sign in / Register</button>
-      <button class="btn-secondary" id="btn-login-required-cancel">Not now</button>
     </div>
   </div>
 </div>
