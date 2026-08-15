@@ -1,0 +1,16 @@
+
+
+
+html, body {position:relative; background-size:contain;overflow: hidden;height: 100%; /* For 100% screen height */  width:  100%;background-repeat:no-repeat;margin:0px;} /* just to be sure these are full screen*/
+
+ #canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 100vh; /* For 100% screen height */
+    width:  100vw;
+
+	cursor: default;
+}

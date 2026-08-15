@@ -1,0 +1,13 @@
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Source files for the artwork, not needed to run the game
+*.pdn
+
+# Nothing here is built, but keep these out if tooling ever appears
+node_modules/
+dist/

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Flygame — squash the flies</title>
+    <meta
+      name="description"
+      content="A small browser arcade game: jump on flies, buy a shotgun, survive the swarm. Originally written as a childhood project, rebuilt for modern browsers."
+    />
+    <meta name="theme-color" content="#0b0d12" />
+    <meta name="color-scheme" content="dark" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Flygame" />
+    <meta property="og:description" content="Jump on flies, buy a shotgun, survive the swarm." />
+    <meta property="og:image" content="img/startScreen.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="img/fly.png" />
+    <link rel="apple-touch-icon" href="img/fly.png" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <link rel="preload" as="image" href="img/logo.png" />
+    <link rel="preload" as="image" href="img/Mann_1.png" />
+    <link rel="preload" as="image" href="img/Fliege_1.png" />
+  </head>
+
+  <body>
+    <div id="stage">
+      <canvas id="game" aria-label="Flygame playfield" role="img"></canvas>
+
+      <div id="overlay">
+        <!-- ---------------------------------------------------------- HUD -->
+        <header id="hud" hidden>
+          <div class="hud__group">
+            <div class="stat" id="stat-score">
+              <span class="stat__label">Score</span>
+              <span class="stat__value" id="hud-score" aria-live="polite" aria-atomic="true">0</span>
+            </div>
+            <div class="stat">
+              <span class="stat__label">Best</span>
+              <span class="stat__value stat__value--muted" id="hud-best">0</span>
+            </div>
+          </div>
+
+          <div class="hud__group hud__group--center">
+            <p class="combo" id="hud-combo" hidden></p>
+          </div>
+
+          <div class="hud__group hud__group--right">
+            <div class="lives" id="hud-lives" role="img" aria-label="Lives remaining"></div>
+            <div class="coins">
+              <img src="img/coin_1.png" alt="" width="28" height="28" />
+              <span id="hud-money">0</span>
+            </div>
+            <ul class="slots" id="hud-slots" aria-label="Weapons"></ul>
+            <button
+              type="button"
+              class="icon-btn"
+              id="btn-pause"
+              title="Pause (Esc)"
+              aria-label="Pause"
+            >
+              ❚❚
+            </button>
+          </div>
+        </header>
+
+        <!-- ------------------------------------------------------ touchpad -->
+        <div id="touchpad" hidden aria-hidden="true">
+          <div class="pad pad--left">
+            <button class="pad__btn" data-action="left" aria-label="Move left">◀</button>
+            <button class="pad__btn" data-action="right" aria-label="Move right">▶</button>
+          </div>
+          <div class="pad pad--right">
+            <button class="pad__btn pad__btn--alt" data-action="swap" aria-label="Switch weapon">⇄</button>
+            <button class="pad__btn" data-action="fire" aria-label="Attack">✦</button>
+            <button class="pad__btn pad__btn--big" data-action="jump" aria-label="Jump">▲</button>
+          </div>
+        </div>
+
+        <!-- --------------------------------------------------------- panel -->
+        <div id="panel" class="panel" role="dialog" aria-modal="true" aria-labelledby="panel-title">
+          <!-- filled by src/ui.js -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Shown by CSS on portrait touch devices, where a 16:9 stage collapses
+         to an unplayable strip. -->
+    <div id="rotate">
+      <p class="rotate__icon" aria-hidden="true">📱</p>
+      <h2>Turn your device</h2>
+      <p>Flygame is played sideways. Rotate to landscape to start.</p>
+    </div>
+
+    <noscript>
+      <div class="fallback">
+        <h1>Flygame</h1>
+        <p>This game needs JavaScript. Please enable it and reload the page.</p>
+      </div>
+    </noscript>
+
+    <div class="fallback" id="file-protocol-warning" hidden>
+      <h1>Flygame</h1>
+      <p>
+        The game is built from ES modules, which browsers refuse to load straight off the
+        file system. Serve the folder over HTTP instead:
+      </p>
+      <pre><code>python3 -m http.server 8000</code></pre>
+      <p>Then open <a href="http://localhost:8000">http://localhost:8000</a>.</p>
+    </div>
+
+    <script type="module" src="src/main.js"></script>
+    <script>
+      // ES modules never run from file://, so give a real explanation instead of
+      // a blank page.
+      if (location.protocol === 'file:') {
+        document.getElementById('file-protocol-warning').hidden = false;
+        document.getElementById('stage').hidden = true;
+      }
+    </script>
+  </body>
+</html>
