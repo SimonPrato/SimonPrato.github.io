@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Thesis &mdash; Simon Prato</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="./css/thesis-viewer.css">
+</head>
+<body>
+    <div class="page">
+        <header class="site-header">
+            <p class="site-title"><a href="../">Simon Prato</a></p>
+            <nav class="breadcrumb"><a href="./">&larr; Other</a></nav>
+        </header>
+
+        <main>
+            <h1>Master Thesis</h1>
+
+            <div class="viewer-toolbar">
+                <div class="viewer-nav">
+                    <button id="prevBtn" type="button" disabled>&larr; Previous 5</button>
+                    <span id="pageRange" class="page-range">Loading&hellip;</span>
+                    <button id="nextBtn" type="button" disabled>Next 5 &rarr;</button>
+                </div>
+                <a id="downloadBtn" class="download-btn" href="./master-thesis.pdf" download="master-thesis-prato.pdf">
+                    Download PDF
+                </a>
+            </div>
+
+            <p id="viewerStatus" class="viewer-status"></p>
+            <div id="pdfPages" class="pdf-pages"></div>
+        </main>
+
+        <footer class="site-footer">
+            <p>&copy; 2026 Simon Prato</p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="./js/thesis-viewer.js"></script>
+</body>
+</html>
