@@ -10,9 +10,21 @@
 
     var pagesContainer = document.getElementById('pdfPages');
     var statusEl = document.getElementById('viewerStatus');
-    var rangeEl = document.getElementById('pageRange');
-    var prevBtn = document.getElementById('prevBtn');
-    var nextBtn = document.getElementById('nextBtn');
+    var rangeEls = [document.getElementById('pageRange'), document.getElementById('pageRangeBottom')];
+    var prevBtns = [document.getElementById('prevBtn'), document.getElementById('prevBtnBottom')];
+    var nextBtns = [document.getElementById('nextBtn'), document.getElementById('nextBtnBottom')];
+
+    function setText(elements, text) {
+        elements.forEach(function (el) {
+            el.textContent = text;
+        });
+    }
+
+    function setDisabled(buttons, disabled) {
+        buttons.forEach(function (btn) {
+            btn.disabled = disabled;
+        });
+    }
 
     var pdfDoc = null;
     var batchStart = 1;
@@ -30,8 +42,8 @@
         }
 
         var token = ++renderToken;
-        prevBtn.disabled = true;
-        nextBtn.disabled = true;
+        setDisabled(prevBtns, true);
+        setDisabled(nextBtns, true);
         setStatus('Rendering pages…');
         pagesContainer.innerHTML = '';
 
@@ -46,9 +58,9 @@
                 return;
             }
             if (pageNum > batchEnd) {
-                rangeEl.textContent = 'Pages ' + batchStart + '–' + batchEnd + ' of ' + pdfDoc.numPages;
-                prevBtn.disabled = batchStart <= 1;
-                nextBtn.disabled = batchEnd >= pdfDoc.numPages;
+                setText(rangeEls, 'Pages ' + batchStart + '–' + batchEnd + ' of ' + pdfDoc.numPages);
+                setDisabled(prevBtns, batchStart <= 1);
+                setDisabled(nextBtns, batchEnd >= pdfDoc.numPages);
                 setStatus('');
                 return;
             }
@@ -103,19 +115,23 @@
         document.querySelector('.viewer-toolbar').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    prevBtn.addEventListener('click', function () {
-        batchStart = Math.max(1, batchStart - BATCH_SIZE);
-        renderBatch();
-        scrollToTop();
+    prevBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            batchStart = Math.max(1, batchStart - BATCH_SIZE);
+            renderBatch();
+            scrollToTop();
+        });
     });
 
-    nextBtn.addEventListener('click', function () {
-        if (!pdfDoc) {
-            return;
-        }
-        batchStart = Math.min(pdfDoc.numPages, batchStart + BATCH_SIZE);
-        renderBatch();
-        scrollToTop();
+    nextBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            if (!pdfDoc) {
+                return;
+            }
+            batchStart = Math.min(pdfDoc.numPages, batchStart + BATCH_SIZE);
+            renderBatch();
+            scrollToTop();
+        });
     });
 
     window.addEventListener('resize', function () {

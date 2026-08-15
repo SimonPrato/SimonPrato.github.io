@@ -9,6 +9,16 @@
     border-bottom: 1px solid var(--border);
 }
 
+.viewer-toolbar-bottom {
+    margin-top: 16px;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    padding-top: 20px;
+    border-bottom: none;
+    border-top: 1px solid var(--border);
+    justify-content: center;
+}
+
 .viewer-nav {
     display: flex;
     align-items: center;
