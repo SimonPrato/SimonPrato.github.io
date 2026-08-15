@@ -154,23 +154,57 @@ Generated during simulation and synthesis (not version controlled):
 
 ## BIST Controller States
 
-| State | Description | Outputs |
-|-------|-------------|---------|
-| S0 | Idle - Waiting for BIST start | mode=0, bist_end=0, init=0, running=0, finish=0 |
-| S1 | Initialize - Reset LFSR and MISR | mode=0, bist_end=0, init=1, running=0, finish=0 |
-| S2 | Running - Apply test patterns (N cycles) | mode=1, bist_end=0, init=0, running=1, finish=0 |
-| S3 | Pattern complete - Check iteration count | mode=0, bist_end=0, init=0, running=1, finish=0 |
-| S4 | Finish - Final signature ready | mode=0, bist_end=0, init=0, running=0, finish=1 |
-| S5 | End - BIST complete, results available | mode=0, bist_end=1, init=0, running=0, finish=0 |
+The controller FSM has six states. `S0` is the reset state; `bist_start` rising from 0→1 kicks off a run, which sweeps through initialization (`S1`), pattern scan/capture (`S2`↔`S3`), and finish/end (`S4`→`S5`) before returning to `S1` on the next `bist_start` pulse.
 
-**State Transitions:**
-- S0→S1: Rising edge of `bist_start`
-- S1→S2: Always after one cycle
-- S2→S3: After N=13 scan cycles
-- S3→S2: If `cnt_m ≤ M`
-- S3→S4: If `cnt_m > M` (1023 patterns complete)
-- S4→S5: Always after one cycle
-- S5→S1: Rising edge of `bist_start` (restart)
+```mermaid
+stateDiagram-v2
+    [*] --> S0 : reset = 1
+    S0 --> S0 : bist_start = 0
+    S0 --> S1 : bist_start = 0 → 1
+    S1 --> S2 : else
+    S2 --> S2 : cnt_n < N
+    S2 --> S3 : cnt_n >= N
+    S3 --> S2 : cnt_m < M
+    S3 --> S4 : cnt_m >= M
+    S4 --> S5 : else
+    S5 --> S5 : else
+    S5 --> S1 : bist_start = 0 → 1
+```
+
+### State Descriptions
+
+| State | Description |
+|-------|-------------|
+| S0 | Idle - waiting for BIST start |
+| S1 | Initialize - reset LFSR and MISR |
+| S2 | Running - shift the current pattern through the scan chain (N cycles) |
+| S3 | Pattern complete - check iteration count against M |
+| S4 | Finish - final signature ready |
+| S5 | End - BIST complete, results available |
+
+### Output Variables per State
+
+| State | mode | init | running | finish | bist_end |
+|-------|:----:|:----:|:-------:|:------:|:--------:|
+| S0 | 0 | 0 | 0 | 0 | 0 |
+| S1 | 0 | 1 | 0 | 0 | 0 |
+| S2 | 1 | 0 | 1 | 0 | 0 |
+| S3 | 0 | 0 | 1 | 0 | 0 |
+| S4 | 0 | 0 | 0 | 1 | 0 |
+| S5 | 0 | 0 | 0 | 0 | 1 |
+
+### State Transitions
+
+- **S0 → S0**: `bist_start = 0` — hold in Idle
+- **S0 → S1**: `bist_start` rising edge (0→1) — BIST triggered
+- **S1 → S2**: unconditional — LFSR/MISR initialized after one cycle
+- **S2 → S2**: `cnt_n < N` — still shifting the current pattern through the scan chain
+- **S2 → S3**: `cnt_n >= N` — N=13 scan cycles for this pattern complete
+- **S3 → S2**: `cnt_m < M` — more patterns remain, load the next one
+- **S3 → S4**: `cnt_m >= M` — all M=1023 patterns applied
+- **S4 → S5**: unconditional — one cycle after entering Finish
+- **S5 → S5**: `bist_start = 0` — hold in End, results available
+- **S5 → S1**: `bist_start` rising edge (0→1) — restart BIST
 
 ## Test Sequence
 
@@ -479,4 +513,4 @@ This removes:
 
 ---
 
-**Last Updated**: January 16, 2026  
+**Last Updated**: August 15, 2026  
