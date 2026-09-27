@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Standing Wave &amp; VSWR Calculator &mdash; Simon Prato</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+    <div class="page">
+        <header class="site-header">
+            <p class="site-title"><a href="../">Simon Prato</a></p>
+            <nav class="breadcrumb"><a href="../">&larr; Projects</a></nav>
+        </header>
+
+        <main>
+            <h1>Standing Wave &amp; VSWR Calculator</h1>
+
+            <p>
+                A transmitted (incident) wave and a reflected wave travel in opposite directions along a line.
+                Their superposition is animated below; when the two amplitudes are equal and the reflection is
+                phase-inverted, the sum forms a true standing wave with stationary nodes. The panel also computes
+                the reflection coefficient, the Voltage Standing Wave Ratio (VSWR), and the return loss from the
+                two amplitudes.
+            </p>
+
+            <div class="canvas-wrap">
+                <canvas id="plot" width="880" height="360" aria-label="Transmitted, reflected and sum wave animation"></canvas>
+            </div>
+
+            <div class="legend">
+                <span><span class="dot dot-incident"></span>Transmitted (&rarr;)</span>
+                <span><span class="dot dot-reflected"></span>Reflected (&larr;)</span>
+                <span><span class="dot dot-sum"></span>Sum (standing wave)</span>
+            </div>
+
+            <div class="vswr-row">
+                <div class="vswr-block">
+                    <div class="vswr-label">Reflection coeff. |&Gamma;|</div>
+                    <div class="vswr-value" id="gammaOut">0.00</div>
+                </div>
+                <div class="vswr-block">
+                    <div class="vswr-label">VSWR</div>
+                    <div class="vswr-value" id="vswrOut">1.00</div>
+                </div>
+                <div class="vswr-block">
+                    <div class="vswr-label">Return loss</div>
+                    <div class="vswr-value" id="rlOut">&infin; dB</div>
+                </div>
+            </div>
+            <p class="note" id="vswrNote">
+                VSWR = (1 + |&Gamma;|) / (1 &minus; |&Gamma;|), with |&Gamma;| = A&#8322; / A&#8321;
+                (reflected amplitude over transmitted amplitude).
+            </p>
+
+            <div class="controls">
+                <div class="control">
+                    <label>Transmitted amplitude (A&#8321;) <span class="val" id="a1val">1.00</span></label>
+                    <input type="range" id="a1" min="0" max="1.5" step="0.01" value="1.0">
+                </div>
+                <div class="control">
+                    <label>Reflected amplitude (A&#8322;) <span class="val" id="a2val">1.00</span></label>
+                    <input type="range" id="a2" min="0" max="1.5" step="0.01" value="1.0">
+                </div>
+                <div class="control">
+                    <label>Animation speed <span class="val" id="speedval">1.00&times;</span></label>
+                    <input type="range" id="speed" min="0.1" max="3" step="0.05" value="1.0">
+                </div>
+                <div class="control">
+                    <label>Wavelengths shown <span class="val" id="wlval">3</span></label>
+                    <input type="range" id="wl" min="1" max="6" step="1" value="3">
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="toggle">
+                    <input type="checkbox" id="invert" checked>
+                    Invert reflected wave (fixed-end reflection)
+                </label>
+                <div class="buttons">
+                    <button class="primary" id="playpause" type="button">Pause</button>
+                    <button id="reset" type="button">Reset phase</button>
+                </div>
+            </div>
+
+            <p class="note">
+                Fixed-end reflection (e.g. a short-circuit termination) flips the reflected wave's phase by 180&deg;,
+                producing nodes where the sum is always zero. Free-end reflection (open-circuit termination) keeps
+                the phase, producing antinodes at the boundary instead. In both cases, |&Gamma;| depends only on the
+                amplitude ratio A&#8322;/A&#8321; and not on the phase convention.
+            </p>
+        </main>
+
+        <footer class="site-footer">
+            <p>&copy; 2026 Simon Prato</p>
+        </footer>
+    </div>
+
+    <script src="./js/main.js"></script>
+</body>
+</html>
