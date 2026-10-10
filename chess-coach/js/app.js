@@ -1665,14 +1665,16 @@ function clearClickSelection() {
 // ---------------------------------------------------------------------------
 let evalAbortController = null;
 let _evalDebounceTimer  = null;
+let _evalRetryTimer     = null;
 let _evalGen            = 0;
 
 function scheduleEvalUpdate() {
-  // Kill running stream immediately — don't wait for the debounce.
+  // Invalidate pending callbacks as soon as the position or visibility changes.
+  ++_evalGen;
   if (evalAbortController) { evalAbortController.abort(); evalAbortController = null; }
   clearTimeout(_evalDebounceTimer);
+  clearTimeout(_evalRetryTimer);
 
-  // Immediately show neutral/loading state so stale eval is never visible.
   resetEvalBar();
   markStockfishLinesStale();
 
@@ -1681,15 +1683,27 @@ function scheduleEvalUpdate() {
 }
 
 function startEvalStream() {
+  clearTimeout(_evalRetryTimer);
   if (state.game.game_over() || state.currentNode.gameResult) return;
   if (!state.evalVisible) return;
 
   if (evalAbortController) { evalAbortController.abort(); }
   evalAbortController = new AbortController();
 
-  const gen    = ++_evalGen;   // generation stamp — stale chunks check against this
+  const gen    = ++_evalGen;
   const signal = evalAbortController.signal;
   const fen    = state.game.fen();
+
+  // Yield to the browser before reconnecting, including on an empty stream.
+  // An immediate Promise-based reconnect can starve rendering and input.
+  const retry = () => {
+    if (signal.aborted || gen !== _evalGen || !state.evalVisible) return;
+    clearTimeout(_evalRetryTimer);
+    _evalRetryTimer = setTimeout(() => {
+      _evalRetryTimer = null;
+      if (!signal.aborted && gen === _evalGen && state.evalVisible) startEvalStream();
+    }, 1500);
+  };
 
   fetch('/api/evaluate/stream', {
     method: 'POST',
@@ -1698,26 +1712,19 @@ function startEvalStream() {
     signal,
     body: JSON.stringify({ fen, moves: [], skillLevel: state.skillLevel }),
   }).then(response => {
-    if (gen !== _evalGen) return;                          // superseded before response arrived
-    if (!response.ok) {
-      if (gen === _evalGen) setTimeout(() => { if (gen === _evalGen) startEvalStream(); }, 1500);
-      return;
-    }
-
+    if (signal.aborted || gen !== _evalGen) return;
+    if (!response.ok || !response.body) { retry(); return; }
 
     const reader  = response.body.getReader();
     const decoder = new TextDecoder();
     let buffer    = '';
     let gotFinal  = false;
 
+    const retryIncomplete = () => { if (!gotFinal) retry(); };
     const pump = ({ done, value }) => {
-      if (gen !== _evalGen) { reader.cancel().catch(() => {}); return; } // generation expired
-      if (done) {
-        // Only restart on unexpected close — not on intentional abort.
-        // signal.aborted is the authoritative flag; gen===_evalGen is a belt-and-suspenders guard.
-        if (!gotFinal && !signal.aborted && gen === _evalGen) startEvalStream();
-        return;
-      }
+      if (signal.aborted || gen !== _evalGen) { reader.cancel().catch(() => {}); return; }
+      if (done) { retryIncomplete(); return; }
+
       buffer += decoder.decode(value, { stream: true });
       const parts = buffer.split('\n\n');
       buffer = parts.pop();
@@ -1727,6 +1734,15 @@ function startEvalStream() {
         if (!dataLine) continue;
         try {
           const data = JSON.parse(dataLine.slice(6));
+          if (data.type === 'error') {
+            // Backend errors (including the static demo's disabled API) are
+            // terminal responses, not connection failures to reconnect to.
+            gotFinal = true;
+            const hint = document.getElementById('stockfish-lines-hint');
+            if (hint) hint.textContent = data.message || 'Evaluation unavailable';
+            reader.cancel().catch(() => {});
+            return;
+          }
           if (data.type === 'latency') { showTrafficNotice(); continue; }
           updateEvalBar(data.numericScore, data.display);
           if (data.bestMoveUCI) {
@@ -1737,18 +1753,12 @@ function startEvalStream() {
           if (data.isFinal) gotFinal = true;
         } catch (_) {}
       }
-      reader.read().then(pump).catch(() => {
-        if (!gotFinal && !signal.aborted && gen === _evalGen) startEvalStream();
-      });
+      reader.read().then(pump).catch(retryIncomplete);
     };
 
-    reader.read().then(pump).catch(() => {
-      if (!gotFinal && !signal.aborted && gen === _evalGen) startEvalStream();
-    });
+    reader.read().then(pump).catch(retryIncomplete);
   }).catch(e => {
-    if (e.name !== 'AbortError' && gen === _evalGen) {
-      setTimeout(() => { if (gen === _evalGen) startEvalStream(); }, 1500);
-    }
+    if (e.name !== 'AbortError') retry();
   });
 }
 
