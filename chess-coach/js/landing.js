@@ -56,7 +56,7 @@ document.querySelectorAll('.reveal:not(.hero .reveal)').forEach(el => observer.o
 // ── Nav tabs → navigate to app ────────────────────────────────────
 document.querySelectorAll('.nav-tab[data-page], .drawer-nav-btn[data-page]').forEach(btn => {
   btn.addEventListener('click', () => {
-    window.location.href = '/app#' + btn.dataset.page;
+    window.location.href = './app.html#' + btn.dataset.page;
   });
 });
 
