@@ -27,3 +27,58 @@
 .length-shortcuts button{font-size:.8rem;padding:4px 10px;min-width:39px}
 .boundary-note{font-size:.88rem;color:var(--muted);margin-top:20px}
 @media(max-width:520px){.parameter-groups{grid-template-columns:1fr;gap:18px}.parameter-group+.parameter-group{border-top:1px solid var(--line);padding-top:18px}.parameter-group+.parameter-group legend{margin-bottom:14px}.value-input input[type=number],.load-model{font-size:16px}}
+
+/* Article hierarchy: readable prose, generous figures and quiet navigation. */
+.page{max-width:840px;padding-top:56px}
+.site-header{margin-bottom:56px}
+.article-header{max-width:660px}
+h1{font-size:2rem;line-height:1.25;letter-spacing:-.025em;margin-bottom:18px}
+.lead{font-size:1.08rem;line-height:1.7;margin:0}
+.contents{padding:26px 0;margin:36px 0 56px}
+.contents>span{font-size:1rem;font-weight:600}
+.contents-layout{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:20px}
+.contents-label{font-size:.73rem;letter-spacing:.065em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.contents ul,.contents ol{display:block;margin:0;padding:0;list-style:none}
+.contents ol{counter-reset:contents}
+.contents li{margin:7px 0}
+.contents ol li{counter-increment:contents}
+.contents ol li:before{content:'0' counter(contents);font-size:.75rem;color:var(--muted);display:inline-block;width:28px;font-variant-numeric:tabular-nums}
+.contents a{font-size:.9rem;text-decoration:none}
+.contents a:hover{text-decoration:underline}
+section{margin-top:80px;padding-top:36px}
+.section-label{display:block;color:var(--muted);font-size:.75rem;letter-spacing:.045em;margin-bottom:10px}
+h2{font-size:1.4rem;line-height:1.35;letter-spacing:-.015em;margin-bottom:22px;max-width:680px}
+h3{font-size:1.06rem;margin-top:36px;margin-bottom:14px}
+section>p,section>h3,.detail-body{max-width:680px}
+p{margin:18px 0;line-height:1.75}
+.equation{max-width:680px;margin:26px 0;padding:18px 22px;background:transparent;border-left:2px solid var(--line);line-height:2}
+.reading-guide,.theory-detail{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 0;margin:24px 0}
+.theory-detail+.theory-detail{border-top:0;margin-top:-24px}
+summary{font-size:.9rem;color:var(--text);line-height:1.6}
+.detail-body{padding-top:12px}
+.detail-body p,.reading-guide p{font-size:.95rem;color:var(--text)}
+.reading-guide p{max-width:680px}
+.simulator{margin:32px 0;padding:26px 24px;border:1px solid var(--line);border-radius:4px}
+.parameter-groups{gap:40px;padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:24px}
+.parameter-group legend{font-weight:600;margin-bottom:18px}
+.load-values{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.sim-title{margin-bottom:18px}
+.sim-title strong{font-weight:600}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;border:0;padding:0;margin:0 0 24px}
+.metric{line-height:1.5;font-size:.73rem}
+.metric output{margin-top:5px;font-size:.95rem}
+.circuit{margin:12px 0 30px}
+.plots{grid-template-columns:minmax(0,1.5fr) minmax(240px,1fr);gap:28px}
+.plot-heading{font-size:.8rem;margin:0 0 10px;color:var(--muted)}
+.waves .plot-heading:not(:first-child){margin-top:22px}
+.legend{margin:24px 0 18px;gap:12px 20px}
+.display-settings{border-top:1px solid var(--line);padding-top:16px;margin-bottom:18px}
+.display-settings summary{font-size:.8rem;color:var(--muted)}
+.view-options{margin:16px 0 0;gap:12px 20px}
+.playback{margin:18px 0 0;gap:20px}
+.sim-note{font-size:.72rem;line-height:1.6;margin:16px 0 0}
+.chart-caption{line-height:1.65}
+footer{padding-top:26px;border-top:1px solid var(--line);margin-top:80px}
+@media(max-width:700px){.simulator{padding:22px 16px}.plots{grid-template-columns:1fr}.smith{max-width:360px;width:100%;margin:26px auto 0}.metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.parameter-groups{gap:24px}.load-values{grid-template-columns:1fr;gap:0}}
+@media(max-width:520px){body{padding:0 20px}.page{padding-top:32px}.site-header{margin-bottom:40px}h1{font-size:1.7rem}h2{font-size:1.25rem}.contents-layout{grid-template-columns:1fr;gap:22px}.contents{margin-bottom:44px}section{margin-top:56px}.simulator{margin-left:-6px;margin-right:-6px;padding:20px 12px}.equation{padding:12px 14px;font-size:1rem}.parameter-groups{gap:20px}.phase-control{flex-wrap:wrap;min-width:0}.phase-control input{flex:1;min-width:80px}}
+@media print{details:not([open])>.detail-body{display:block}.display-settings{display:none}.simulator{border:0}}

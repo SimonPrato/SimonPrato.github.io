@@ -12,20 +12,24 @@
 <header class="site-header"><a class="home" href="../">Simon Prato</a><a class="back" href="../">← All projects</a></header>
 <main>
 <div class="eyebrow">An interactive field guide</div>
-<h1>Transmission Line Explorer</h1>
-<p class="lead">A resistor can look bigger. An inductor can look like an open circuit. The energy still has to go somewhere. Follow the voltage, current and fields to see why.</p>
-<nav class="contents" aria-label="Table of contents"><span>On this page</span><ol><li><a href="#explorer">Adjustable explorer</a></li><li><a href="#inductors">Inductors</a></li><li><a href="#capacitors">Capacitors</a></li><li><a href="#resistors">Resistors &amp; power</a></li><li><a href="#open-circuits">Open circuits</a></li><li><a href="#short-circuits">Short circuits</a></li></ol></nav>
+<div class="article-header"><h1>Transmission Line Explorer</h1>
+<p class="lead">A resistor can look bigger. An inductor can look like an open circuit. The energy still has to go somewhere. Follow the voltage, current and fields to see why.</p></div>
+<nav class="contents" aria-label="Table of contents"><span>Contents</span><div class="contents-layout"><div><p class="contents-label">Explore &amp; understand</p><ul><li><a href="#explorer">Adjustable explorer</a></li><li><a href="#theory">Equations &amp; reflection</a></li><li><a href="#assumptions">Delay &amp; model assumptions</a></li></ul></div><div><p class="contents-label">Five worked examples</p><ol><li><a href="#inductors">Inductors</a></li><li><a href="#capacitors">Capacitors</a></li><li><a href="#resistors">Resistors &amp; power</a></li><li><a href="#open-circuits">Open circuits</a></li><li><a href="#short-circuits">Short circuits</a></li></ol></div></div></nav>
 <section id="explorer">
 <div class="section-label">Start here</div><h2>Build your own line</h2>
-<p>Change the load resistance and reactance, the line’s characteristic impedance, or its electrical length. Presets reproduce the cases below. All examples assume an ideal, lossless line in sinusoidal steady state, with current defined from the input toward the load.</p>
+<p>Choose a load and adjust the line. Watch the voltage, current and input impedance change together. The five worked examples below explain the results.</p>
 <div id="explorer-sim" class="simulator" data-kind="custom" data-r="0" data-x="100" data-z0="100" data-length="0.125" data-adjustable="true"></div>
-<details class="reading-guide" open><summary>How to read the animations</summary>
+<details class="reading-guide"><summary>How to read the animations</summary>
 <p>The graphs show signed instantaneous voltage <i>v</i> and current <i>i</i>. Solid lines are the totals. Enable “Traveling waves” to reveal the dashed forward and dotted reflected waves traveling in opposite directions. The pale envelopes show the peak magnitude at each position. Voltage is normalized to the incident peak voltage <i>A</i>; current to <i>A/Z₀</i>.</p>
 <p>Enable “Energy pockets” to reveal the shaded storage bands below each graph. They are always positive: electric energy follows <i>v²</i>, and magnetic energy follows <i>i²</i>. Both use the same fixed scale. A large voltage pocket identifies strong electric-field storage; a large current pocket identifies strong magnetic-field storage.</p>
 <p>The Smith chart is a <strong>phasor map</strong>, not a time plot. Its arc traces impedance from the load toward the input. “Scan line” moves the inspection point along that arc and marks the corresponding location on both wave graphs. The chart does not rotate just because time advances.</p>
 </details>
-<article class="foundation">
-<h3>The equations behind every example</h3>
+</section>
+<section id="theory" class="foundation">
+<div class="section-label">The framework</div><h2>Equations &amp; reflection</h2>
+<p>All examples use an ideal, lossless line in sinusoidal steady state. Positive current flows from the input toward the load.</p>
+<details class="theory-detail"><summary>The equations behind every example</summary>
+<div class="detail-body">
 <p>A line has distributed inductance <i>L′</i> and capacitance <i>C′</i> per unit length. Its characteristic impedance, speed and electrical length are</p>
 <div class="equation">Z₀ = √(L′/C′), &nbsp; vₚ = 1/√(L′C′), &nbsp; θ = βℓ = 2πℓ/λ.</div>
 <p>A prime means “per unit length.” <i>Z₀</i> is the voltage-to-current ratio of one traveling wave; it is not a resistance that burns energy. For a load <i>Zₗ = R + jX</i>, the voltage reflection coefficient and input impedance are</p>
@@ -36,14 +40,15 @@
 <p>With <i>x = 0</i> at the input and <i>x = ℓ</i> at the load, the simulator uses peak phasors</p>
 <div class="equation">V(x) = A[e<sup>jβ(ℓ−x)</sup> + Γₗ e<sup>−jβ(ℓ−x)</sup>],<br>I(x) = <span class="frac"><span>A</span><span>Z₀</span></span>[e<sup>jβ(ℓ−x)</sup> − Γₗ e<sup>−jβ(ℓ−x)</sup>].</div>
 <p>The plotted waves are <i>Re{V(x)e<sup>j(ωt+φ₀)</sup>}</i> and <i>Re{I(x)e<sup>j(ωt+φ₀)</sup>}</i>. Each diagram chooses φ₀ so that 0° is the positive voltage peak at the point with the largest voltage amplitude. For a resistor or general load, other positions can peak at different phases. The minus sign in the reflected current is essential: its wave travels backward, while our positive current direction stays toward the load.</p>
-<h3>Total reflection does not imply a 180° phase shift</h3>
+</div></details>
+<details class="theory-detail"><summary>Total reflection and phase shift</summary><div class="detail-body"><h3>Total reflection does not imply a 180° phase shift</h3>
 <p>An ideal reactive load absorbs no average power, so all incident power is reflected:</p>
 <div class="equation">Γₗ = <span class="frac"><span>jX − Z₀</span><span>jX + Z₀</span></span>, &emsp; |Γₗ| = 1, &emsp; Pᵣₑꜰ / Pꜰₒᵣʷ = |Γₗ|² = 1.</div>
 <p>This fixes the <strong>magnitude</strong> of the reflection coefficient, not its phase. For X = +Z₀, the reflected voltage shifts by +90°; for X = −Z₀, it shifts by −90°. A short circuit gives a 180° voltage reflection, while an open circuit gives a 0° voltage reflection. All four loads reflect all incident power.</p>
 <p>Energy is a positive quantity, so it has no voltage-like “reflection phase.” Reflected power travels in the opposite direction. With a signed power-flow coordinate pointing toward the load, its average contribution is negative:</p>
 <div class="equation">P̅ᵣₑꜰ,ₛᵢɡₙₑ𝒹 = −|Γₗ|² P̅ꜰₒᵣʷ.</div>
 <p>That reversal of flow is distinct from a 180° oscillation phase shift. The reflected wave’s voltage and current differ by 180° under our fixed current-direction convention, regardless of whether the load is reactive or resistive. The <strong>incident and reflected currents at the input</strong> differ by 180° in the λ/8, Xₗ = Z₀ example because the load reflection phase and round-trip propagation phase combine there.</p>
-</article>
+</div></details>
 </section>
 <section id="inductors">
 <div class="section-label">01 / Magnetic storage</div><h2>Inductors: an open circuit at the input</h2>
@@ -108,7 +113,7 @@
 <div class="simulator" id="short-sim" data-kind="short" data-r="0" data-x="0" data-z0="100" data-length="0.125"></div>
 <p>The ideal short dissipates no power despite its finite current, because its voltage is zero. Energy remains in the line’s fields and travels back toward the source. A physical short has resistance and inductance, so it can dissipate power and depart from the ideal boundary condition.</p>
 </section>
-<section class="closing"><h2>Delay, phase and what the animation assumes</h2>
+<section id="assumptions" class="closing"><div class="section-label">About the model</div><h2>Delay, phase and what the animation assumes</h2>
 <p>The termination does not change the propagation speed of the ideal line. A length λ/8 has a one-way delay T/8 and a round-trip delay T/4. The inductor or capacitor adds a frequency-dependent reflection phase; this can affect a reflected pulse’s timing and shape, without changing the line’s wave speed.</p>
 <p>The simulator is a single-frequency steady-state model, not a switch-on transient. Changing electrical length changes ℓ/λ; changing reactance edits its value at that frequency. Absolute L, C, frequency and physical length are not inferred. The energy pockets show line storage only; load energy is described in the relevant section.</p>
 <div class="equation">uᴱ / (½C′A²) = (v/A)², &emsp; uᴹ / (½C′A²) = (Z₀i/A)².</div>
