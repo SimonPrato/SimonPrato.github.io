@@ -3,7 +3,6 @@
  */
 
 body {
-    font-family: Arial, sans-serif;
     margin: 20px;
     line-height: 1.6;
 }
@@ -20,7 +19,7 @@ body {
 
 h2 {
     text-align: center;
-    color: #333;
+    color: var(--text);
 }
 
 /* Introduction text */
@@ -168,6 +167,7 @@ sup {
 /* Button styling */
 button,
 input[type="button"] {
+    font-family: inherit;
     background-color: #4CAF50;
     color: white;
     border: none;
@@ -198,14 +198,13 @@ input[type="button"]:hover {
 
 /* Interactive semiconductor view */
 .junction-card {
-    max-width: 880px;
+    max-width: 800px;
     margin: 48px auto 32px;
-    padding: 28px;
-    border: 1px solid #dce4ef;
-    border-radius: 20px;
-    background: #fff;
-    box-shadow: 0 12px 40px rgba(31, 51, 83, .07);
-    color: #26334b;
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--text);
     box-sizing: border-box;
 }
 .junction-header {
@@ -216,20 +215,17 @@ input[type="button"]:hover {
 }
 .junction-eyebrow {
     margin: 0 0 4px;
-    color: #65758d;
+    color: var(--muted);
     font-size: 11px;
     font-weight: bold;
-    letter-spacing: .12em;
-    text-transform: uppercase;
 }
-.junction-header h3 { margin: 0; font-size: 25px; }
+.junction-header h3 { margin: 0; font-size: 1.1rem; }
 .junction-header button {
-    color: #334b6d;
-    background: #eef3f9;
+    font: inherit;
+    font-size: 14px;
     white-space: nowrap;
 }
-.junction-header button:hover { background: #e0e8f4; }
-.junction-description { color: #65758d; margin: 12px 0 22px; }
+.junction-description { color: var(--muted); margin: 12px 0 22px; }
 .junction-voltage {
     display: grid;
     grid-template-columns: auto 110px minmax(80px, 1fr);
@@ -241,20 +237,22 @@ input[type="button"]:hover {
 .junction-voltage input[type="number"] {
     width: 100%;
     box-sizing: border-box;
-    border: 1px solid #cbd6e6;
-    border-radius: 8px;
-    padding: 9px;
-    color: #26334b;
-    background: #f7f9fc;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 5px;
+    font: inherit;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--bg);
 }
-.junction-voltage input[type="range"] { width: 100%; accent-color: #b77912; }
-.junction-voltage small { grid-column: 1 / -1; color: #65758d; }
+.junction-voltage input[type="range"] { width: 100%; accent-color: var(--accent); }
+.junction-voltage small { grid-column: 1 / -1; color: var(--muted); }
 .junction-stage {
     position: relative;
-    border: 1px solid #e3eaf4;
-    border-radius: 14px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
     overflow: hidden;
-    background: radial-gradient(ellipse at 50% 35%, #fff, #edf2f9);
+    background: var(--code-bg);
 }
 #junction-canvas {
     display: block;
@@ -262,15 +260,19 @@ input[type="button"]:hover {
     height: 390px;
     cursor: grab;
     touch-action: none;
+    --junction-p-label: #b83a61;
+    --junction-n-label: #2869bc;
+    --junction-depletion-label: #77510e;
+    --junction-center-line: rgba(31, 42, 66, .65);
 }
 #junction-canvas:active { cursor: grabbing; }
-#junction-canvas:focus-visible { outline: 3px solid #3673cc; outline-offset: -3px; }
+#junction-canvas:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; }
 .junction-status {
     position: absolute;
     top: 10px;
     left: 20px;
     right: 20px;
-    color: #65758d;
+    color: var(--muted);
     font-size: 13px;
     text-align: center;
     pointer-events: none;
@@ -281,7 +283,7 @@ input[type="button"]:hover {
     bottom: 10px;
     width: 100%;
     margin: 0;
-    color: #65758d;
+    color: var(--muted);
     text-align: center;
     font-size: 11px;
     pointer-events: none;
@@ -292,9 +294,9 @@ input[type="button"]:hover {
     margin: 22px 0;
     text-align: center;
 }
-.junction-metrics div + div { border-left: 1px solid #e3eaf4; }
-.junction-metrics span { display: block; color: #65758d; font-size: 12px; }
-.junction-metrics strong { display: block; font-size: 20px; margin-top: 3px; }
+.junction-metrics div + div { border-left: 1px solid var(--border); }
+.junction-metrics span { display: block; color: var(--muted); font-size: 12px; }
+.junction-metrics strong { display: block; font-size: 1.1rem; margin-top: 3px; }
 .junction-legend { max-width: 600px; margin: 0 auto; }
 .junction-colorbar {
     height: 9px;
@@ -302,7 +304,7 @@ input[type="button"]:hover {
     background: linear-gradient(90deg, #e1486e, #ebeff6 50%, #2b76e6);
 }
 .junction-legend-labels { display: flex; justify-content: space-between; gap: 8px; }
-.junction-legend-labels, .junction-legend p { font-size: 11px; color: #65758d; }
+.junction-legend-labels, .junction-legend p { font-size: 11px; color: var(--muted); }
 .junction-legend p { margin: 8px 0; text-align: center; }
 .junction-depletion-key {
     display: inline-block;
@@ -313,10 +315,10 @@ input[type="button"]:hover {
     margin-right: 4px;
     vertical-align: middle;
 }
-.junction-note { margin: 20px 0 0; font-size: 12px; color: #65758d; }
+.junction-note { margin: 20px 0 0; font-size: 12px; color: var(--muted); }
 @media (max-width: 600px) {
     .junction-card { padding: 16px; }
-    .junction-header h3 { font-size: 21px; }
+    .junction-header h3 { font-size: 1.1rem; }
     .junction-voltage { grid-template-columns: 1fr 100px; }
     .junction-voltage input[type="range"] { grid-column: 1 / -1; }
     #junction-canvas { height: 310px; }
@@ -324,3 +326,12 @@ input[type="button"]:hover {
     .junction-legend-labels { font-size: 10px; }
 }
 
+
+@media (prefers-color-scheme: dark) {
+    #junction-canvas {
+        --junction-p-label: #f28aa5;
+        --junction-n-label: #85b6ff;
+        --junction-depletion-label: #e9ba5f;
+        --junction-center-line: rgba(234, 234, 234, .65);
+    }
+}
