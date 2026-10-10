@@ -20,8 +20,8 @@
 <p>Change the load resistance and reactance, the line’s characteristic impedance, or its electrical length. Presets reproduce the cases below. All examples assume an ideal, lossless line in sinusoidal steady state, with current defined from the input toward the load.</p>
 <div id="explorer-sim" class="simulator" data-kind="custom" data-r="0" data-x="100" data-z0="100" data-length="0.125" data-adjustable="true"></div>
 <details class="reading-guide" open><summary>How to read the animations</summary>
-<p>The graphs show signed instantaneous voltage <i>v</i> and current <i>i</i>. Solid lines are the totals; dashed forward and dotted reflected waves travel in opposite directions. The pale envelopes show the peak magnitude at each position. Voltage is normalized to the incident peak voltage <i>A</i>; current to <i>A/Z₀</i>.</p>
-<p>The shaded energy pockets below each graph are always positive: electric energy follows <i>v²</i>, and magnetic energy follows <i>i²</i>. Both use the same fixed scale. A large voltage pocket identifies strong electric-field storage; a large current pocket identifies strong magnetic-field storage.</p>
+<p>The graphs show signed instantaneous voltage <i>v</i> and current <i>i</i>. Solid lines are the totals. Enable “Traveling waves” to reveal the dashed forward and dotted reflected waves traveling in opposite directions. The pale envelopes show the peak magnitude at each position. Voltage is normalized to the incident peak voltage <i>A</i>; current to <i>A/Z₀</i>.</p>
+<p>Enable “Energy pockets” to reveal the shaded storage bands below each graph. They are always positive: electric energy follows <i>v²</i>, and magnetic energy follows <i>i²</i>. Both use the same fixed scale. A large voltage pocket identifies strong electric-field storage; a large current pocket identifies strong magnetic-field storage.</p>
 <p>The Smith chart is a <strong>phasor map</strong>, not a time plot. Its arc traces impedance from the load toward the input. “Scan line” moves the inspection point along that arc and marks the corresponding location on both wave graphs. The chart does not rotate just because time advances.</p>
 </details>
 <article class="foundation">
@@ -35,7 +35,7 @@
 <p>The magnitude of Γ stays constant on a lossless line. Its phase rotates clockwise: a one-way distance of λ/8 rotates the reflection coefficient by 90°, because reflection includes a round trip.</p>
 <p>With <i>x = 0</i> at the input and <i>x = ℓ</i> at the load, the simulator uses peak phasors</p>
 <div class="equation">V(x) = A[e<sup>jβ(ℓ−x)</sup> + Γₗ e<sup>−jβ(ℓ−x)</sup>],<br>I(x) = <span class="frac"><span>A</span><span>Z₀</span></span>[e<sup>jβ(ℓ−x)</sup> − Γₗ e<sup>−jβ(ℓ−x)</sup>].</div>
-<p>The plotted waves are <i>Re{V(x)e<sup>jωt</sup>}</i> and <i>Re{I(x)e<sup>jωt</sup>}</i>. The minus sign in the reflected current is essential: its wave travels backward, while our positive current direction stays toward the load.</p>
+<p>The plotted waves are <i>Re{V(x)e<sup>j(ωt+φ₀)</sup>}</i> and <i>Re{I(x)e<sup>j(ωt+φ₀)</sup>}</i>. Each diagram chooses φ₀ so that 0° is the positive voltage peak at the point with the largest voltage amplitude. For a resistor or general load, other positions can peak at different phases. The minus sign in the reflected current is essential: its wave travels backward, while our positive current direction stays toward the load.</p>
 <h3>Total reflection does not imply a 180° phase shift</h3>
 <p>An ideal reactive load absorbs no average power, so all incident power is reflected:</p>
 <div class="equation">Γₗ = <span class="frac"><span>jX − Z₀</span><span>jX + Z₀</span></span>, &emsp; |Γₗ| = 1, &emsp; Pᵣₑꜰ / Pꜰₒᵣʷ = |Γₗ|² = 1.</div>
