@@ -10,6 +10,7 @@ let helpDisplayed = false;
  */
 function plot() {
   const formData = document.forms.data;
+  clearJunction3D('Updating profile…');
   
   // Get and validate input values
   let x1, x2;
@@ -19,6 +20,7 @@ function plot() {
     x1 = eval(replaceWithMathFunctions(x1Str));
   } catch (err) {
     alert(`Error in x1: ${err.message}`);
+    clearJunction3D('Correct the spatial interval and click Plot.');
     return;
   }
   
@@ -27,10 +29,16 @@ function plot() {
     x2 = eval(replaceWithMathFunctions(x2Str));
   } catch (err) {
     alert(`Error in x2: ${err.message}`);
+    clearJunction3D('Correct the spatial interval and click Plot.');
     return;
   }
   
   // Parse doping profiles
+  if (!Number.isFinite(x1) || !Number.isFinite(x2) || x2 <= x1) {
+    alert('Please enter a finite interval with x2 greater than x1.');
+    clearJunction3D('Enter a valid spatial interval and click Plot.');
+    return;
+  }
   let dopingData;
   try {
     dopingData = parseDopingProfiles(
@@ -41,6 +49,13 @@ function plot() {
     );
   } catch (err) {
     console.error("Error parsing doping profiles:", err);
+    clearJunction3D('Correct the doping expressions and click Plot.');
+    return;
+  }
+  if ([...dopingData.donor, ...dopingData.acceptor].some(pair =>
+    !Number.isFinite(pair[1]) || pair[1] < 0)) {
+    alert('Donor and acceptor concentrations must be finite and nonnegative throughout the interval.');
+    clearJunction3D('Enter finite, nonnegative concentrations and click Plot.');
     return;
   }
   
@@ -123,3 +138,4 @@ function toggleHelp() {
     helpDisplayed = false;
   }
 }
+

@@ -16,6 +16,7 @@
     <script src="./js/dopingProfile.js"></script>
     <script src="./js/depletionCalculations.js"></script>
     <script src="./js/plotting.js"></script>
+    <script src="./js/junction3d.js"></script>
     <script src="./js/main.js"></script>
     
     <!-- Styles -->
@@ -182,5 +183,39 @@
             </tbody>
         </table>
     </div>
+    <section class="junction-card" aria-labelledby="junction-heading">
+        <div class="junction-header">
+            <div>
+                <p class="junction-eyebrow">Inside the semiconductor</p>
+                <h3 id="junction-heading">PN junction in 3D</h3>
+            </div>
+            <button type="button" id="junction-reset">Reset view</button>
+        </div>
+        <p class="junction-description">Explore the doping profile and watch the depletion region expand with reverse voltage.</p>
+        <div class="junction-voltage">
+            <label for="junction-voltage-number">Reverse voltage [V]</label>
+            <input id="junction-voltage-number" type="number" step="any" aria-describedby="junction-range">
+            <input id="junction-voltage-slider" type="range" aria-label="Reverse voltage" step="any">
+            <small id="junction-range"></small>
+        </div>
+        <div class="junction-stage">
+            <canvas id="junction-canvas" tabindex="0" role="img" aria-label="Rotatable three-dimensional PN junction. Drag or use arrow keys to rotate." aria-describedby="junction-status junction-hint"></canvas>
+            <p id="junction-status" class="junction-status" role="status"></p>
+            <p id="junction-hint" class="junction-hint">Drag to rotate · Arrow keys also work</p>
+        </div>
+        <div class="junction-metrics" aria-live="polite">
+            <div><span>p-side depletion</span><strong id="junction-p-width">—</strong></div>
+            <div><span>Total width W</span><strong id="junction-total-width">—</strong></div>
+            <div><span>n-side depletion</span><strong id="junction-n-width">—</strong></div>
+        </div>
+        <div class="junction-legend">
+            <div class="junction-colorbar"></div>
+            <div class="junction-legend-labels"><span>p-type · acceptors</span><span>Compensated</span><span>n-type · donors</span></div>
+            <p id="junction-color-scale"></p>
+            <p><span class="junction-depletion-key"></span> Gold outlines mark the depletion region; doping remains present inside it.</p>
+        </div>
+        <p class="junction-note">Color represents net doping N<sub>D</sub> − N<sub>A</sub>, normalized to the largest magnitude in the plotted interval. Widths are interpolated from the calculator’s voltage curve. The transverse dimensions are illustrative.</p>
+    </section>
 </body>
 </html>
+
