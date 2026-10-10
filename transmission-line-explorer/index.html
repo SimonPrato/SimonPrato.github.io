@@ -36,6 +36,13 @@
 <p>With <i>x = 0</i> at the input and <i>x = ℓ</i> at the load, the simulator uses peak phasors</p>
 <div class="equation">V(x) = A[e<sup>jβ(ℓ−x)</sup> + Γₗ e<sup>−jβ(ℓ−x)</sup>],<br>I(x) = <span class="frac"><span>A</span><span>Z₀</span></span>[e<sup>jβ(ℓ−x)</sup> − Γₗ e<sup>−jβ(ℓ−x)</sup>].</div>
 <p>The plotted waves are <i>Re{V(x)e<sup>jωt</sup>}</i> and <i>Re{I(x)e<sup>jωt</sup>}</i>. The minus sign in the reflected current is essential: its wave travels backward, while our positive current direction stays toward the load.</p>
+<h3>Total reflection does not imply a 180° phase shift</h3>
+<p>An ideal reactive load absorbs no average power, so all incident power is reflected:</p>
+<div class="equation">Γₗ = <span class="frac"><span>jX − Z₀</span><span>jX + Z₀</span></span>, &emsp; |Γₗ| = 1, &emsp; Pᵣₑꜰ / Pꜰₒᵣʷ = |Γₗ|² = 1.</div>
+<p>This fixes the <strong>magnitude</strong> of the reflection coefficient, not its phase. For X = +Z₀, the reflected voltage shifts by +90°; for X = −Z₀, it shifts by −90°. A short circuit gives a 180° voltage reflection, while an open circuit gives a 0° voltage reflection. All four loads reflect all incident power.</p>
+<p>Energy is a positive quantity, so it has no voltage-like “reflection phase.” Reflected power travels in the opposite direction. With a signed power-flow coordinate pointing toward the load, its average contribution is negative:</p>
+<div class="equation">P̅ᵣₑꜰ,ₛᵢɡₙₑ𝒹 = −|Γₗ|² P̅ꜰₒᵣʷ.</div>
+<p>That reversal of flow is distinct from a 180° oscillation phase shift. The reflected wave’s voltage and current differ by 180° under our fixed current-direction convention, regardless of whether the load is reactive or resistive. The <strong>incident and reflected currents at the input</strong> differ by 180° in the λ/8, Xₗ = Z₀ example because the load reflection phase and round-trip propagation phase combine there.</p>
 </article>
 </section>
 <section id="inductors">
