@@ -9,6 +9,7 @@
  * @param {Array<Array<number>>} acceptorData - Acceptor concentration data
  */
 function plotResults(results, donorData, acceptorData) {
+  updateJunction3D(results, donorData, acceptorData);
   if (!results) {
     // Plot only doping profile if calculation failed
     plotDopingProfileOnly(donorData, acceptorData);
@@ -115,3 +116,4 @@ function plotDopingProfileOnly(donorData, acceptorData) {
   
   plotDopingProfile(donorData, acceptorData, netDoping);
 }
+

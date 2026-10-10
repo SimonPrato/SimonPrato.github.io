@@ -195,3 +195,132 @@ input[type="button"]:hover {
 .help-button:hover {
     background-color: #0b7dda;
 }
+
+/* Interactive semiconductor view */
+.junction-card {
+    max-width: 880px;
+    margin: 48px auto 32px;
+    padding: 28px;
+    border: 1px solid #dce4ef;
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 12px 40px rgba(31, 51, 83, .07);
+    color: #26334b;
+    box-sizing: border-box;
+}
+.junction-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+.junction-eyebrow {
+    margin: 0 0 4px;
+    color: #65758d;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+.junction-header h3 { margin: 0; font-size: 25px; }
+.junction-header button {
+    color: #334b6d;
+    background: #eef3f9;
+    white-space: nowrap;
+}
+.junction-header button:hover { background: #e0e8f4; }
+.junction-description { color: #65758d; margin: 12px 0 22px; }
+.junction-voltage {
+    display: grid;
+    grid-template-columns: auto 110px minmax(80px, 1fr);
+    align-items: center;
+    gap: 10px 16px;
+    margin-bottom: 18px;
+}
+.junction-voltage label { font-size: 14px; font-weight: bold; }
+.junction-voltage input[type="number"] {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #cbd6e6;
+    border-radius: 8px;
+    padding: 9px;
+    color: #26334b;
+    background: #f7f9fc;
+}
+.junction-voltage input[type="range"] { width: 100%; accent-color: #b77912; }
+.junction-voltage small { grid-column: 1 / -1; color: #65758d; }
+.junction-stage {
+    position: relative;
+    border: 1px solid #e3eaf4;
+    border-radius: 14px;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 35%, #fff, #edf2f9);
+}
+#junction-canvas {
+    display: block;
+    width: 100%;
+    height: 390px;
+    cursor: grab;
+    touch-action: none;
+}
+#junction-canvas:active { cursor: grabbing; }
+#junction-canvas:focus-visible { outline: 3px solid #3673cc; outline-offset: -3px; }
+.junction-status {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    right: 20px;
+    color: #65758d;
+    font-size: 13px;
+    text-align: center;
+    pointer-events: none;
+}
+.junction-status:empty { display: none; }
+.junction-hint {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    margin: 0;
+    color: #65758d;
+    text-align: center;
+    font-size: 11px;
+    pointer-events: none;
+}
+.junction-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 22px 0;
+    text-align: center;
+}
+.junction-metrics div + div { border-left: 1px solid #e3eaf4; }
+.junction-metrics span { display: block; color: #65758d; font-size: 12px; }
+.junction-metrics strong { display: block; font-size: 20px; margin-top: 3px; }
+.junction-legend { max-width: 600px; margin: 0 auto; }
+.junction-colorbar {
+    height: 9px;
+    border-radius: 9px;
+    background: linear-gradient(90deg, #e1486e, #ebeff6 50%, #2b76e6);
+}
+.junction-legend-labels { display: flex; justify-content: space-between; gap: 8px; }
+.junction-legend-labels, .junction-legend p { font-size: 11px; color: #65758d; }
+.junction-legend p { margin: 8px 0; text-align: center; }
+.junction-depletion-key {
+    display: inline-block;
+    width: 13px;
+    height: 9px;
+    border: 2px solid #b77912;
+    background: #fff1cc;
+    margin-right: 4px;
+    vertical-align: middle;
+}
+.junction-note { margin: 20px 0 0; font-size: 12px; color: #65758d; }
+@media (max-width: 600px) {
+    .junction-card { padding: 16px; }
+    .junction-header h3 { font-size: 21px; }
+    .junction-voltage { grid-template-columns: 1fr 100px; }
+    .junction-voltage input[type="range"] { grid-column: 1 / -1; }
+    #junction-canvas { height: 310px; }
+    .junction-metrics strong { font-size: 16px; }
+    .junction-legend-labels { font-size: 10px; }
+}
+
