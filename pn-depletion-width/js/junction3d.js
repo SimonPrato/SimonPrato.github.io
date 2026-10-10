@@ -99,6 +99,10 @@ function initializeJunction3D() {
   } else {
     window.addEventListener('resize', scheduleJunctionDraw);
   }
+  if (typeof window.matchMedia === 'function') {
+    window.matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', scheduleJunctionDraw);
+  }
 }
 
 function clearJunction3D(message) {
@@ -206,6 +210,10 @@ function drawJunction3D() {
   ctx.clearRect(0, 0, width, height);
   const data = junctionView.data;
   if (!data) return;
+  const styles = typeof getComputedStyle === 'function' ? getComputedStyle(canvas) : null;
+  const themeColor = (name, fallback) => styles ?
+    styles.getPropertyValue(name).trim() || fallback : fallback;
+  const fontFamily = styles ? styles.fontFamily : 'Arial, sans-serif';
   const region = junctionDepletion();
   const scale = Math.min(width / 7.8, height / 4.8);
   const cy = Math.cos(junctionView.yaw), sy = Math.sin(junctionView.yaw);
@@ -285,7 +293,7 @@ function drawJunction3D() {
     ctx.setLineDash([]);
   };
   if (region) {
-    ring(modelX(region.center), 'rgba(31,42,66,0.65)', true);
+    ring(modelX(region.center), themeColor('--junction-center-line', 'rgba(31,42,66,0.65)'), true);
     ring(modelX(region.left), '#b77912', false);
     ring(modelX(region.right), '#b77912', false);
     const a = project([modelX(region.left), -.95, .65]);
@@ -293,17 +301,19 @@ function drawJunction3D() {
     ctx.strokeStyle = '#b77912';
     ctx.lineWidth = 2;
     ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
-    ctx.fillStyle = '#77510e';
-    ctx.font = '600 13px Arial, sans-serif';
+    ctx.fillStyle = themeColor('--junction-depletion-label', '#77510e');
+    ctx.font = '600 13px ' + fontFamily;
     ctx.textAlign = 'center';
     ctx.fillText('Depletion region · W = ' + region.total.toFixed(3) + ' µm',
       width / 2, height - 48);
   }
-  ctx.font = '600 13px Arial, sans-serif';
+  ctx.font = '600 13px ' + fontFamily;
   ctx.textAlign = 'center';
   for (const [i, x] of [[0, -2.8], [data.net.length - 1, 2.8]]) {
     const position = project([x, 1.02, 0]);
-    ctx.fillStyle = data.net[i] < 0 ? '#b83a61' : data.net[i] > 0 ? '#2869bc' : '#536279';
+    ctx.fillStyle = data.net[i] < 0 ?
+      themeColor('--junction-p-label', '#b83a61') : data.net[i] > 0 ?
+      themeColor('--junction-n-label', '#2869bc') : (styles ? styles.color : '#666');
     ctx.fillText((data.net[i] < 0 ? 'p-type' : data.net[i] > 0 ? 'n-type' : 'Compensated') +
       ' · ' + data.donor[i][0].toPrecision(3) + ' µm', position.x, position.y);
   }
