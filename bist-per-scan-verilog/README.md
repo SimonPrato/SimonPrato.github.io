@@ -156,20 +156,7 @@ Generated during simulation and synthesis (not version controlled):
 
 The controller FSM has six states. `S0` is the reset state; `bist_start` rising from 0→1 kicks off a run, which sweeps through initialization (`S1`), pattern scan/capture (`S2`↔`S3`), and finish/end (`S4`→`S5`) before returning to `S1` on the next `bist_start` pulse.
 
-```mermaid
-stateDiagram-v2
-    [*] --> S0 : reset = 1
-    S0 --> S0 : bist_start = 0
-    S0 --> S1 : bist_start = 0 → 1
-    S1 --> S2 : else
-    S2 --> S2 : cnt_n < N
-    S2 --> S3 : cnt_n >= N
-    S3 --> S2 : cnt_m < M
-    S3 --> S4 : cnt_m >= M
-    S4 --> S5 : else
-    S5 --> S5 : else
-    S5 --> S1 : bist_start = 0 → 1
-```
+<img width="800" alt="BIST controller state diagram, states S0 to S5" src="img/controller-fsm.png" />
 
 ### State Descriptions
 
