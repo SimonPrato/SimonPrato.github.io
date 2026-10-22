@@ -162,3 +162,67 @@ footer.site-footer a {
         --accent: #eaeaea;
     }
 }
+
+/* Homepage: work grouped by topic */
+
+.page-wide {
+    max-width: 880px;
+}
+
+.work-group {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 24px;
+    margin-bottom: 48px;
+    scroll-margin-top: 24px;
+}
+
+.group-title {
+    margin: 0;
+    padding-top: 18px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+}
+
+.project-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.tag {
+    flex-shrink: 0;
+    padding: 1px 8px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+.project-list a:hover .tag {
+    border-color: var(--muted);
+    color: var(--text);
+}
+
+nav.site-nav {
+    flex-wrap: wrap;
+    row-gap: 4px;
+}
+
+@media (max-width: 640px) {
+    .work-group {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        margin-bottom: 40px;
+    }
+
+    .group-title {
+        padding-top: 0;
+    }
+}
