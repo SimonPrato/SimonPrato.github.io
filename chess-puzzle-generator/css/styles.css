@@ -8,8 +8,6 @@
     --track: #e5e5e5;
     --sq-light: #ececec;
     --sq-dark: #b4b4b4;
-    --piece-white: #ffffff;
-    --piece-black: #1a1a1a;
     --highlight: rgba(255, 196, 0, 0.45);
     --good: #2f7d4f;
     --bad: #c0392b;
@@ -126,22 +124,39 @@ main a {
     border-width: max(3px, 1.1cqi);
 }
 
+.sq.movable {
+    cursor: grab;
+    /* Let a drag start on a piece instead of scrolling the page. */
+    touch-action: none;
+}
+
+.sq.drag-origin .piece {
+    opacity: 0.3;
+}
+
+.sq.drag-over {
+    box-shadow: inset 0 0 0 max(3px, 0.7cqi) var(--accent);
+}
+
+.drag-ghost {
+    position: fixed;
+    z-index: 100;
+    transform: translate(-50%, -50%) scale(1.1);
+    object-fit: contain;
+    pointer-events: none;
+    cursor: grabbing;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+}
+
 .board.finished .sq {
     cursor: default;
 }
 
 .piece {
-    font-size: 9.5cqi;
+    width: 88%;
+    height: 88%;
+    object-fit: contain;
     pointer-events: none;
-}
-
-.piece.w {
-    color: var(--piece-white);
-    -webkit-text-stroke: max(1px, 0.18cqi) #1a1a1a;
-}
-
-.piece.b {
-    color: var(--piece-black);
 }
 
 .coord {
