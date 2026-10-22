@@ -4,135 +4,142 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simon Prato</title>
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/style.css?v=3">
 </head>
 <body>
-    <div class="page page-wide">
-        <header class="site-header">
-            <p class="site-title"><a href="./">Simon Prato</a></p>
-            <p class="site-subtitle">Electrical engineer. Research, interactive tools and small side projects.</p>
-            <nav class="site-nav">
-                <a href="./other/cv-prato.pdf" target="_blank" rel="noopener">CV</a>
-                <a href="#rf">RF &amp; Electromagnetics</a>
-                <a href="#circuits">Circuits &amp; Devices</a>
-                <a href="#chess">Chess &amp; Games</a>
+    <div class="page page-home">
+        <header class="home-intro">
+            <h1>Simon Prato</h1>
+            <p>Electrical engineer. Research on near-field coupling and TEM cells, plus interactive tools and side projects.</p>
+            <nav class="home-links">
+                <a class="pill" href="./other/cv-prato.pdf" target="_blank" rel="noopener">CV (PDF)</a>
+                <a class="pill" href="#research">Research</a>
+                <a class="pill" href="#projects">Projects</a>
             </nav>
         </header>
 
         <main>
-            <section class="work-group" id="rf">
-                <h2 class="group-title">RF &amp; Electromagnetics</h2>
-                <ul class="project-list">
-                    <li class="project-item">
-                        <a href="./other/poster2026-prague-paper.pdf" target="_blank" rel="noopener">
-                            <div class="project-head">
-                                <span class="project-name">Equivalent Circuit Models of Near-Field Coupling between Electrically Small Antennas and TEM Cells</span>
-                                <span class="tag">Paper</span>
-                            </div>
-                            <div class="project-desc">Paper for POSTER 2026, Prague (PDF).</div>
-                        </a>
-                    </li>
-                    <li class="project-item">
-                        <a href="./other/thesis.html">
-                            <div class="project-head">
-                                <span class="project-name">Numerical Investigation of TEM Cells and Antenna Coupling</span>
-                                <span class="tag">Thesis</span>
-                            </div>
-                            <div class="project-desc">My master thesis at TU Graz &mdash; read it in the browser or download the PDF.</div>
-                        </a>
-                    </li>
-                    <li class="project-item">
-                        <a href="./transmission-line-explorer/">
-                            <div class="project-head">
-                                <span class="project-name">Transmission Line Explorer</span>
-                                <span class="tag">Interactive</span>
-                            </div>
-                            <div class="project-desc">An interactive article on impedance transformation, voltage and current waves, field energy, and Smith charts &mdash; with five load examples.</div>
-                        </a>
-                    </li>
-                    <li class="project-item">
-                        <a href="./standing-wave/">
-                            <div class="project-head">
-                                <span class="project-name">Standing Wave &amp; VSWR Calculator</span>
-                                <span class="tag">Tool</span>
-                            </div>
-                            <div class="project-desc">Animates a transmitted and a reflected wave, plots their sum as a standing wave, and computes VSWR, reflection coefficient, and return loss.</div>
-                        </a>
-                    </li>
+            <section class="home-section" id="research">
+                <div class="section-head">
+                    <h2>Research</h2>
+                </div>
+                <ul class="card-grid featured">
+                <li class="card">
+                    <a href="./other/poster2026-prague-paper.pdf" target="_blank" rel="noopener">
+                        <img class="card-thumb" src="./assets/img/previews/paper-poster2026.webp" alt="" loading="lazy" width="800" height="500">
+                        <div class="card-meta">Paper · POSTER 2026, Prague</div>
+                        <div class="card-title">Equivalent Circuit Models of Near-Field Coupling between Electrically Small Antennas and TEM Cells</div>
+                        <div class="card-desc">Conference paper (PDF).</div>
+                    </a>
+                </li>
+                <li class="card">
+                    <a href="./other/thesis.html">
+                        <img class="card-thumb" src="./assets/img/previews/master-thesis.webp" alt="" loading="lazy" width="800" height="500">
+                        <div class="card-meta">Master thesis · TU Graz</div>
+                        <div class="card-title">Numerical Investigation of TEM Cells and Antenna Coupling</div>
+                        <div class="card-desc">Read it in the browser or download the PDF.</div>
+                    </a>
+                </li>
                 </ul>
             </section>
 
-            <section class="work-group" id="circuits">
-                <h2 class="group-title">Circuits &amp; Devices</h2>
-                <ul class="project-list">
-                    <li class="project-item">
-                        <a href="./low-power-ota/">
-                            <div class="project-head">
-                                <span class="project-name">Low-gm OTA</span>
-                                <span class="tag">Design</span>
-                            </div>
-                            <div class="project-desc">Low-power operational transconductance amplifier design in 1V/1&mu;A, with a weak-inversion input pair and series/parallel current mirroring.</div>
-                        </a>
-                    </li>
-                    <li class="project-item">
-                        <a href="./bist-per-scan-verilog/">
-                            <div class="project-head">
-                                <span class="project-name">BIST-per-Scan (Verilog)</span>
-                                <span class="tag">Design</span>
-                            </div>
-                            <div class="project-desc">Built-In Self-Test system using scan chain methodology, with LFSR pattern generation and MISR signature analysis.</div>
-                        </a>
-                    </li>
-                    <li class="project-item">
-                        <a href="./pn-depletion-width/">
-                            <div class="project-head">
-                                <span class="project-name">PN Junction Depletion Width Calculator</span>
-                                <span class="tag">Tool</span>
-                            </div>
-                            <div class="project-desc">Compute and plot the depletion width of a pn-junction for arbitrary doping profiles.</div>
-                        </a>
-                    </li>
+            <section class="home-section" id="projects">
+                <div class="section-head">
+                    <h2>Projects</h2>
+                    <div class="filters" role="group" aria-label="Filter projects">
+                        <button class="pill active" type="button" data-filter="all">All</button>
+                        <button class="pill" type="button" data-filter="rf">RF</button>
+                        <button class="pill" type="button" data-filter="circuits">Circuits</button>
+                        <button class="pill" type="button" data-filter="chess">Chess &amp; games</button>
+                    </div>
+                </div>
+                <ul class="card-grid">
+                <li class="card" data-topic="rf">
+                    <a href="./transmission-line-explorer/">
+                        <img class="card-thumb" src="./assets/img/previews/transmission-line-explorer.webp" alt="" loading="lazy" width="800" height="500">
+                        <div class="card-meta">RF · Interactive article</div>
+                        <div class="card-title">Transmission Line Explorer</div>
+                        <div class="card-desc">Impedance transformation, voltage and current waves, field energy and Smith charts, with five load examples.</div>
+                    </a>
+                </li>
+                <li class="card" data-topic="rf">
+                    <a href="./standing-wave/">
+                        <img class="card-thumb" src="./assets/img/previews/standing-wave.webp" alt="" loading="lazy" width="800" height="500">
+                        <div class="card-meta">RF · Calculator</div>
+                        <div class="card-title">Standing Wave &amp; VSWR</div>
+                        <div class="card-desc">Animated incident and reflected waves, with VSWR, reflection coefficient and return loss.</div>
+                    </a>
+                </li>
+                <li class="card" data-topic="circuits">
+                    <a href="./low-power-ota/">
+                        <img class="card-thumb" src="./assets/img/previews/low-power-ota.webp" alt="" loading="lazy" width="800" height="500">
+                        <div class="card-meta">Analog · Circuit design</div>
+                        <div class="card-title">Low-g<sub>m</sub> OTA</div>
+                        <div class="card-desc">A 1&nbsp;V / 1&nbsp;&mu;A transconductance amplifier with a weak-inversion input pair.</div>
+                    </a>
+                </li>
+                <li class="card" data-topic="circuits">
+                    <a href="./bist-per-scan-verilog/">
+                        <img class="card-thumb" src="./assets/img/previews/bist-per-scan.webp" alt="" loading="lazy" width="800" height="500">
+                        <div class="card-meta">Digital · Verilog</div>
+                        <div class="card-title">BIST-per-Scan</div>
+                        <div class="card-desc">Scan-chain built-in self-test with LFSR pattern generation and MISR signature analysis.</div>
+                    </a>
+                </li>
+                <li class="card" data-topic="circuits">
+                    <a href="./pn-depletion-width/">
+                        <img class="card-thumb" src="./assets/img/previews/pn-depletion-width.webp" alt="" loading="lazy" width="800" height="500">
+                        <div class="card-meta">Semiconductors · Calculator</div>
+                        <div class="card-title">PN Junction Depletion Width</div>
+                        <div class="card-desc">Depletion width and fields of a pn-junction for arbitrary doping profiles.</div>
+                    </a>
+                </li>
+                <li class="card" data-topic="chess">
+                    <a href="./chess-puzzle-generator/">
+                        <img class="card-thumb" src="./assets/img/previews/chess-puzzle-generator.webp" alt="" loading="lazy" width="800" height="500">
+                        <div class="card-meta">Chess · Puzzles</div>
+                        <div class="card-title">Chess Puzzle Generator</div>
+                        <div class="card-desc">Endless random mate-in-one puzzles, generated in the browser while you solve.</div>
+                    </a>
+                </li>
+                <li class="card" data-topic="chess">
+                    <a href="./chess-coach/app.html#analysis">
+                        <img class="card-thumb" src="./assets/img/previews/chess-coach.webp" alt="" loading="lazy" width="800" height="500">
+                        <div class="card-meta">Chess · Archived</div>
+                        <div class="card-title">Chess Coach</div>
+                        <div class="card-desc">Analysis, puzzles and coaching. Static demo &mdash; API-backed features are disabled.</div>
+                    </a>
+                </li>
+                <li class="card" data-topic="chess">
+                    <a href="./flygame/">
+                        <img class="card-thumb" src="./assets/img/previews/flygame.webp" alt="" loading="lazy" width="800" height="500">
+                        <div class="card-meta">Game · Browser</div>
+                        <div class="card-title">Flygame</div>
+                        <div class="card-desc">Jump on flies, buy a shotgun, survive the swarm. A childhood project, rebuilt.</div>
+                    </a>
+                </li>
                 </ul>
+                <!-- New projects: add a card with a data-topic and an 800x500 preview in assets/img/previews/. -->
             </section>
-
-            <section class="work-group" id="chess">
-                <h2 class="group-title">Chess &amp; Games</h2>
-                <ul class="project-list">
-                    <li class="project-item">
-                        <a href="./chess-puzzle-generator/">
-                            <div class="project-head">
-                                <span class="project-name">Chess Puzzle Generator</span>
-                                <span class="tag">Tool</span>
-                            </div>
-                            <div class="project-desc">Endless random mate-in-one puzzles, generated in the browser while you solve. Includes the original Python command-line generator.</div>
-                        </a>
-                    </li>
-                    <li class="project-item">
-                        <a href="./chess-coach/app.html#analysis">
-                            <div class="project-head">
-                                <span class="project-name">Chess Coach</span>
-                                <span class="tag">Archived</span>
-                            </div>
-                            <div class="project-desc">Chess analysis, puzzles, and coaching. Static demo &mdash; API-backed features are disabled.</div>
-                        </a>
-                    </li>
-                    <li class="project-item">
-                        <a href="./flygame/">
-                            <div class="project-head">
-                                <span class="project-name">Flygame</span>
-                                <span class="tag">Game</span>
-                            </div>
-                            <div class="project-desc">Browser arcade game &mdash; jump on flies, buy a shotgun, survive the swarm. Rebuilt from a childhood project for modern browsers.</div>
-                        </a>
-                    </li>
-                </ul>
-            </section>
-            <!-- New work goes into the matching section above. -->
         </main>
 
         <footer class="site-footer">
             <p>&copy; 2026 Simon Prato</p>
         </footer>
     </div>
+
+    <script>
+        document.querySelectorAll('[data-filter]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var topic = btn.dataset.filter;
+                document.querySelectorAll('[data-filter]').forEach(function (b) {
+                    b.classList.toggle('active', b === btn);
+                });
+                document.querySelectorAll('#projects .card').forEach(function (card) {
+                    card.hidden = topic !== 'all' && card.dataset.topic !== topic;
+                });
+            });
+        });
+    </script>
 </body>
 </html>

@@ -163,66 +163,200 @@ footer.site-footer a {
     }
 }
 
-/* Homepage: work grouped by topic */
+/* Homepage: research highlights and project card grid */
 
-.page-wide {
-    max-width: 880px;
+.page-home {
+    max-width: 1040px;
 }
 
-.work-group {
-    display: grid;
-    grid-template-columns: 180px 1fr;
-    gap: 24px;
-    margin-bottom: 48px;
-    scroll-margin-top: 24px;
+.home-intro {
+    margin-bottom: 56px;
 }
 
-.group-title {
-    margin: 0;
-    padding-top: 18px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+.home-intro h1 {
+    font-size: 1.75rem;
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+}
+
+.home-intro p {
     color: var(--muted);
+    margin: 0 0 16px;
+    max-width: 560px;
 }
 
-.project-head {
+.home-links {
     display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 16px;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
-.tag {
-    flex-shrink: 0;
-    padding: 1px 8px;
+.pill {
+    display: inline-block;
+    padding: 4px 12px;
     border: 1px solid var(--border);
     border-radius: 999px;
+    background: none;
     color: var(--muted);
-    font-size: 0.72rem;
-    letter-spacing: 0.02em;
-    white-space: nowrap;
+    font: inherit;
+    font-size: 0.85rem;
+    text-decoration: none;
+    cursor: pointer;
 }
 
-.project-list a:hover .tag {
+.pill:hover {
     border-color: var(--muted);
     color: var(--text);
 }
 
-nav.site-nav {
-    flex-wrap: wrap;
-    row-gap: 4px;
+.pill.active {
+    border-color: var(--text);
+    background: var(--text);
+    color: var(--bg);
 }
 
-@media (max-width: 640px) {
-    .work-group {
-        grid-template-columns: 1fr;
-        gap: 8px;
-        margin-bottom: 40px;
+.home-section {
+    margin-bottom: 64px;
+}
+
+.section-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.section-head h2 {
+    margin: 0;
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px 24px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.card-grid.featured {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.featured .card a {
+    display: grid;
+    grid-template-columns: 168px 1fr;
+    column-gap: 20px;
+    align-items: start;
+}
+
+.featured .card-thumb {
+    grid-row: span 3;
+}
+
+.featured .card-meta {
+    margin-top: 2px;
+}
+
+.card a {
+    display: block;
+    height: 100%;
+    color: var(--text);
+    text-decoration: none;
+}
+
+.card-thumb {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 8 / 5;
+    object-fit: cover;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--code-bg);
+    transition: border-color 0.15s, transform 0.15s;
+}
+
+.card a:hover .card-thumb {
+    border-color: var(--muted);
+    transform: translateY(-2px);
+}
+
+.card a:hover .card-title {
+    text-decoration: underline;
+}
+
+.card-meta {
+    margin: 12px 0 2px;
+    color: var(--muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.card-title {
+    font-weight: 500;
+    line-height: 1.35;
+}
+
+.card-desc {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.card[hidden] {
+    display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+    .card-thumb {
+        filter: brightness(0.85);
     }
 
-    .group-title {
-        padding-top: 0;
+    .card a:hover .card-thumb {
+        filter: none;
     }
+}
+
+@media (max-width: 860px) {
+    .card-grid,
+    .card-grid.featured {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card-grid.featured {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 560px) {
+    .card-grid,
+    .card-grid.featured {
+        grid-template-columns: 1fr;
+    }
+
+    .featured .card a {
+        grid-template-columns: 112px 1fr;
+        column-gap: 14px;
+    }
+
+    .page {
+        padding-top: 40px;
+    }
+}
+
+.card-title sub {
+    line-height: 0;
 }
