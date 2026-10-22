@@ -68,7 +68,7 @@ context.document.forms.data.f2.value = '0';
 run('plot()');
 assert.equal(element('junction-voltage-slider').disabled, true);
 assert.equal(run('junctionDepletion()'), null);
-assert.equal(element('junction-total-width').textContent, '—');
+assert.equal(element('junction-total-width').textContent, '-');
 assert.ok(run('junctionView.data !== null'));
 // Nonfinite concentrations, expression errors and reversed intervals clear the view.
 for (const donor of ['1/0', 'badFunction(x)', '-1']) {

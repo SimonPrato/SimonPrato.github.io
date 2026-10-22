@@ -3,7 +3,7 @@
  *
  * Sound effects go through the Web Audio API: each clip is decoded once into
  * an AudioBuffer and every play spawns a throwaway BufferSource. That gives
- * real polyphony and zero restart latency — the original reused a single
+ * real polyphony and zero restart latency, the original reused a single
  * `Audio` element per effect, so a second explosion cut off the first, and
  * `play()` was being called on every frame an explosion was on screen.
  *
@@ -54,7 +54,7 @@ class AudioManager {
   }
 
   /**
-   * Must be called from a user gesture — browsers refuse to start an
+   * Must be called from a user gesture, browsers refuse to start an
    * AudioContext otherwise. Safe to call repeatedly.
    */
   unlock() {

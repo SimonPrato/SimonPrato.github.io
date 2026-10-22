@@ -195,16 +195,16 @@ stateDiagram-v2
 
 ### State Transitions
 
-- **S0 → S0**: `bist_start = 0` — hold in Idle
-- **S0 → S1**: `bist_start` rising edge (0→1) — BIST triggered
-- **S1 → S2**: unconditional — LFSR/MISR initialized after one cycle
-- **S2 → S2**: `cnt_n < N` — still shifting the current pattern through the scan chain
-- **S2 → S3**: `cnt_n >= N` — N=13 scan cycles for this pattern complete
-- **S3 → S2**: `cnt_m < M` — more patterns remain, load the next one
-- **S3 → S4**: `cnt_m >= M` — all M=1023 patterns applied
-- **S4 → S5**: unconditional — one cycle after entering Finish
-- **S5 → S5**: `bist_start = 0` — hold in End, results available
-- **S5 → S1**: `bist_start` rising edge (0→1) — restart BIST
+- **S0 → S0**: `bist_start = 0`, hold in Idle
+- **S0 → S1**: `bist_start` rising edge (0→1): BIST triggered
+- **S1 → S2**: unconditional, LFSR/MISR initialized after one cycle
+- **S2 → S2**: `cnt_n < N`, still shifting the current pattern through the scan chain
+- **S2 → S3**: `cnt_n >= N`, N=13 scan cycles for this pattern complete
+- **S3 → S2**: `cnt_m < M`, more patterns remain, load the next one
+- **S3 → S4**: `cnt_m >= M`, all M=1023 patterns applied
+- **S4 → S5**: unconditional, one cycle after entering Finish
+- **S5 → S5**: `bist_start = 0`, hold in End, results available
+- **S5 → S1**: `bist_start` rising edge (0→1): restart BIST
 
 ## Test Sequence
 

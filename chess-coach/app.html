@@ -13,7 +13,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Chess Explain">
-  <!-- This page is a static portfolio demo of the Chess Explain project;
+  <!-- This page is a static homepage demo of the Chess Explain project;
        backend-dependent SEO/social metadata from production was removed. -->
 
   <!-- Favicons (light background for visibility in search results & light/dark UIs) -->
@@ -36,7 +36,7 @@
 <body>
 
 <header>
-  <a href="../" style="position:absolute;top:10px;left:10px;z-index:50;font:13px/1 -apple-system,sans-serif;color:inherit;opacity:.65;text-decoration:none;">&larr; Portfolio</a>
+  <a href="../" style="position:absolute;top:10px;left:10px;z-index:50;font:13px/1 -apple-system,sans-serif;color:inherit;opacity:.65;text-decoration:none;">&larr; Homepage</a>
   <!-- Mobile-only hamburger -->
   <button class="hamburger-btn" id="btn-hamburger" aria-label="Open menu" aria-expanded="false">
     <span class="hamburger-line"></span>
@@ -267,11 +267,11 @@
 
       </div>
 
-      <!-- Stockfish lines — always visible regardless of active panel -->
+      <!-- Stockfish lines, always visible regardless of active panel -->
       <div class="stockfish-lines-tool" id="stockfish-lines-tool" aria-label="Stockfish suggestions">
         <button class="stockfish-lines-toggle" id="stockfish-lines-toggle" aria-expanded="true" aria-controls="stockfish-lines-body" type="button">
           <span class="stockfish-lines-title">Stockfish lines</span>
-          <span class="stockfish-lines-hint" id="stockfish-lines-hint">Depth —</span>
+          <span class="stockfish-lines-hint" id="stockfish-lines-hint">Depth -</span>
           <svg class="stockfish-lines-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -323,7 +323,7 @@
 
         <div class="button-bar">
           <div id="variation-strip" role="group" aria-label="Choose continuation" hidden></div>
-          <!-- Mobile section nav — lives here on mobile so it shares one row with prev/next -->
+          <!-- Mobile section nav, lives here on mobile so it shares one row with prev/next -->
           <nav class="mobile-panel-nav" id="mobile-panel-nav" aria-label="Panel view">
             <button class="mpn-btn mpn-btn--active" data-mpanel="right" aria-selected="true">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3" cy="6" r="1.2"/><circle cx="3" cy="12" r="1.2"/><circle cx="3" cy="18" r="1.2"/></svg>
@@ -393,7 +393,7 @@
     </div>
   </section>
 
-  <!-- Mobile panel tab bar (phones only) — kept for JS compat, hidden by CSS -->
+  <!-- Mobile panel tab bar (phones only), kept for JS compat, hidden by CSS -->
   <div class="analysis-tab-bar" id="analysis-tab-bar" role="tablist" aria-label="Panel view" aria-hidden="true">
     <button class="analysis-tab analysis-tab-active" data-panel="right" role="tab" aria-selected="true" tabindex="-1">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3" cy="6" r="1.2"/><circle cx="3" cy="12" r="1.2"/><circle cx="3" cy="18" r="1.2"/></svg>
@@ -477,9 +477,9 @@
       <div class="analysis-live-stats" id="analysis-live-stats" style="display:none">
         <div class="live-eval-chart-wrap" id="live-eval-chart-wrap"></div>
         <div class="analysis-live-accuracy">
-          <span class="live-acc-side">White <span class="live-acc-val" id="live-acc-white">—</span></span>
+          <span class="live-acc-side">White <span class="live-acc-val" id="live-acc-white">-</span></span>
           <span class="live-acc-sep">·</span>
-          <span class="live-acc-side">Black <span class="live-acc-val" id="live-acc-black">—</span></span>
+          <span class="live-acc-side">Black <span class="live-acc-val" id="live-acc-black">-</span></span>
         </div>
         <div class="analysis-live-badges">
           <span class="live-badge live-badge--brilliant" id="live-cnt-brilliant" style="display:none">!! <span>0</span></span>
@@ -613,7 +613,7 @@
   <!-- ── Game screen ── -->
   <div id="play-game-panel" class="play-arena" style="display:none">
 
-    <!-- Mobile opponent info bar (phones only) — tap to expand chat log -->
+    <!-- Mobile opponent info bar (phones only), tap to expand chat log -->
     <div class="play-mobile-opp-bar" id="play-mobile-opp-bar">
       <button class="play-mobile-opp-head" id="play-mobile-opp-head" aria-expanded="false" aria-controls="play-mobile-opp-log">
         <div class="play-mobile-opp-avatar" id="play-mobile-opp-avatar-m"><img class="piece-icon" src="./images/chess_bold_black_queen.png" alt="" aria-hidden="true"></div>
@@ -636,7 +636,7 @@
           <div class="play-character-avatar" id="play-character-avatar"><img class="piece-icon" src="./images/chess_bold_black_pawn.png" alt="" aria-hidden="true"></div>
           <div class="play-character-meta">
             <div class="play-character-name" id="play-character-name">Opponent</div>
-            <div class="play-character-elo" id="play-character-elo">— Elo</div>
+            <div class="play-character-elo" id="play-character-elo">- Elo</div>
           </div>
         </div>
         <div class="play-speech-wrap">
@@ -792,7 +792,7 @@
         </div>
         <div class="puzzle-stat-item">
           <div class="puzzle-stat-label">Accuracy</div>
-          <div class="puzzle-stat-val" id="puzzle-accuracy-val">—</div>
+          <div class="puzzle-stat-val" id="puzzle-accuracy-val">-</div>
         </div>
       </div>
 
@@ -924,7 +924,7 @@
           <span class="phs-lbl">Day Streak</span>
         </div>
         <div class="phs-item">
-          <span class="phs-val" id="profile-stat-accuracy">—</span>
+          <span class="phs-val" id="profile-stat-accuracy">-</span>
           <span class="phs-lbl">Accuracy</span>
         </div>
         <div class="phs-item">
@@ -1375,7 +1375,7 @@
           <textarea class="contact-input contact-textarea" id="contact-message" name="message" placeholder="Describe your issue or idea in detail..." required minlength="20" maxlength="2000" rows="6"></textarea>
           <div class="contact-char-count"><span id="contact-char-count">0</span> / 2000</div>
         </div>
-        <!-- Honeypot field — hidden from humans, filled by bots -->
+        <!-- Honeypot field, hidden from humans, filled by bots -->
         <input type="text" name="website" class="contact-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
         <div class="contact-error" id="contact-error" role="alert" style="display:none"></div>
         <div class="contact-success" id="contact-success" role="status" style="display:none">
@@ -2397,7 +2397,7 @@
   </div>
 </div>
 
-<!-- Libraries \u2014 served locally, no CDN dependency -->
+<!-- Libraries: served locally, no CDN dependency -->
 <script src="./js/vendor/marked.min.js"></script>
 <script src="./js/vendor/purify.min.js"></script>
 <script src="./js/vendor/jquery.min.js"></script>

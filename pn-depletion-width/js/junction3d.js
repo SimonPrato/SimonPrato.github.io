@@ -114,7 +114,7 @@ function clearJunction3D(message) {
     junctionElement(name).disabled = true;
   }
   for (const name of ['p-width', 'n-width', 'total-width']) {
-    junctionElement(name).textContent = '—';
+    junctionElement(name).textContent = '-';
   }
   junctionElement('range').textContent = '';
   junctionElement('color-scale').textContent = '';
@@ -170,7 +170,7 @@ function updateJunctionMetrics() {
   for (const [name, value] of [
     ['p-width', region && region.pWidth], ['n-width', region && region.nWidth],
     ['total-width', region && region.total]
-  ]) junctionElement(name).textContent = region ? value.toFixed(3) + ' µm' : '—';
+  ]) junctionElement(name).textContent = region ? value.toFixed(3) + ' µm' : '-';
   if (region) junctionElement('canvas').setAttribute('aria-label',
     'Rotatable PN junction at ' + junctionView.voltage.toPrecision(4) +
     ' volts. Depletion width ' + region.total.toFixed(3) + ' micrometers.');

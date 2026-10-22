@@ -660,7 +660,7 @@ const failed = results.filter((r) => !r.ok);
 const pad = Math.max(...results.map((r) => r.name.length));
 for (const r of results) {
   const mark = r.ok ? '\x1b[32m ok \x1b[0m' : '\x1b[31mFAIL\x1b[0m';
-  console.log(`${mark}  ${r.name.padEnd(pad)}${r.ok ? '' : `  — ${r.detail}`}`);
+  console.log(`${mark}  ${r.name.padEnd(pad)}${r.ok ? '' : `, ${r.detail}`}`);
 }
 console.log(`\n${results.length - failed.length}/${results.length} passed`);
 process.exit(failed.length ? 1 : 0);

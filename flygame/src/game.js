@@ -241,7 +241,7 @@ export class Game {
       p.jumpBuffer = 0;
     }
 
-    // Releasing jump early cuts the arc short — standard variable-height jump.
+    // Releasing jump early cuts the arc short, standard variable-height jump.
     if (!inp.jumpHeld && p.vy < -PLAYER.JUMP_V * 0.35) p.vy = -PLAYER.JUMP_V * 0.35;
 
     p.vy += PLAYER.GRAVITY * dt;
@@ -327,7 +327,7 @@ export class Game {
     this.equip(id);
     audio.play('coin', { rate: 0.8 });
     this._emitHud();
-    // Only refresh the shop card while the shop is actually open — otherwise a
+    // Only refresh the shop card while the shop is actually open, otherwise a
     // purchase would paint the panel back over live gameplay.
     if (this.state === State.SHOP) this.hooks.onShopChange?.();
     return true;
@@ -570,7 +570,7 @@ export class Game {
 
   gameOver() {
     // The blink is driven by the invulnerability timer, which stops ticking
-    // once the simulation halts — leave it set and the player never reappears.
+    // once the simulation halts, leave it set and the player never reappears.
     this.player.invuln = 0;
     audio.play('lose');
     this.newRecord = this.hooks.submitScore?.(this.score) ?? false;
@@ -641,7 +641,7 @@ export class Game {
     const py = p.y + PLAYER.H * 0.7;
     if (Math.hypot(px - cx, py - cy) < BOMB.BLAST_RADIUS) this.hurtPlayer();
 
-    // Blasts also clear flies caught in them — bombers can kill their own kind.
+    // Blasts also clear flies caught in them, bombers can kill their own kind.
     for (const e of this.enemies) {
       if (!e.alive || e.dying) continue;
       const ex = e.x + ENEMY.W / 2;

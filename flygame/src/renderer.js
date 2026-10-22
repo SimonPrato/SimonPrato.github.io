@@ -5,7 +5,7 @@
  * us: `fit` computes a uniform scale plus letterbox offsets, so nothing ever
  * stretches and the same pixel coordinates work everywhere.
  *
- * The canvas backing store is sized in device pixels (capped at 2x — beyond
+ * The canvas backing store is sized in device pixels (capped at 2x, beyond
  * that you pay 4x the fill rate for no visible gain), and resizes are batched
  * into a single rAF so dragging a window edge does not thrash allocations.
  */
