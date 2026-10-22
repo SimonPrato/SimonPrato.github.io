@@ -30,7 +30,7 @@ export const PLAYER = Object.freeze({
   MAX_X: VIEW.W - 170,
   /**
    * The original was one-hit-death. Three hits plus a moment of invulnerability
-   * makes the ramp readable without making it easy — set LIVES to 1 for the
+   * makes the ramp readable without making it easy, set LIVES to 1 for the
    * original rules.
    */
   LIVES: 3,

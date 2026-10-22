@@ -1,4 +1,4 @@
-// This is a static portfolio demo — there is no backend behind it. Every
+// This is a static homepage demo, there is no backend behind it. Every
 // call the app makes to a same-origin `/api/...` endpoint (login, AI
 // analysis, puzzles, payments, etc.) is intercepted here before it ever
 // leaves the browser, and answered with a synthetic response carrying the
@@ -26,7 +26,7 @@
   }
 
   // Endpoints consumed as an SSE stream (`response.body.getReader()`)
-  // expect a 200 with a real stream, not an HTTP error — so we hand back a
+  // expect a 200 with a real stream, not an HTTP error, so we hand back a
   // stream containing a single `type: "error"` frame, which is exactly how
   // the app already renders backend error messages inline.
   function sseDisabledResponse() {

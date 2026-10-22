@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Flygame — interface shell
+   Flygame, interface shell
    The canvas draws the world; everything you can read or click lives in the
    DOM above it. That keeps text crisp at every DPI and makes the whole UI
    keyboard- and screen-reader-accessible for free.
@@ -271,7 +271,7 @@ body {
 }
 
 /* The shop keeps the scene readable: dim less, sit above the player, and let
-   clicks and touches through everywhere except the card itself — otherwise the
+   clicks and touches through everywhere except the card itself, otherwise the
    panel would swallow the on-screen d-pad on phones. */
 #panel.panel--shop {
   align-items: start;

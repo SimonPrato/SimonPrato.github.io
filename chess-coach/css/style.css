@@ -35,7 +35,7 @@
   --ctrl-w: 54px;
   --board-ui-h: 3.9rem;
 
-  /* Board square palette — shared with collection mini-boards */
+  /* Board square palette, shared with collection mini-boards */
   --sq-light: #f0e4ca;
   --sq-dark: #4a7547;
 
@@ -316,7 +316,7 @@ main {
   animation: board-breathe 6s ease-in-out infinite;
   background-color: var(--sq-dark, #4a7547);
   cursor: default;
-  /* Dragging a piece is a touch gesture — never let it scroll the page.
+  /* Dragging a piece is a touch gesture, never let it scroll the page.
      Without this, a vertical drag scrolls the (scrollable) page on mobile and
      leaves the board shifted upwards and stuck. */
   touch-action: none;
@@ -387,7 +387,7 @@ main {
 .white-1e1d7 { background-color: var(--sq-light, #f0e4ca); color: var(--sq-light, #f0e4ca); }
 .black-3c85d  { background-color: var(--sq-dark, #4a7547);  color: var(--sq-dark, #4a7547); }
 
-/* Remove chessboard.js default harsh border — integration with app style */
+/* Remove chessboard.js default harsh border, integration with app style */
 .board-b72b1 { border: none !important; }
 
 /* ── Eval column ── */
@@ -573,7 +573,7 @@ main {
   overflow: hidden;
 }
 
-/* One group per piece type — pieces of the same kind stack with overlap */
+/* One group per piece type, pieces of the same kind stack with overlap */
 .mb-group {
   display: inline-flex;
   align-items: center;
@@ -1173,7 +1173,7 @@ button { cursor: pointer; font-family: inherit; }
   animation: qa-stream-in 0.2s ease-out;
 }
 
-/* Blinking cursor via ::after — no extra DOM nodes needed */
+/* Blinking cursor via ::after, no extra DOM nodes needed */
 @keyframes qa-blink {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0; }
@@ -2652,7 +2652,7 @@ button { cursor: pointer; font-family: inherit; }
   transition: width 0.35s ease;
 }
 
-/* Live eval chart — shown inside analysis-live-stats while analysis runs */
+/* Live eval chart, shown inside analysis-live-stats while analysis runs */
 .live-eval-chart-wrap {
   width: 100%;
   border-radius: 4px;
@@ -2847,7 +2847,7 @@ button { cursor: pointer; font-family: inherit; }
   color: var(--text);
 }
 
-/* Drag ghost — piece image following the pointer */
+/* Drag ghost, piece image following the pointer */
 .builder-drag-ghost {
   position: fixed;
   width: 52px;
@@ -2953,7 +2953,7 @@ button { cursor: pointer; font-family: inherit; }
   :root { --board-size: min(calc(100vw - 2rem), 520px); }
   body  { height: auto; min-height: 100dvh; overflow: auto; }
   main  { grid-template-columns: 1fr; justify-items: center; flex: none; overflow: visible; }
-  /* Board first on tablet portrait — analysis panel scrolls below */
+  /* Board first on tablet portrait, analysis panel scrolls below */
   .board-section { order: -1; }
   .left-panel, .right-panel { height: auto; overflow: visible; width: min(100%, 560px); }
   .card-move-history { min-height: 220px; }
@@ -3759,7 +3759,7 @@ button { cursor: pointer; font-family: inherit; }
 
 
 /* ─────────────────────────────────────────────────────────────
-   ABOUT PAGE — redesign
+   ABOUT PAGE: redesign
    ───────────────────────────────────────────────────────────── */
 
 .about-page-content {
@@ -3999,7 +3999,7 @@ button { cursor: pointer; font-family: inherit; }
 }
 
 /* ─────────────────────────────────────────────────────────────
-   COLLECTION PAGE — improvements
+   COLLECTION PAGE: improvements
    ───────────────────────────────────────────────────────────── */
 
 /* Stronger hover on collection items */
@@ -4067,7 +4067,7 @@ button { cursor: pointer; font-family: inherit; }
 }
 
 /* ─────────────────────────────────────────────────────────────
-   HEADER — mobile fixes
+   HEADER: mobile fixes
    ───────────────────────────────────────────────────────────── */
 
 @media (max-width: 420px) {
@@ -4081,7 +4081,7 @@ button { cursor: pointer; font-family: inherit; }
 }
 
 /* ─────────────────────────────────────────────────────────────
-   ABOUT — mobile
+   ABOUT: mobile
    ───────────────────────────────────────────────────────────── */
 
 @media (max-width: 640px) {
@@ -4136,13 +4136,13 @@ button { cursor: pointer; font-family: inherit; }
   transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease;
 }
 
-/* Collection mini board — accent glow on hover */
+/* Collection mini board, accent glow on hover */
 .collection-item:hover .collection-mini-board {
   box-shadow: 0 0 0 2px var(--accent), 0 4px 16px rgba(16, 185, 129, 0.25);
   transition: box-shadow 0.2s ease;
 }
 
-/* Import button in collection — accent variant */
+/* Import button in collection, accent variant */
 .collection-import-toggle {
   color: var(--accent);
   border-color: rgba(16, 185, 129, 0.3);
@@ -4182,7 +4182,7 @@ button { cursor: pointer; font-family: inherit; }
 
 /* Play page uses the same 3-column grid as the Analysis main */
 /* ═══════════════════════════════════════════════════════════════
-   Play page — main container
+   Play page, main container
    ═══════════════════════════════════════════════════════════════ */
 
 .play-main {
@@ -5063,7 +5063,7 @@ button { cursor: pointer; font-family: inherit; }
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   Collection — Analyze button + loading state
+   Collection, Analyze button + loading state
    ═══════════════════════════════════════════════════════════════ */
 
 .collection-analyze-btn {
@@ -5564,7 +5564,7 @@ button { cursor: pointer; font-family: inherit; }
 [data-theme="light"] .piece-icon { filter: none; }
 
 /* Opponent/persona avatars invert the global rule: black pieces on dark surfaces,
-   white pieces on light surfaces — the opposite of general piece-icon behaviour. */
+   white pieces on light surfaces, the opposite of general piece-icon behaviour. */
 .persona-avatar-v2 .piece-icon,
 .play-character-avatar .piece-icon,
 .play-mobile-opp-avatar .piece-icon { filter: none; }
@@ -5675,7 +5675,7 @@ button { cursor: pointer; font-family: inherit; }
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   Collection — Analysis stats summary row
+   Collection, Analysis stats summary row
    ═══════════════════════════════════════════════════════════════ */
 
 .analysis-stats-row {
@@ -6347,7 +6347,7 @@ button { cursor: pointer; font-family: inherit; }
   line-height: 1.5;
 }
 
-/* Gameplay panel — default color radio group */
+/* Gameplay panel, default color radio group */
 .gameplay-color-group {
   display: flex;
   gap: 0.75rem;
@@ -6552,7 +6552,7 @@ body.page-play .site-footer { display: none; }
     gap: 0.35rem;
   }
 
-  /* Hide nav — moved to drawer */
+  /* Hide nav, moved to drawer */
   .main-nav { display: none; }
 
   /* Keep logo + title visible */
@@ -6584,7 +6584,7 @@ body.page-play .site-footer { display: none; }
 
 /* ── Persona roster: responsive columns ── */
 @media (max-width: 768px) {
-  /* 3 columns on tablet (641-768px) — 5 columns is too cramped */
+  /* 3 columns on tablet (641-768px), 5 columns is too cramped */
   .persona-roster { grid-template-columns: repeat(3, 1fr); gap: 0.55rem; }
   .play-setup-screen { padding: 1.25rem 1rem 2rem; }
   .play-setup-inner { gap: 1.25rem; }
@@ -6762,7 +6762,7 @@ body.page-play .site-footer { display: none; }
    HAMBURGER + MOBILE DRAWER
    ════════════════════════════════════════════════════════════════ */
 
-/* Hamburger — hidden on desktop */
+/* Hamburger, hidden on desktop */
 .hamburger-btn {
   display: none;
   flex-direction: column;
@@ -6793,7 +6793,7 @@ body.page-play .site-footer { display: none; }
 .hamburger-btn.open .hamburger-line:nth-child(2) { opacity: 0; transform: scaleX(0); }
 .hamburger-btn.open .hamburger-line:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/* Override default display:none for mobile/tablet — must come after the global rule above */
+/* Override default display:none for mobile/tablet, must come after the global rule above */
 @media (max-width: 768px) {
   .hamburger-btn { display: flex; }
 }
@@ -6974,7 +6974,7 @@ body.page-play .site-footer { display: none; }
 .drawer-theme-btn:active { background: var(--surface2); transform: scale(0.97); }
 .drawer-theme-btn svg { flex-shrink: 0; opacity: 0.75; }
 
-/* Analysis tab bar — hidden on desktop */
+/* Analysis tab bar, hidden on desktop */
 .analysis-tab-bar { display: none; }
 
 /* ════════════════════════════════════════════════════════════════
@@ -7029,7 +7029,7 @@ body.page-play .site-footer { display: none; }
 #mobile-comment-hint { display: none; }
 .mobile-engine-bar   { display: none; }
 
-/* Mobile comment hint — tappable strip below button bar.
+/* Mobile comment hint, tappable strip below button bar.
    Uses max-height collapse so no space is reserved when hidden. */
 body.mobile-board-active #mobile-comment-hint {
   display: flex;
@@ -7088,7 +7088,7 @@ body.mobile-board-active #mobile-comment-hint.visible:active {
     --ctrl-w: 0px;
   }
 
-  /* Hide material bars on mobile — reclaims 52px for board + panel */
+  /* Hide material bars on mobile, reclaims 52px for board + panel */
   body.mobile-board-active .material-bar {
     display: none !important;
   }
@@ -7104,7 +7104,7 @@ body.mobile-board-active #mobile-comment-hint.visible:active {
     align-items: stretch !important;
   }
 
-  /* 3. Board section — first row, fixed height */
+  /* 3. Board section, first row, fixed height */
   body.mobile-board-active #page-analysis .board-section {
     order: 0;
     flex-shrink: 0 !important;
@@ -7180,7 +7180,7 @@ body.mobile-board-active #mobile-comment-hint.visible:active {
     font-size: 1.25rem !important;
   }
 
-  /* 5. Engine eval — hidden on mobile (shown in Analysis tab instead) */
+  /* 5. Engine eval, hidden on mobile (shown in Analysis tab instead) */
   body.mobile-board-active #page-analysis .mobile-eval-display {
     display: none;
   }
@@ -7297,7 +7297,7 @@ body.mobile-board-active #mobile-comment-hint.visible:active {
     flex-wrap: wrap;
   }
 
-  /* 7. Analysis tab bar — visible only in mobile board view */
+  /* 7. Analysis tab bar, visible only in mobile board view */
   body.mobile-board-active #analysis-tab-bar {
     display: flex;
     order: 1;
@@ -7343,7 +7343,7 @@ body.mobile-board-active #mobile-comment-hint.visible:active {
     opacity: 1;
   }
 
-  /* 8. Panel visibility — tab-driven */
+  /* 8. Panel visibility, tab-driven */
   body.mobile-board-active #page-analysis .right-panel,
   body.mobile-board-active #page-analysis .left-panel {
     display: none !important;
@@ -7364,12 +7364,12 @@ body.mobile-board-active #mobile-comment-hint.visible:active {
     display: flex !important;
   }
 
-  /* Right panel: outer container doesn't scroll — .card-move-history scrolls instead */
+  /* Right panel: outer container doesn't scroll, .card-move-history scrolls instead */
   body.mobile-board-active #page-analysis .right-panel {
     overflow-y: hidden !important;
   }
 
-  /* Analysis (left) panel: no outer scroll — inner subpanel-body scrolls */
+  /* Analysis (left) panel: no outer scroll, inner subpanel-body scrolls */
   body.mobile-board-active #page-analysis .left-panel {
     overflow-y: hidden !important;
     padding: 0 !important;
@@ -7381,7 +7381,7 @@ body.mobile-board-active #mobile-comment-hint.visible:active {
     display: none !important;
   }
 
-  /* Analyze game button — pinned at bottom of the flex column, never scrolls away */
+  /* Analyze game button, pinned at bottom of the flex column, never scrolls away */
   body.mobile-board-active #page-analysis #analyze-game-row {
     flex-shrink: 0;
     padding: 0.5rem 0 0;
@@ -7429,7 +7429,7 @@ body.mobile-board-active #mobile-comment-hint.visible:active {
     box-shadow: none !important;
   }
 
-  /* Panel title is hidden on mobile — tabs already identify the panel */
+  /* Panel title is hidden on mobile, tabs already identify the panel */
   body.mobile-board-active #page-analysis .cp-panel-title {
     display: none !important;
   }
@@ -7462,7 +7462,7 @@ body.mobile-board-active #mobile-comment-hint.visible:active {
     background: transparent !important;
   }
 
-  /* Skill selector hidden in analysis panel on mobile — only shown inside the Ask overlay */
+  /* Skill selector hidden in analysis panel on mobile, only shown inside the Ask overlay */
   body.mobile-board-active #page-analysis .skill-selector,
   body.mobile-board-active #page-analysis .skill-elo-hint {
     display: none !important;
@@ -7594,7 +7594,7 @@ body.mobile-board-active #mobile-comment-hint.visible:active {
     padding: 0.5rem 0.65rem;
   }
 
-  /* Stockfish panel hidden on mobile — no space, content panel fills the gap */
+  /* Stockfish panel hidden on mobile, no space, content panel fills the gap */
   body.mobile-board-active #page-analysis .stockfish-lines-tool {
     display: none !important;
   }
@@ -7768,7 +7768,7 @@ body.mobile-board-active #mobile-comment-hint.visible:active {
     border-bottom: 1px solid var(--border) !important;
   }
 
-  /* Play panels — moves always visible directly below board */
+  /* Play panels, moves always visible directly below board */
   body.mobile-board-active .play-arena-left {
     order: 3;
     flex: 1 1 0 !important;
@@ -7806,9 +7806,9 @@ body.mobile-board-active #mobile-comment-hint.visible:active {
   body.mobile-board-active .play-history-card { min-height: 0 !important; flex: 1 !important; }
   body.mobile-board-active .play-move-history-list { max-height: none !important; }
 
-  /* Mobile chat toggle and bar shown/hidden by JS only — no CSS override needed */
+  /* Mobile chat toggle and bar shown/hidden by JS only, no CSS override needed */
 
-  /* Mobile chat input bar — layout when JS sets display:flex */
+  /* Mobile chat input bar, layout when JS sets display:flex */
   body.mobile-board-active .play-mobile-chat-bar {
     align-items: center;
     gap: 0.5rem;
@@ -7822,7 +7822,7 @@ body.mobile-board-active #mobile-comment-hint.visible:active {
 
 } /* end @media (max-width: 640px) */
 
-/* Remove default chessboard.js border — container handles the framing */
+/* Remove default chessboard.js border, container handles the framing */
 .board-b72b1 { border: none !important; }
 /* Black pieces on board squares get a subtle white outline in dark mode */
 [data-theme="dark"] .square-55d63 img.piece-417db[src*="black"] {
@@ -8711,8 +8711,8 @@ body.mobile-board-active #page-analysis .cp-panel-title {
   display: none !important;
 }
 
-/* card-subpanel: flex column, overflow hidden — subpanel-body handles scrolling.
-   No display !important — JS sets inline display:none on inactive panels. */
+/* card-subpanel: flex column, overflow hidden, subpanel-body handles scrolling.
+   No display !important, JS sets inline display:none on inactive panels. */
 body.mobile-board-active #page-analysis .card-subpanel {
   flex: 1 1 0 !important;
   flex-direction: column !important;
@@ -8988,7 +8988,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   TRAIN PAGE — mode selector
+   TRAIN PAGE: mode selector
 ═══════════════════════════════════════════════════════════════ */
 .train-page {
   display: flex;
@@ -9034,7 +9034,7 @@ body.mobile-board-active #page-analysis .ob-footer {
      height, and the available width. The height clamp (previously a mistaken
      100vw, which never guarded vertical overflow) reserves enough for the header,
      arena padding AND the email-verification banner so the bottom rank is never
-     hidden behind it. This value is constant — it must NOT depend on the
+     hidden behind it. This value is constant, it must NOT depend on the
      late-applied verify-banner class, or chessboard.js sizes the board before the
      container shrinks and its fixed-width squares then wrap. */
   width:  min(var(--board-size), calc(100dvh - 230px), calc(100vw - var(--panel-w) - 5rem));
@@ -9082,7 +9082,7 @@ body.mobile-board-active #page-analysis .ob-footer {
   overflow-x: hidden;
 }
 
-/* Stats bar — 2×2 grid on narrow desktop panel; restored to 4×1 on mobile */
+/* Stats bar, 2×2 grid on narrow desktop panel; restored to 4×1 on mobile */
 .puzzle-stats-bar {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -9415,7 +9415,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 
 .puzzle-board-wrap.shake { animation: shake-board 0.4s ease; }
 
-/* Solve celebration — glow ring shockwave */
+/* Solve celebration, glow ring shockwave */
 @keyframes board-success-glow {
   0%   { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
   12%  { box-shadow: 0 0 0 10px rgba(34,197,94,0.7), 0 0 40px rgba(34,197,94,0.25); }
@@ -9905,7 +9905,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 .profile-achiev-icon .achiev-piece-icon,
 .achievement-popup-icon .achiev-piece-icon { width: 1.4em; height: 1.4em; object-fit: contain; display: block; }
 
-/* Inline SVG achievement icons (non-chess) — inherit color from the card */
+/* Inline SVG achievement icons (non-chess), inherit color from the card */
 .achiev-svg-icon { display: inline-flex; color: var(--accent); }
 .achiev-svg-icon svg { width: 1.25em; height: 1.25em; display: block; }
 .profile-achiev-card.earned.rarity-uncommon  .achiev-svg-icon { color: #22c55e; }
@@ -10056,7 +10056,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 
 
 /* ═══════════════════════════════════════════════════════════════
-   RESPONSIVE — puzzle arena
+   RESPONSIVE: puzzle arena
 ═══════════════════════════════════════════════════════════════ */
 @media (max-width: 680px) {
   .puzzle-arena {
@@ -10112,7 +10112,7 @@ body.mobile-board-active #page-analysis .ob-footer {
   padding: 0.48rem 0.9rem;
 }
 
-/* Puzzle stat bar labels: amber-400 and orange-500 both fail on white — darken */
+/* Puzzle stat bar labels: amber-400 and orange-500 both fail on white, darken */
 [data-theme="light"] .puzzle-stat-item:nth-child(1) .puzzle-stat-label { color: #b45309; }
 [data-theme="light"] .puzzle-stat-item:nth-child(2) .puzzle-stat-label { color: #c2410c; }
 [data-theme="light"] .streak-fire { color: #c2410c; }
@@ -11012,7 +11012,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 [data-theme="light"] .coll-detail-share-row { background: rgba(5,150,105,0.04); }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   GAMIFICATION — daily streaks, XP, leaderboard, milestones, rating graph
+   GAMIFICATION: daily streaks, XP, leaderboard, milestones, rating graph
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── Drawer gamification row ─────────────────────────────────────────────── */
@@ -11044,7 +11044,7 @@ body.mobile-board-active #page-analysis .ob-footer {
   border: 1px solid rgba(16,185,129,0.2);
 }
 
-/* ── Profile stat cards — variants ───────────────────────────────────────── */
+/* ── Profile stat cards, variants ───────────────────────────────────────── */
 .profile-stat-card--streak {
   background: linear-gradient(145deg, rgba(245,158,11,0.09) 0%, rgba(245,158,11,0.02) 100%);
   border-color: rgba(245,158,11,0.22);
@@ -11497,7 +11497,7 @@ body.mobile-board-active #page-analysis .ob-footer {
   border-color: var(--accent);
   background: var(--accent-subtle);
 }
-/* Touch devices have no hover — keep the edit affordance visible */
+/* Touch devices have no hover, keep the edit affordance visible */
 @media (hover: none) {
   .profile-bio-view.has-bio .profile-bio-edit-btn { opacity: 1; }
 }
@@ -12029,7 +12029,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 .error-msg.visible ~ .analysis-welcome,
 .analysis-result.visible ~ .analysis-welcome { display: none !important; }
 
-/* Empty state — current move has no comment (e.g. a solid book move). */
+/* Empty state, current move has no comment (e.g. a solid book move). */
 .analysis-empty {
   display: flex;
   flex-direction: column;
@@ -12261,7 +12261,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   COLLECTION EMPTY STATE — IMPROVED
+   COLLECTION EMPTY STATE: IMPROVED
    ══════════════════════════════════════════════════════════════════════════ */
 
 .collection-empty-king {
@@ -12315,7 +12315,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   PLAY PAGE — TIP & BUTTON IMPROVEMENTS
+   PLAY PAGE: TIP & BUTTON IMPROVEMENTS
    ══════════════════════════════════════════════════════════════════════════ */
 
 .play-setup-tip {
@@ -12399,7 +12399,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 .play-pos-reset-btn:hover { color: var(--text); }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   GLOBAL POLISH — PAGE TRANSITIONS, HOVER STATES
+   GLOBAL POLISH: PAGE TRANSITIONS, HOVER STATES
    ══════════════════════════════════════════════════════════════════════════ */
 
 /* Smooth tab switching animation */
@@ -12431,7 +12431,7 @@ body.mobile-board-active #page-analysis .ob-footer {
    MOBILE IMPROVEMENTS
    ══════════════════════════════════════════════════════════════════════════ */
 
-/* Analysis welcome on mobile — compact */
+/* Analysis welcome on mobile, compact */
 @media (max-width: 860px) {
   .analysis-welcome {
     padding: 0.5rem 0;
@@ -12459,7 +12459,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   SETTINGS PAGE — Better section spacing
+   SETTINGS PAGE: Better section spacing
    ══════════════════════════════════════════════════════════════════════════ */
 
 /* Make settings sections feel airier */
@@ -12478,7 +12478,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 [data-theme="light"] .collection-empty-cta:hover { background: var(--accent-subtle); }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   PROFILE PAGE — RESPONSIVE
+   PROFILE PAGE: RESPONSIVE
    ══════════════════════════════════════════════════════════════════════════ */
 
 @media (max-width: 600px) {
@@ -12573,13 +12573,13 @@ body.mobile-board-active #page-analysis .ob-footer {
 
 
 /* ══════════════════════════════════════════════════════════════════════════
-   MOBILE REDESIGN v2.0 — Compact, beautiful, state-of-the-art
+   MOBILE REDESIGN v2.0, Compact, beautiful, state-of-the-art
    All rules are scoped to ≤640px or body.mobile-board-active so the
    desktop layout is never touched.
    ══════════════════════════════════════════════════════════════════════════ */
 
 /* ────────────────────────────────────────────────────────────────────────
-   1. HEADER — ultra-compact, glassy
+   1. HEADER: ultra-compact, glassy
    ──────────────────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
   header {
@@ -12603,7 +12603,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 }
 
 /* ────────────────────────────────────────────────────────────────────────
-   2. ANALYSIS PAGE — re-order for true bottom-tab navigation
+   2. ANALYSIS PAGE: re-order for true bottom-tab navigation
       Board → Content → [spacer] → Bottom Tab Bar
    ──────────────────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
@@ -12632,7 +12632,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 }
 
 /* ────────────────────────────────────────────────────────────────────────
-   3. ANALYSIS TAB BAR — iOS-style bottom navigation
+   3. ANALYSIS TAB BAR: iOS-style bottom navigation
    ──────────────────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
   body.mobile-board-active #analysis-tab-bar .analysis-tab {
@@ -12680,7 +12680,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 }
 
 /* ────────────────────────────────────────────────────────────────────────
-   4. BOARD BUTTON BAR — cleaner navigation controls
+   4. BOARD BUTTON BAR: cleaner navigation controls
    ──────────────────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
   body.mobile-board-active #page-analysis .button-bar {
@@ -12765,7 +12765,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 }
 
 /* ────────────────────────────────────────────────────────────────────────
-   5. ANALYSIS (LEFT) PANEL — compact, beautiful
+   5. ANALYSIS (LEFT) PANEL: compact, beautiful
    ──────────────────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
 
@@ -12954,7 +12954,7 @@ body.mobile-board-active #page-analysis .ob-footer {
     min-width: 0;
   }
 
-  /* Score pill — inline, colored to the leading side */
+  /* Score pill, inline, colored to the leading side */
   .mob-eval-score {
     flex-shrink: 0;
     padding: 0.12rem 0.42rem;
@@ -12996,7 +12996,7 @@ body.mobile-board-active #page-analysis .ob-footer {
     white-space: nowrap;
   }
 
-  /* Eye toggle — hides / reveals the whole engine evaluation */
+  /* Eye toggle, hides / reveals the whole engine evaluation */
   .mob-engine-eye {
     flex-shrink: 0;
     display: flex;
@@ -13049,7 +13049,7 @@ body.mobile-board-active #page-analysis .ob-footer {
     font-style: italic;
   }
 
-  /* Chevron toggle — collapses the engine detail (depth + full line) */
+  /* Chevron toggle, collapses the engine detail (depth + full line) */
   .mob-engine-toggle {
     flex-shrink: 0;
     display: flex;
@@ -13080,7 +13080,7 @@ body.mobile-board-active #page-analysis .ob-footer {
     transform: rotate(-90deg);
   }
 
-  /* Collapsible body — full evaluation (up to 3 lines + depth), revealed on expand */
+  /* Collapsible body, full evaluation (up to 3 lines + depth), revealed on expand */
   .mob-engine-body {
     display: flex;
     flex-direction: column;
@@ -13159,7 +13159,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 }
 
 /* ────────────────────────────────────────────────────────────────────────
-   6. MOVES (RIGHT) PANEL — compact, scroll-friendly
+   6. MOVES (RIGHT) PANEL: compact, scroll-friendly
    ──────────────────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
 
@@ -13230,7 +13230,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 }
 
 /* ────────────────────────────────────────────────────────────────────────
-   7. MOBILE ASK OVERLAY — polished bottom sheet
+   7. MOBILE ASK OVERLAY: polished bottom sheet
    ──────────────────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
   .mobile-ask-popup {
@@ -13298,7 +13298,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 }
 
 /* ────────────────────────────────────────────────────────────────────────
-   8. ANNOTATION POPUP — polished bottom sheet
+   8. ANNOTATION POPUP: polished bottom sheet
    ──────────────────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
   .mobile-ann-popup {
@@ -13356,7 +13356,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 }
 
 /* ────────────────────────────────────────────────────────────────────────
-   9. PLAY SETUP SCREEN — beautiful, compact persona selection
+   9. PLAY SETUP SCREEN: beautiful, compact persona selection
    ──────────────────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
   .play-setup-screen {
@@ -13487,7 +13487,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 }
 
 /* ────────────────────────────────────────────────────────────────────────
-   10. PLAY GAME ARENA — compact, functional
+   10. PLAY GAME ARENA: compact, functional
    ──────────────────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
   /* Opponent info bar: more compact */
@@ -13531,7 +13531,7 @@ body.mobile-board-active #page-analysis .ob-footer {
     border-bottom: 1px solid var(--border) !important;
   }
 
-  /* Jump-to-current pill — float it above the button bar as an overlay so its
+  /* Jump-to-current pill, float it above the button bar as an overlay so its
      appearance while browsing history doesn't reflow (and shift) the centered
      nav group and the rest of the bar. The bar is position:relative. */
   body.mobile-board-active .play-arena .btn-jump-current {
@@ -13644,7 +13644,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 }
 
 /* ────────────────────────────────────────────────────────────────────────
-   11. PUZZLE ARENA — compact stats, clean layout
+   11. PUZZLE ARENA: compact stats, clean layout
    ──────────────────────────────────────────────────────────────────────── */
 @media (max-width: 680px) {
   /* Full-width puzzle arena on mobile */
@@ -13861,7 +13861,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 }
 
 /* ────────────────────────────────────────────────────────────────────────
-   15. COLLECTION PAGE — compact list items
+   15. COLLECTION PAGE: compact list items
    ──────────────────────────────────────────────────────────────────────── */
 @media (max-width: 480px) {
   .collection-item {
@@ -13889,7 +13889,7 @@ body.mobile-board-active #page-analysis .ob-footer {
     overflow: visible;
   }
 
-  /* Collapse "Add to…" and "Share" to icon-only — title attr covers a11y */
+  /* Collapse "Add to…" and "Share" to icon-only, title attr covers a11y */
   .collection-add-btn,
   .collection-share-btn {
     font-size: 0 !important;  /* hides text node; SVG has explicit dimensions */
@@ -13913,7 +13913,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 }
 
 /* ────────────────────────────────────────────────────────────────────────
-   16. MODALS — bottom-sheet style on mobile
+   16. MODALS: bottom-sheet style on mobile
    ──────────────────────────────────────────────────────────────────────── */
 @media (max-width: 540px) {
   .modal-box {
@@ -13938,7 +13938,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 }
 
 /* ────────────────────────────────────────────────────────────────────────
-   17. HAMBURGER DRAWER — polished
+   17. HAMBURGER DRAWER: polished
    ──────────────────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
   .mobile-drawer {
@@ -13977,7 +13977,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 }
 
 /* ────────────────────────────────────────────────────────────────────────
-   18. UNIVERSAL TAP FEEDBACK — tactile micro-interactions
+   18. UNIVERSAL TAP FEEDBACK: tactile micro-interactions
    ──────────────────────────────────────────────────────────────────────── */
 @media (pointer: coarse) {
   .analysis-tab:active,
@@ -14004,8 +14004,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 
 /* ── Modal patch: revert position:fixed on generic modal-box (too aggressive) ── */
 @media (max-width: 540px) {
-  /* Keep generic modal-box scrollable but DON'T use fixed positioning —
-     the overlay already handles placement. Just add rounded top corners. */
+  /* Keep generic modal-box scrollable but DON'T use fixed positioning, the overlay already handles placement. Just add rounded top corners. */
   .modal-box {
     position: static !important;
     border-radius: 18px 18px 0 0 !important;
@@ -14050,7 +14049,7 @@ body.mobile-board-active #page-analysis .ob-footer {
    MOBILE COMPACT PANEL NAV
    Replaces the old bottom tab bar (Moves/Analysis) and the sub-tab header
    (Comments/Opening) with a single slim 3-chip row above the content.
-   Desktop is completely untouched — all rules are guarded by mobile-board-active
+   Desktop is completely untouched, all rules are guarded by mobile-board-active
    or the ≤640px media query.
    ═══════════════════════════════════════════════════════════════════════════ */
 
@@ -14059,7 +14058,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 
 @media (max-width: 640px) {
 
-  /* ── Section nav is now inside .button-bar — no standalone row on mobile ── */
+  /* ── Section nav is now inside .button-bar, no standalone row on mobile ── */
   body.mobile-board-active .mobile-panel-nav {
     display: none; /* hidden by default; overridden inside .button-bar below */
   }
@@ -14136,7 +14135,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 }
 
 /* ────────────────────────────────────────────────────────────────────────
-   10. ONE-ROW BUTTON BAR — section nav chips share the row with prev/next
+   10. ONE-ROW BUTTON BAR: section nav chips share the row with prev/next
    ──────────────────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
 
@@ -14153,7 +14152,7 @@ body.mobile-board-active #page-analysis .ob-footer {
     flex-shrink: 0 !important;
   }
 
-  /* Compact chip buttons — inactive: icon only, active: icon + label */
+  /* Compact chip buttons, inactive: icon only, active: icon + label */
   body.mobile-board-active #page-analysis .button-bar .mpn-btn {
     flex: none !important;
     display: flex !important;
@@ -14228,7 +14227,7 @@ body.mobile-board-active #page-analysis .ob-footer {
     pointer-events: auto !important;
   }
 
-  /* Eval display: no room in the one-row bar — eval is in the Analysis panel */
+  /* Eval display: no room in the one-row bar, eval is in the Analysis panel */
   body.mobile-board-active #page-analysis .mobile-eval-display {
     display: none !important;
   }
@@ -14240,7 +14239,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 }
 
 /* ────────────────────────────────────────────────────────────────────────
-   11. ASK BUTTON — compact pill, AI sparkle style
+   11. ASK BUTTON: compact pill, AI sparkle style
    ──────────────────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
 
@@ -14284,7 +14283,7 @@ body.mobile-board-active #page-analysis .ob-footer {
 }
 
 /* ────────────────────────────────────────────────────────────────────────
-   12. OPENING PANEL — compact, dense, overview-optimized
+   12. OPENING PANEL: compact, dense, overview-optimized
    ──────────────────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
 
@@ -14363,7 +14362,7 @@ body.mobile-board-active #page-analysis .ob-footer {
     font-size: 0.63rem !important;
   }
 
-  /* Hide year — saves space, year is rarely useful on mobile overview */
+  /* Hide year, saves space, year is rarely useful on mobile overview */
   body.mobile-board-active #page-analysis .ob-game-year {
     display: none !important;
   }
@@ -14380,7 +14379,7 @@ body.mobile-board-active #page-analysis .ob-footer {
    Breakpoints are ordered large→small so each overrides the last.
    ════════════════════════════════════════════════════════════════ */
 
-/* ── ≤640px: Collection import modal — max-height + compact padding ── */
+/* ── ≤640px: Collection import modal, max-height + compact padding ── */
 @media (max-width: 640px) {
   .collection-import-modal-box {
     padding: 1rem;
@@ -14391,11 +14390,11 @@ body.mobile-board-active #page-analysis .ob-footer {
   .collection-import-modal-subtitle { font-size: 0.78rem; }
   .collection-import-card  { padding: 0.8rem 0.85rem; }
   .collection-import-title { font-size: 0.88rem; margin-bottom: 0.15rem; }
-  /* Shorter textarea — long PGNs scroll within the field */
+  /* Shorter textarea, long PGNs scroll within the field */
   .collection-import-textarea { min-height: 90px; }
 }
 
-/* ── ≤480px: All modals — compact 1rem padding + individual overrides ── */
+/* ── ≤480px: All modals, compact 1rem padding + individual overrides ── */
 @media (max-width: 480px) {
   /* Default: every .modal-box goes from 1.5rem → 1rem padding on phone */
   .modal-box { padding: 1rem; }
@@ -14422,11 +14421,11 @@ body.mobile-board-active #page-analysis .ob-footer {
   /* Share modal body lives inside its own element, not .modal-box */
   .share-modal-body { padding: 1rem; gap: 0.65rem; }
 
-  /* Game-over modal — 1.25rem heading slightly large on small screens */
+  /* Game-over modal, 1.25rem heading slightly large on small screens */
   .play-over-heading { font-size: 1.05rem !important; }
 }
 
-/* ── ≤380px: Position builder — palette pieces scaled down ── */
+/* ── ≤380px: Position builder, palette pieces scaled down ── */
 @media (max-width: 380px) {
   .builder-palette-piece,
   .builder-trash { width: 36px; height: 36px; }

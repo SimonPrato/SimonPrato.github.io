@@ -3,7 +3,7 @@
  *
  * Nothing here draws to the canvas. Keeping the interface in the DOM means the
  * text stays sharp on any display, the whole game is keyboard-navigable, and
- * screen readers get real buttons instead of invisible click rectangles — the
+ * screen readers get real buttons instead of invisible click rectangles, the
  * original hid the soundtrack switcher and the entire shop behind hard-coded
  * pixel regions with no visual affordance at all.
  */
@@ -164,7 +164,7 @@ export class UI {
       'paused',
       `<div class="card">
          <h2 id="panel-title">Paused</h2>
-         <p>Take your time — nothing moves while this is open.</p>
+         <p>Take your time. Nothing moves while this is open.</p>
          <div class="btn-row">
            <button class="btn btn--primary" data-cmd="resume" autofocus>Resume</button>
            <button class="btn" data-cmd="restart">Restart</button>
@@ -210,7 +210,7 @@ export class UI {
         <p class="item__name">${esc(w.name)} <kbd>${i + 1}</kbd></p>
         <p class="item__blurb">${esc(w.blurb)}</p>
         <p class="price">${
-          isOwned ? '—' : `${w.price} <img src="img/coin_1.png" alt="coins" />`
+          isOwned ? '-' : `${w.price} <img src="img/coin_1.png" alt="coins" />`
         }</p>
         <button class="btn btn--block ${!isOwned && affordable ? 'btn--primary' : ''}"
                 data-cmd="buy" data-arg="${w.id}" ${isOwned || !affordable ? 'disabled' : ''}>${label}</button>

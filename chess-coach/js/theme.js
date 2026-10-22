@@ -1,4 +1,4 @@
-// Runs synchronously in <head> — sets theme before first paint to prevent FOUC
+// Runs synchronously in <head>, sets theme before first paint to prevent FOUC
 (function () {
   // Signal that JS is running (landing page keeps .reveal content visible without JS)
   document.documentElement.classList.remove('no-js');

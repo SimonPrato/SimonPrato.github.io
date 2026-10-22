@@ -1,6 +1,6 @@
 /**
  * The smallest browser environment the game modules need in order to run under
- * plain Node — no dependencies, no headless browser.
+ * plain Node, no dependencies, no headless browser.
  *
  * The 2D context is a recorder rather than a no-op: it throws when asked to
  * draw an image that does not exist, which is exactly the class of bug the old

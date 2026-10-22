@@ -38,9 +38,9 @@
 
     function updateVSWR() {
         if (A1 <= 0) {
-            gammaOut.textContent = '—';
-            vswrOut.textContent = '—';
-            rlOut.textContent = '—';
+            gammaOut.textContent = '-';
+            vswrOut.textContent = '-';
+            rlOut.textContent = '-';
             vswrOut.classList.remove('warn');
             vswrNote.innerHTML = 'Set a non-zero transmitted amplitude (A&#8321;) to compute VSWR.';
             return;

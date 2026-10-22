@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Project write-up — Flygame
+   Project write-up, Flygame
    Shares the game's palette so the two pages read as one thing.
    ========================================================================== */
 
@@ -128,7 +128,7 @@ h1 {
   border: 0;
 }
 
-/* Keyboard events only reach the frame once it has focus, so say so — and get
+/* Keyboard events only reach the frame once it has focus, so say so, and get
    out of the way the moment it is clicked. */
 .embed__veil {
   position: absolute;

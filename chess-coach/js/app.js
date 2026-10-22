@@ -86,7 +86,7 @@ const LOADING_MESSAGES = [
   "Desperately searching for good news…",
 ];
 
-// Large pool of pre-written idle banter messages — shown every 5-10s with no loading
+// Large pool of pre-written idle banter messages, shown every 5-10s with no loading
 const PERSONA_IDLE_MESSAGES = {
   jonas: [
     "I definitely know what I'm doing here.",
@@ -332,7 +332,7 @@ function showToast(message, type = 'info', duration = 3000) {
 // High-traffic notice
 // Shown when the server reports engine latency (SSE `{type:'latency'}` events
 // or `highLatency: true` on JSON responses). The engine keeps calculating at
-// full strength — this popup only explains why results take longer.
+// full strength, this popup only explains why results take longer.
 // ---------------------------------------------------------------------------
 const TRAFFIC_NOTICE_COOLDOWN_MS = 120000; // at most one popup per 2 minutes
 const TRAFFIC_NOTICE_VISIBLE_MS  = 12000;
@@ -360,7 +360,7 @@ function showTrafficNotice() {
       </div>
       <div class="traffic-notice-body">
         <div class="traffic-notice-title">Busier than usual</div>
-        <div class="traffic-notice-text">A lot of players are analyzing right now, so responses may take a little longer than normal. Your request is still running at full strength &mdash; nothing is lost.</div>
+        <div class="traffic-notice-text">A lot of players are analyzing right now, so responses may take a little longer than normal. Your request is still running at full strength. Nothing is lost.</div>
       </div>
       <button type="button" class="traffic-notice-close" aria-label="Dismiss notice">&times;</button>`;
     notice.querySelector('.traffic-notice-close').addEventListener('click', hideTrafficNotice);
@@ -424,7 +424,7 @@ let _isDirty = false;
 function markDirty() { _isDirty = true; }
 function markClean() { _isDirty = false; _hasUnsavedCommentEdits = false; cleanGameTitle = state.gameTitle; }
 
-// Unsaved comment work on a game that is NOT in the collection — used to warn
+// Unsaved comment work on a game that is NOT in the collection, used to warn
 // before the tab closes (collection games auto-persist instead).
 let _hasUnsavedCommentEdits = false;
 
@@ -522,7 +522,7 @@ function addMoveToTree(san, uci) {
 
   // Color and move number come from the parent (pre-move) FEN
   const parts = state.currentNode.fen.split(' ');
-  const color = parts[1];          // 'w' or 'b' — who made this move
+  const color = parts[1];          // 'w' or 'b', who made this move
   const moveNumber = parseInt(parts[5], 10);
 
   // If this move already exists as a child, just navigate there
@@ -595,7 +595,7 @@ function navigateTo(node, animate = false) {
     // chessboard.js appends the moving piece clone directly to <body> and
     // drives it with jQuery .animate(). Snapping the board via position()
     // rebuilds the squares but leaves that clone mid-flight, producing a
-    // ghost duplicate. Stop and remove it before snapping — but spare each
+    // ghost duplicate. Stop and remove it before snapping, but spare each
     // board's persistent drag piece (.cb-persistent-drag-piece): removing it
     // detaches the element chessboard.js reuses for every drag, which made
     // dragged pieces invisible after rapid move navigation.
@@ -682,7 +682,7 @@ function _showVariationStripMobile() {
 }
 
 // ---------------------------------------------------------------------------
-// Variation chooser — shown when stepping forward into a branch point.
+// Variation chooser, shown when stepping forward into a branch point.
 // Desktop: a popover anchored above the "Next" button (mouse + keyboard).
 // Mobile: a bottom action-sheet with large tap targets.
 // ---------------------------------------------------------------------------
@@ -807,7 +807,7 @@ function navigateLast() {
 }
 
 // ---------------------------------------------------------------------------
-// Move sound (Web Audio API synthesis — no external file needed)
+// Move sound (Web Audio API synthesis, no external file needed)
 // ---------------------------------------------------------------------------
 let _audioCtx = null;
 
@@ -879,11 +879,11 @@ const ANN_CLASSIFICATION = {
   '??': 'blunder',
 };
 
-// Set of node IDs that just received a new annotation — drives pop-in animation
+// Set of node IDs that just received a new annotation, drives pop-in animation
 const _newlyAnnotatedNodeIds = new Set();
 
 // ---------------------------------------------------------------------------
-// Game analysis helpers — eval chart + navigation
+// Game analysis helpers, eval chart + navigation
 // ---------------------------------------------------------------------------
 
 function cpToWinPct(cp) {
@@ -1000,7 +1000,7 @@ function saveGameplaySettings() {
 }
 
 // ---------------------------------------------------------------------------
-// Server-side persistence — settings & collection
+// Server-side persistence, settings & collection
 // ---------------------------------------------------------------------------
 let _settingsSyncTimer = null;
 const SETTINGS_SYNC_DEBOUNCE_MS = 1500;
@@ -1100,7 +1100,7 @@ async function loadUserDataFromServer() {
     if (!resp.ok) return;
     const { settings, games, deleted } = await resp.json();
 
-    // Apply settings — server is authoritative for logged-in users
+    // Apply settings, server is authoritative for logged-in users
     if (settings) {
       if (settings.boardSettings) {
         Object.assign(boardSettings, settings.boardSettings);
@@ -1143,7 +1143,7 @@ async function loadUserDataFromServer() {
       }
       for (const lg of localItems) {
         if (lg == null || seen.has(lg.id)) continue;
-        // Deleted on another device — drop the local copy unless it was
+        // Deleted on another device, drop the local copy unless it was
         // edited after the deletion.
         const delTs = deletedAt.get(lg.id);
         if (delTs !== undefined && gameUpdatedAt(lg) <= delTs) continue;
@@ -1151,7 +1151,7 @@ async function loadUserDataFromServer() {
         localAhead = true;
       }
       window._collectionAPI.set(merged);
-      // Local had newer or extra games — push them so other devices see them.
+      // Local had newer or extra games, push them so other devices see them.
       if (localAhead) syncCollectionToServer();
     }
   } catch {}
@@ -1245,7 +1245,7 @@ let PIECE_IMAGES = {
 
 // chessboard.js appends one persistent floating drag-piece <img> to <body> per
 // board and reuses it for every drag. The ghost-clone cleanup in navigateTo()
-// must never remove it — once detached, every subsequent drag moves an element
+// must never remove it, once detached, every subsequent drag moves an element
 // that is no longer in the DOM, so the dragged piece turns invisible. Tag the
 // persistent piece right after each board is built; the transient animation
 // clones chessboard.js creates during position() calls stay untagged.
@@ -1303,12 +1303,12 @@ function initBoard() {
   // chessboard.js positions the dragged-piece clone in document coordinates as
   // a direct child of <body>. On mobile board pages the body is position:fixed
   // (pinned to the viewport), which makes the viewport the clone's containing
-  // block — so any residual document scroll (typically left behind by the
+  // block, so any residual document scroll (typically left behind by the
   // on-screen keyboard after typing in the PGN-import textarea) displaces the
   // clone from the finger by exactly the scroll offset and the dragged piece
   // appears to vanish. With the body pinned, document scroll has no visual
   // effect, so resetting it is always safe. Two layers:
-  //  1. Undo stray scroll the moment it appears — but not while an input is
+  //  1. Undo stray scroll the moment it appears, but not while an input is
   //     focused, since the OS scrolls to keep the keyboard from covering it.
   //  2. Reset on the touch/click that starts a drag, covering scroll left over
   //     from a still-focused input that never fired another scroll event.
@@ -1416,7 +1416,7 @@ function loadBoardSettings() {
 
 // anchorEl (optional): when the preview is triggered from inside a panel/list
 // (e.g. the move history), pass that element so the board is placed clear of its
-// whole bounding box instead of just left of the cursor — which would otherwise
+// whole bounding box instead of just left of the cursor, which would otherwise
 // land on top of the list the user is hovering.
 function showPreview(fen, x, y, anchorEl = null) {
   if (!state.previewBoard) return;
@@ -1510,7 +1510,7 @@ function onDrop(source, target) {
     if (state._dragStartWasSelected) {
       clearClickSelection();
     }
-    // else: first click — onDragStart's selection and highlights remain
+    // else: first click, onDragStart's selection and highlights remain
     return 'snapback';
   }
 
@@ -1647,17 +1647,17 @@ function clearClickSelection() {
 }
 
 // ---------------------------------------------------------------------------
-// Live evaluation update — streaming SSE from Stockfish
+// Live evaluation update, streaming SSE from Stockfish
 // Design: abort-immediately / debounced-start / generation-guarded
 //
-//  scheduleEvalUpdate()  — called on every position change.
+//  scheduleEvalUpdate(), called on every position change.
 //    1. Kills the running stream RIGHT NOW (no 250 ms wait) so stale data
 //       stops arriving immediately.
 //    2. Resets the eval bar to the neutral/loading state immediately.
 //    3. Debounces the *start* of the new stream by 250 ms so rapid
 //       navigation (arrow-key held down) produces only one request per pause.
 //
-//  startEvalStream()     — called after the debounce settles.
+//  startEvalStream(), called after the debounce settles.
 //    Each invocation increments _evalGen. Closures capture their own gen value
 //    and silently drop any data / reconnect attempt that belongs to a previous
 //    generation. This is the final safety net against late-arriving chunks
@@ -1865,7 +1865,7 @@ function escapeHtml(str) {
 const CHESS_PIECE_ICONS = new Set(['pawn', 'knight', 'bishop', 'rook', 'queen', 'king']);
 
 // Crisp inline SVGs for the non-chess achievement icons (use currentColor so
-// rarity styling carries through). Keyed by plain ASCII name — no Unicode.
+// rarity styling carries through). Keyed by plain ASCII name, no Unicode.
 const ACHIEV_SVG_ICONS = {
   flame:         '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c.5 3 2.3 4.6 3.8 6 1.6 1.5 2.7 3.2 2.7 5.5a6.5 6.5 0 0 1-13 0c0-1.1.3-2.1.9-3 .2 1 .9 1.8 1.9 1.8 1.1 0 1.9-.9 1.9-2 0-1.4-.8-2.2-.8-3.8C9.4 4.7 10.4 3.2 12 2z"/></svg>',
   gem:           '<svg viewBox="0 0 24 24" fill="currentColor" stroke="rgba(0,0,0,0.18)" stroke-width="1" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12l3.5 5.5L12 22 2.5 8.5z"/></svg>',
@@ -2199,7 +2199,7 @@ function animateEvalScore(targetCp, display, immediate) {
   const els = _evalScoreEls();
   if (_evalScoreTween.raf) { cancelAnimationFrame(_evalScoreTween.raf); _evalScoreTween.raf = null; }
 
-  // Mate scores (and an immediate reset) skip the tween — there is no
+  // Mate scores (and an immediate reset) skip the tween, there is no
   // meaningful in-between value to count through.
   const isMate = typeof display === 'string' && /M/i.test(display);
   if (immediate || isMate) {
@@ -2210,7 +2210,7 @@ function animateEvalScore(targetCp, display, immediate) {
 
   const from = _evalScoreTween.current;
   const to = Number.isFinite(targetCp) ? targetCp : 0;
-  if (Math.abs(to - from) < 1) {           // already there — just snap text
+  if (Math.abs(to - from) < 1) {           // already there, just snap text
     _evalScoreTween.current = to;
     els.forEach(el => { el.textContent = display; });
     return;
@@ -2260,7 +2260,7 @@ function updateEvalBar(numericScore, display, immediate) {
 }
 
 function resetEvalBar() {
-  updateEvalBar(0, '0.00', true);  // immediate — position changed, don't count down to 0
+  updateEvalBar(0, '0.00', true);  // immediate, position changed, don't count down to 0
   clearTopMove();
 }
 
@@ -2373,7 +2373,7 @@ function setStockfishLinesEnabled(enabled) {
   const hint = document.getElementById('stockfish-lines-hint');
   if (!tool) return;
   tool.classList.toggle('is-disabled', !enabled);
-  if (hint) hint.textContent = enabled ? 'Depth —' : 'Disabled';
+  if (hint) hint.textContent = enabled ? 'Depth -' : 'Disabled';
 }
 
 function _formatStockfishLineScore(tm, sideToMove) {
@@ -2461,7 +2461,7 @@ function renderStockfishLines(topMoves, sideToMove, depth) {
   const body = document.getElementById('stockfish-lines-body');
   if (!body) return;
   const hint = document.getElementById('stockfish-lines-hint');
-  if (hint && state.evalVisible) hint.textContent = `Depth ${Number.isFinite(depth) ? depth : '—'}`;
+  if (hint && state.evalVisible) hint.textContent = `Depth ${Number.isFinite(depth) ? depth : '-'}`;
 
   const anchorId = state.currentNode && typeof state.currentNode.id === 'number'
     ? state.currentNode.id : null;
@@ -2479,7 +2479,7 @@ function renderStockfishLines(topMoves, sideToMove, depth) {
 
   // How many moves the position actually has. Slots beyond this count can never
   // be filled, so they stay blank; slots within it but not yet returned by the
-  // engine show a shimmering skeleton — the panel always reads as "3 lines
+  // engine show a shimmering skeleton, the panel always reads as "3 lines
   // loading" rather than visibly popping from 1 → 2 → 3 lines as depth climbs.
   let legalCount = 3;
   try { legalCount = state.game.moves().length; } catch (_) {}
@@ -2494,7 +2494,7 @@ function renderStockfishLines(topMoves, sideToMove, depth) {
     if (!state.evalVisible) {
       row.classList.remove('stockfish-line--skeleton', 'stockfish-line--placeholder');
       delete row.dataset.sfMovesSig;
-      scoreEl.textContent = i === 0 ? '—' : '';
+      scoreEl.textContent = i === 0 ? '-' : '';
       movesEl.textContent = i === 0 ? 'Enable eval bar to see lines.' : '';
       continue;
     }
@@ -2513,14 +2513,14 @@ function renderStockfishLines(topMoves, sideToMove, depth) {
     }
 
     // Real line for this slot. The score updates live every reading, but the
-    // move list is only rebuilt when the actual moves change — so a deepening
+    // move list is only rebuilt when the actual moves change, so a deepening
     // search that keeps recommending the same line never flickers.
     row.classList.remove('stockfish-line--skeleton', 'stockfish-line--placeholder');
     scoreEl.textContent = _formatStockfishLineScore(tm, side);
 
     const sanMoves = _pvUciToSanMoves(fen, tm.pv);
     const movesSig = side + '|' + sanMoves.join(' ');
-    if (row.dataset.sfMovesSig === movesSig) continue;  // identical — leave DOM untouched
+    if (row.dataset.sfMovesSig === movesSig) continue;  // identical, leave DOM untouched
 
     row.dataset.sfMovesSig = movesSig;
 
@@ -2555,7 +2555,7 @@ function renderStockfishLines(topMoves, sideToMove, depth) {
     movesEl.classList.add('sf-moves-in');
   }
 
-  // Mobile engine bar — collapsed header shows a plain "Engine evaluation"
+  // Mobile engine bar, collapsed header shows a plain "Engine evaluation"
   // label; the expanded body shows the full evaluation (up to 3 lines).
   const mobLabel = document.getElementById('mob-engine-label');
   const mobDepth = document.getElementById('mob-engine-depth');
@@ -2903,7 +2903,7 @@ function _resolveAnchorForSeq(seqStr, defaultAnchorId) {
   const mlNode = _mainlineNodeAtPly(state.root, targetPly);
   if (mlNode && _nodePly(mlNode) === targetPly) return mlNode.id;
 
-  // Cannot resolve — return null so moves are rendered as plain text
+  // Cannot resolve, return null so moves are rendered as plain text
   return null;
 }
 
@@ -3012,7 +3012,7 @@ function playVariationFromNode(anchorNodeId, sanMoves, { fallbackToAnchor = true
   for (const san of sanMoves) {
     const move = state.game.move(san);
     if (!move) {
-      // Invalid move — restore original state
+      // Invalid move, restore original state
       state.currentNode = prevNode;
       state.game.load(prevNode.fen);
       return;
@@ -3056,7 +3056,7 @@ function clearAnalysis() {
 }
 
 // Show a friendly placeholder when a game is loaded but the current move has no
-// AI comment — e.g. a solid book move with no inaccuracy to flag — so the
+// AI comment, e.g. a solid book move with no inaccuracy to flag, so the
 // Comments panel never looks blank/broken. Mutually exclusive with the
 // spinner, error, analysis result and onboarding welcome.
 function updateCommentsEmptyState() {
@@ -3330,7 +3330,7 @@ async function askQuestion() {
             askingNode.qa = askingNode.qa || [];
             askingNode.qa.push({ question, answer: finalAnswer });
             askingNode.pendingQa = null;
-            // The Q&A thread is part of the game's comments — persist it like
+            // The Q&A thread is part of the game's comments, persist it like
             // any other comment edit or it vanishes on reload.
             markDirty();
             window._persistCommentChange?.();
@@ -3510,7 +3510,7 @@ function _renderOpeningData(data) {
     if (hasGames) {
       gamesEl.innerHTML = '';
 
-      // Capture FEN now — used in game row helpers that may run later (show-more click)
+      // Capture FEN now, used in game row helpers that may run later (show-more click)
       const posFen = state.currentNode.fen;
 
       function _makeGameRow(g) {
@@ -3562,7 +3562,7 @@ function _renderOpeningData(data) {
       const isMobile = document.body.classList.contains('mobile-board-active');
 
       if (isMobile) {
-        // On mobile: skip the expandable section entirely — show a direct Browse button
+        // On mobile: skip the expandable section entirely, show a direct Browse button
         if (toggleBtn) toggleBtn.style.display = 'none';
         gamesEl.style.display = 'none';
 
@@ -3643,7 +3643,7 @@ async function _openMasterGame(game, rowEl) {
     localStorage.setItem(key, JSON.stringify({ pgn, uciMoves }));
     window.open(`/app?g=${key}`, '_blank', 'noopener');
   } catch {
-    // silently fail — row loading state is cleared in finally
+    // silently fail, row loading state is cleared in finally
   } finally {
     rowEl.classList.remove('ob-game-loading');
   }
@@ -3973,7 +3973,7 @@ function hideError(elementId) {
 }
 
 // ---------------------------------------------------------------------------
-// Analyze position — calls backend, attaches result as comment on current node.
+// Analyze position, calls backend, attaches result as comment on current node.
 //
 // This is the core flow for assessing a position and finding the best move:
 //   1. Sends the current FEN + move path to the backend (/api/analyze).
@@ -3995,7 +3995,7 @@ async function analyzePosition() {
     return;
   }
 
-  const btn = document.getElementById('btn-analyze'); // may be null — button removed from analysis tab
+  const btn = document.getElementById('btn-analyze'); // may be null, button removed from analysis tab
   const spinner = document.getElementById('spinner');
   const titleEl = document.getElementById('analysis-card-title');
   const explanationEl = document.getElementById('explanation-text');
@@ -4103,7 +4103,7 @@ async function analyzePosition() {
             showTrafficNotice();
 
           } else if (evt.type === 'move') {
-            // Show move arrow + eval immediately — no waiting for explanation
+            // Show move arrow + eval immediately, no waiting for explanation
             if (evt.evaluation && analyzingNode.id === state.currentNode.id) {
               updateEvalBar(evt.evaluation.numericScore, evt.evaluation.display);
             }
@@ -4172,7 +4172,7 @@ async function analyzePosition() {
       }
     }
 
-    // Stream closed without a done event — show whatever arrived
+    // Stream closed without a done event, show whatever arrived
     if (!streamDone && accumulated && analyzingNode.id === state.currentNode.id) {
       cancelTw();
       renderExplanation(accumulated);
@@ -4342,7 +4342,7 @@ function reconstructAnalysisFromTreeData(treeData) {
     const cls = ANN_CLASSIFICATION[node.annotation] || null;
     if (cls) {
       hasClassification = true;
-      // `great` is a strong move — bucket it with correct for the summary count.
+      // `great` is a strong move, bucket it with correct for the summary count.
       if (cls === 'great') stats.correct++;
       else if (stats[cls] !== undefined) stats[cls]++;
     }
@@ -4509,7 +4509,7 @@ function importPgnString(pgn) {
 
   state.currentNode = current;
   state.game.load(current.fen);
-  state.board.position(current.fen, false); // no animation — caller may navigate away immediately
+  state.board.position(current.fen, false); // no animation, caller may navigate away immediately
 
   clearAnalysis();
   clearHighlights();
@@ -4535,7 +4535,7 @@ function importPgnString(pgn) {
 // Event listeners
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-// Board size — measured from the actual layout so the board fills exactly
+// Board size, measured from the actual layout so the board fills exactly
 // ---------------------------------------------------------------------------
 function applyBoardSize() {
   const vw = window.innerWidth;
@@ -4557,15 +4557,14 @@ function applyBoardSize() {
 
     if (isPlay) {
       // Play: board fills the viewport width (moves scroll below). The container
-      // is 8n+1 so chessboard.js — which sizes its board to 8·floor((w-1)/8) —
-      // renders an exact 8n board inside it. We then pin it with a WHOLE-pixel
+      // is 8n+1 so chessboard.js, which sizes its board to 8·floor((w-1)/8): // renders an exact 8n board inside it. We then pin it with a WHOLE-pixel
       // horizontal offset instead of letting it be flex-centered.
       //
       // Why integer offsets: the board is normally centered by `.board-section
       // { align-items: center }`, which yields a fractional side margin (e.g.
       // (390-385)/2 = 2.5px). On a high-DPR phone that is 7.5 device px, and the
       // browser rounds it inconsistently each time chessboard.js rebuilds the
-      // piece layer on a move — so the board appears to jitter ~1px left/right
+      // piece layer on a move, so the board appears to jitter ~1px left/right
       // every move. Centering with a rounded, whole-pixel padding makes the
       // position repaint-stable.
       const n      = Math.floor((vw - 1) / 8);
@@ -4578,7 +4577,7 @@ function applyBoardSize() {
       return;
     }
 
-    // Analysis: leave room for panel below — header(46)+button-bar(44)+compact-nav(40)+min-panel(200)=330.
+    // Analysis: leave room for panel below, header(46)+button-bar(44)+compact-nav(40)+min-panel(200)=330.
     const boardSize = Math.min(vw, Math.max(vh - 330, 200));
     const n         = Math.floor((boardSize - 1) / 8);
     const snapped   = Math.max(8 * n + 1, 201);
@@ -4615,7 +4614,7 @@ function applyBoardSize() {
 
   // Desktop: accurate measurement from the play arena layout. Without this the
   // play board falls through to the generic fallback below, which ignores the
-  // arena's material bars + button bar — sizing the board too tall so the center
+  // arena's material bars + button bar, sizing the board too tall so the center
   // column overflows and stretches the side panels (Moves / Ask the coach) past
   // the viewport, pushing the game-action buttons out of view.
   const playPanel = document.getElementById('play-game-panel');
@@ -4646,7 +4645,7 @@ function applyBoardSize() {
 }
 
 // ---------------------------------------------------------------------------
-// Play page — board & game logic
+// Play page, board & game logic
 // ---------------------------------------------------------------------------
 
 function playHasMoves() {
@@ -4806,7 +4805,7 @@ function _resolvePromotion(piece) {
 function playDoMove(from, to, promotion, animate) {
   const move = playState.game.move({ from, to, promotion });
   if (!move) return false;
-  // User moved — exit browse mode and clear AI highlight
+  // User moved, exit browse mode and clear AI highlight
   playState.browseIndex = null;
   playState.aiLastMove = null;
   document.getElementById('play-btn-jump-current').style.display = 'none';
@@ -4856,7 +4855,7 @@ function playOnDrop(source, target) {
     return 'snapback';
   }
 
-  // Defer to playOnSnapEnd — calling playDoMove here invokes board.position() which
+  // Defer to playOnSnapEnd, calling playDoMove here invokes board.position() which
   // renders the piece on the target square while the snap animation is still running.
   playState._pendingDrop = { source, target };
 }
@@ -4908,7 +4907,7 @@ function playOnSquareClick(square) {
       return;
     }
 
-    // If clicked own piece again — re-select
+    // If clicked own piece again, re-select
     const piece = playState.game.get(square);
     if (piece && piece.color === userChar) {
       playState.selectedSquare = square;
@@ -4922,7 +4921,7 @@ function playOnSquareClick(square) {
       }
     }
   } else {
-    // First click — select piece
+    // First click, select piece
     const piece = playState.game.get(square);
     if (piece && piece.color === userChar) {
       clearPlayHighlights();
@@ -4958,7 +4957,7 @@ function appendPlyRecord(san, color, fen, from, to) {
       last.black = san;
       last.blackPly = plyIdx;
     } else {
-      playState.playMoves.push({ num: moveNum, white: '—', black: san, whitePly: -1, blackPly: plyIdx });
+      playState.playMoves.push({ num: moveNum, white: '-', black: san, whitePly: -1, blackPly: plyIdx });
     }
   }
 
@@ -4974,7 +4973,7 @@ function playRecordMove(san, color) {
   renderPlayMoveHistory();
   updatePlayUndoBtn();
 
-  // A move played after a save means the saved copy is now stale — re-arm the
+  // A move played after a save means the saved copy is now stale, re-arm the
   // save-before-leaving prompt so the new move isn't silently lost.
   playState.savedToCollection = false;
 }
@@ -5268,7 +5267,7 @@ function startPlayGame() {
   // Show mobile chat toggle (mobile only); update placeholder
   const mobileChatToggle = document.getElementById('btn-play-mobile-chat-toggle');
   if (mobileChatToggle && window.innerWidth <= 640) mobileChatToggle.style.display = 'flex';
-  // Show mobile resign button (mobile only) — desktop uses the .play-game-actions Resign button
+  // Show mobile resign button (mobile only), desktop uses the .play-game-actions Resign button
   const mobileResignToggle = document.getElementById('btn-play-mobile-resign');
   if (mobileResignToggle && window.innerWidth <= 640) mobileResignToggle.style.display = 'flex';
   // Show mobile "ask the coach" toggle on the same breakpoint as the chat toggle
@@ -5290,7 +5289,7 @@ function startPlayGame() {
     mobileChatInput.value = '';
   }
 
-  // Orient and reset board — resize after making panel visible. Recompute
+  // Orient and reset board, resize after making panel visible. Recompute
   // --board-size now that the game panel is shown, so applyBoardSize can measure
   // the arena's real chrome (material bars + button bar) instead of falling back.
   playState.orientation = playState.userColor;
@@ -5602,7 +5601,7 @@ function stopPlayIdleBanter() {
 }
 
 function scheduleNextIdleMessage() {
-  // Random 25–50 second delay — decoupled from move pace
+  // Random 25–50 second delay, decoupled from move pace
   const delay = 25000 + Math.random() * 25000;
   playState._idleTimer = setTimeout(showNextIdleMessage, delay);
 }
@@ -5610,7 +5609,7 @@ function scheduleNextIdleMessage() {
 function showNextIdleMessage() {
   if (!playState.active || playState.game.game_over()) return;
 
-  // Skip while opponent is thinking — don't interrupt the thinking dots
+  // Skip while opponent is thinking, don't interrupt the thinking dots
   if (playState.waitingForOpponent) {
     scheduleNextIdleMessage();
     return;
@@ -5757,7 +5756,7 @@ async function sendPlayChat(srcInput, srcBtn) {
       // Resume idle banter after 9s so the reply gets read
       setTimeout(startPlayIdleBanter, 9000);
     } else {
-      // No reply — restore previous state
+      // No reply, restore previous state
       if (thinkEl) thinkEl.style.display = 'none';
       if (textEl)  textEl.style.display  = '';
       if (playState.active && !playState.game.game_over()) startPlayIdleBanter();
@@ -5783,7 +5782,7 @@ async function sendPlayChat(srcInput, srcBtn) {
 
 // ── Play: ask the coach about the current position ──────────────────────────
 // Mirrors the Analysis tab's Q&A (same /api/ask/stream endpoint, same look) but
-// answers as a neutral coach about the live game position — it never reveals the
+// answers as a neutral coach about the live game position, it never reveals the
 // opponent's reply.
 
 // Build the UCI move list leading to the current position (for the ask payload).
@@ -6179,15 +6178,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // untouched Q&A block is stripped back out (the structured node.qa entries
   // remain the source of truth), while an edited one replaces node.qa. Without
   // this, the Q&A text used to get baked into node.comment on every save and
-  // then rendered twice — duplicating a little more with each edit.
+  // then rendered twice, duplicating a little more with each edit.
   let _editQaSnapshot = null;
-  // The node being edited — the user can navigate moves while the form is
+  // The node being edited, the user can navigate moves while the form is
   // open, so saving against state.currentNode could hit the wrong move.
   let _editingNode = null;
 
   // After a comment edit/delete on a game that lives in the collection,
   // persist the whole tree immediately so the change survives reload and
-  // reaches other devices — no separate "save game" step needed.
+  // reaches other devices, no separate "save game" step needed.
   function persistCommentChange() {
     if (state.loadedGameId) {
       saveCurrentToCollection({ silent: true });
@@ -6224,11 +6223,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let body = document.getElementById('comment-edit-body').value.trim();
     if (_editQaSnapshot) {
       if (body.endsWith(_editQaSnapshot)) {
-        // Q&A block left as-is — keep the structured thread, store only the
+        // Q&A block left as-is, keep the structured thread, store only the
         // comment part above it.
         body = body.slice(0, body.length - _editQaSnapshot.length).trim();
       } else {
-        // User rewrote or removed the Q&A text — the body now owns it.
+        // User rewrote or removed the Q&A text, the body now owns it.
         node.qa = [];
       }
     }
@@ -6267,7 +6266,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Delete comment (trash) — show confirmation modal if there is content to delete.
+  // Delete comment (trash), show confirmation modal if there is content to delete.
   // Capture the node when the modal opens: keyboard navigation can still move
   // the board underneath it, and the delete must hit the move it was asked for.
   let _deletingNode = null;
@@ -6322,7 +6321,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   })();
 
-  // Mobile engine line collapse (analysis tab) — defaults collapsed for a compact bar
+  // Mobile engine line collapse (analysis tab), defaults collapsed for a compact bar
   (function () {
     const toggle = document.getElementById('mob-engine-toggle');
     const body   = document.getElementById('mob-engine-body');
@@ -6340,7 +6339,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   })();
 
-  // Mobile eye toggle — hide / reveal the whole engine evaluation
+  // Mobile eye toggle, hide / reveal the whole engine evaluation
   (function () {
     const eye   = document.getElementById('mob-engine-eye');
     const label = document.getElementById('mob-engine-label');
@@ -6406,7 +6405,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const items = getCollection();
     const sig = pgnSignature(pgn);
 
-    // Prefer the exact game this board was loaded from — signature matching
+    // Prefer the exact game this board was loaded from, signature matching
     // alone can pick the wrong copy when duplicates exist, and fails outright
     // once new moves change the signature (which used to create a duplicate
     // instead of updating the loaded game).
@@ -6702,7 +6701,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!available) {
       el.checked = false;
     } else if (!wasAvailable) {
-      el.checked = true; // just became available — auto-check
+      el.checked = true; // just became available, auto-check
     }
     // if already available: leave user's choice intact
   }
@@ -6788,7 +6787,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // The side that just moved (i.e. the side NOT to move) cannot be left in
     // check. Flip the side to move and ask chess.js whether that side is in
-    // check — this also rejects positions where the two kings are adjacent.
+    // check, this also rejects positions where the two kings are adjacent.
     const parts = fen.split(' ');
     parts[1] = parts[1] === 'w' ? 'b' : 'w';
     const flipped = new Chess();
@@ -7064,7 +7063,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Board click — place or remove piece
+  // Board click, place or remove piece
   document.getElementById('builder-board').addEventListener('click', e => {
     if (builderWasDragging) return;
     const squareEl = e.target.closest('[data-square]');
@@ -7127,7 +7126,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target === document.getElementById('position-builder-modal')) closePositionBuilder();
   });
 
-  // FEN input bar — load position from pasted FEN
+  // FEN input bar, load position from pasted FEN
   (function () {
     const fenInput = document.getElementById('builder-fen-input');
 
@@ -7617,7 +7616,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
       }
-      // Backfill is derived data — persist it locally only, without bumping
+      // Backfill is derived data, persist it locally only, without bumping
       // updatedAt or pushing to the server. A full-array push from here could
       // race the initial server load and clobber fresher data with this
       // device's stale copy.
@@ -7856,7 +7855,7 @@ document.addEventListener('DOMContentLoaded', () => {
     `).join('');
 
     list.querySelectorAll('.collection-analyze-btn').forEach(btn => {
-      // If already running, button is disabled — no double-start
+      // If already running, button is disabled, no double-start
       if (_analysisInProgress.has(btn.dataset.id)) {
         btn.disabled = true;
         btn.innerHTML = `<span class="collection-analyze-spinner"></span> Analyzing…`;
@@ -8790,7 +8789,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Resize boards when browser tab becomes visible again.
-  // Only resize each board if its page is currently shown — calling resize() on a
+  // Only resize each board if its page is currently shown, calling resize() on a
   // hidden element makes chessboard.js measure a 0-width container and render a
   // black/collapsed board.
   document.addEventListener('visibilitychange', () => {
@@ -8919,7 +8918,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Re-measure and re-init boards on window resize.
-  // Skip each board if its page is hidden — rebuilding a board while its
+  // Skip each board if its page is hidden, rebuilding a board while its
   // container has display:none makes chessboard.js measure 0px and produce a
   // black/collapsed result. switchToPage() handles the deferred resize when
   // the user navigates back to analysis.
@@ -8978,7 +8977,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ---------------------------------------------------------------------------
-  // Play page — event wiring
+  // Play page, event wiring
   // ---------------------------------------------------------------------------
   (function initPlayPage() {
     // Persona selection
@@ -9022,19 +9021,19 @@ document.addEventListener('DOMContentLoaded', () => {
       updatePlaySetupUI();
     });
 
-    // Resign — show confirmation modal
+    // Resign, show confirmation modal
     document.getElementById('btn-play-resign')?.addEventListener('click', () => {
       if (!playState.active) return;
       playResign();
     });
 
-    // Resign (mobile button-bar) — same confirmation modal
+    // Resign (mobile button-bar), same confirmation modal
     document.getElementById('btn-play-mobile-resign')?.addEventListener('click', () => {
       if (!playState.active) return;
       playResign();
     });
 
-    // New game (from game panel) — offer to save first
+    // New game (from game panel), offer to save first
     document.getElementById('btn-play-new')?.addEventListener('click', () => {
       if (playHasMoves() && !playState.savedToCollection) {
         playRequestSaveBeforeLeaving(() => playReturnToSetup());
@@ -9178,7 +9177,7 @@ document.addEventListener('DOMContentLoaded', () => {
   })();
 
   // ---------------------------------------------------------------------------
-  // Game Analysis (Collection tab) — background, saves to localStorage
+  // Game Analysis (Collection tab), background, saves to localStorage
   // ---------------------------------------------------------------------------
 
   function showGameInsightsModal(analysisData, { pendingAiIndices = null, aiEnabled = true } = {}) {
@@ -9190,7 +9189,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const { stats = {}, moves = [] } = analysisData;
     const { blunder = 0, mistake = 0, inaccuracy = 0, correct = 0,
             whiteAccuracy, blackAccuracy } = stats;
-    const fmtAcc = v => typeof v === 'number' ? v + '%' : '—';
+    const fmtAcc = v => typeof v === 'number' ? v + '%' : '-';
 
     const statsHtml = `
       <div class="insights-stats-grid">
@@ -9202,7 +9201,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="insights-stat insights-stat--accuracy insights-stat--black-acc"><span class="insights-stat-num">${fmtAcc(blackAccuracy)}</span><span class="insights-stat-label">Black acc.</span></div>
       </div>`;
 
-    // Eval chart — always shown when there are enough moves
+    // Eval chart, always shown when there are enough moves
     const chartSvg = renderEvalChart(moves);
     const chartHtml = chartSvg
       ? `<div class="eval-chart-container">\
@@ -9488,7 +9487,7 @@ ${chartSvg}</div>`
                 if (bar) bar.style.width = Math.min(100, Math.round((evt.moveIndex + 1) / item.moveCount * 100)) + '%';
               }
             } else if (evt.type === 'stockfish_done') {
-              // Stockfish analysis complete — save immediately and unblock UI.
+              // Stockfish analysis complete, save immediately and unblock UI.
               persistAnalysis(evt.stats);
               pendingAiIndices = new Set(evt.aiEnabled ? (evt.keyMomentIndices || []) : []);
               _analysisInProgress.delete(item.id);
@@ -9521,7 +9520,7 @@ ${chartSvg}</div>`
               // Update the insights modal live if it's open for this game.
               updateInsightsModalComment(item.id, evt.moveIndex, evt.comment);
             } else if (evt.type === 'done') {
-              // Final event — ensure everything is persisted.
+              // Final event, ensure everything is persisted.
               persistAnalysis(evt.stats);
               if (pendingAiIndices) pendingAiIndices.clear();
               refreshInsightsModalIfOpen(item.id, movesData, evt.stats, new Set(), true);
@@ -9541,7 +9540,7 @@ ${chartSvg}</div>`
   }
 
   // ---------------------------------------------------------------------------
-  // Full-game live analysis — annotates all moves in the analysis tab in real time
+  // Full-game live analysis, annotates all moves in the analysis tab in real time
   // ---------------------------------------------------------------------------
   async function analyzeFullGameLive(collectionItemId = null) {
     const btn = document.getElementById('btn-analyze-game');
@@ -9580,8 +9579,8 @@ ${chartSvg}</div>`
       const wEl = document.getElementById('live-acc-white');
       const bEl = document.getElementById('live-acc-black');
       const wAcc = avg(liveAccW), bAcc = avg(liveAccB);
-      if (wEl) wEl.textContent = wAcc !== null ? wAcc + '%' : '—';
-      if (bEl) bEl.textContent = bAcc !== null ? bAcc + '%' : '—';
+      if (wEl) wEl.textContent = wAcc !== null ? wAcc + '%' : '-';
+      if (bEl) bEl.textContent = bAcc !== null ? bAcc + '%' : '-';
       for (const [type, count] of Object.entries(liveStats)) {
         const el = document.getElementById('live-cnt-' + type);
         if (!el) continue;
@@ -9722,7 +9721,7 @@ ${chartSvg}</div>`
               }
 
             } else if (evt.type === 'stockfish_done' || evt.type === 'done') {
-              // Surface why AI coaching comments are absent — but only when there
+              // Surface why AI coaching comments are absent, but only when there
               // were key moments that would have received one (a clean game with no
               // inaccuracies legitimately has nothing to comment on, so stay quiet).
               if (evt.type === 'stockfish_done' && (evt.keyMomentIndices || []).length > 0) {
@@ -9743,7 +9742,7 @@ ${chartSvg}</div>`
                 }
               } else {
                 // Analysis results (move annotations + AI comments) are not auto-saved
-                // for unsaved games — mark dirty so the user is prompted to save.
+                // for unsaved games, mark dirty so the user is prompted to save.
                 markDirty();
               }
             }
@@ -10188,7 +10187,7 @@ ${chartSvg}</div>`
       });
     }
 
-    // Mobile result-sheet state — declared here (before the direct-load bootstrap
+    // Mobile result-sheet state, declared here (before the direct-load bootstrap
     // below) so loadNextPuzzle()/detachPuzzleSheetDismiss() don't hit the TDZ.
     let _sheetOutsideHandler = null;
     let _sheetTouch = null;
@@ -10198,7 +10197,7 @@ ${chartSvg}</div>`
     window._loadNextPuzzle  = () => loadNextPuzzle();
 
     // If the train page was already active when this IIFE ran (direct #train URL
-    // load), switchToPage ran before these callbacks were registered — bootstrap now.
+    // load), switchToPage ran before these callbacks were registered, bootstrap now.
     if (trainPage && trainPage.style.display !== 'none') {
       applyBoardSize();
       initPuzzleBoard();
@@ -10247,7 +10246,7 @@ ${chartSvg}</div>`
       const mv = g.move({ from: src, to: tgt, promotion: promo });
       if (!mv) return 'snapback';
       g.undo();
-      // Store move for puzzleOnSnapEnd — don't call board.position mid-drag to avoid double-piece
+      // Store move for puzzleOnSnapEnd, don't call board.position mid-drag to avoid double-piece
       _pPendingMove = { src, tgt, promo };
     }
 
@@ -10368,7 +10367,7 @@ ${chartSvg}</div>`
         puzzleState.validating = false;
 
         if (isEquivalent) {
-          // Accept the alternative — re-apply move and mark solved
+          // Accept the alternative, re-apply move and mark solved
           g.move({ from, to, promotion: promo });
           puzzleState.board.position(g.fen(), !fromDrag);
           updatePuzzleCheckHighlight();
@@ -10750,7 +10749,7 @@ ${chartSvg}</div>`
         const attempted = s.puzzlesAttempted || 0;
         accuracyEl.textContent = attempted > 0
           ? Math.round(((s.puzzlesSolved || 0) / attempted) * 100) + '%'
-          : '—';
+          : '-';
       }
     }
 
@@ -10995,7 +10994,7 @@ ${chartSvg}</div>`
       puzzleState.board.position(g.fen(), false);
       updatePuzzleCheckHighlight();
 
-      // Store themes for reveal after solving — don't show them upfront (spoiler)
+      // Store themes for reveal after solving, don't show them upfront (spoiler)
       const themesRow = document.getElementById('puzzle-themes-row');
       if (themesRow) themesRow.innerHTML = '';
 
@@ -11161,7 +11160,7 @@ ${chartSvg}</div>`
         const s = data.stats;
         const accuracy = s.puzzlesAttempted > 0
           ? Math.round((s.puzzlesSolved / s.puzzlesAttempted) * 100) + '%'
-          : '—';
+          : '-';
         document.getElementById('profile-stat-elo').textContent = s.puzzleElo !== null ? s.puzzleElo : '?';
         document.getElementById('profile-stat-solved').textContent = s.puzzlesSolved;
         document.getElementById('profile-stat-best-streak').textContent = s.dailyStreakBest || 0;
@@ -11565,7 +11564,7 @@ ${chartSvg}</div>`
       const addsBadge = isPublic
         ? `<span class="coll-card-adds" title="Added by ${addCount} ${addCount === 1 ? 'person' : 'people'}">${ADDS_ICON}<span class="coll-card-adds-num">${addCount}</span></span>`
         : '';
-      // "Add to my collections" toggle — public cards only, hidden on the user's own.
+      // "Add to my collections" toggle, public cards only, hidden on the user's own.
       const addBtn = (isPublic && !col.is_owner)
         ? `<button class="coll-card-add-btn${col.is_added ? ' is-added' : ''}" data-coll-id="${col.id}" type="button" aria-pressed="${col.is_added ? 'true' : 'false'}" title="${col.is_added ? 'Remove from my collections' : 'Add to my collections'}">
             ${ADD_ICON_PLUS}${ADD_ICON_CHECK}<span class="coll-card-add-label">${col.is_added ? 'Added' : 'Add'}</span>
@@ -11894,8 +11893,7 @@ ${chartSvg}</div>`
           const game = games.find(g => g.id === btn.dataset.gameId);
           if (!game || !game.pgn) return;
           confirmIfUnsaved(() => {
-            // Restore the full tree (comments, Q&A, drawings) when available —
-            // loading just the PGN would silently drop every saved comment.
+            // Restore the full tree (comments, Q&A, drawings) when available, // loading just the PGN would silently drop every saved comment.
             if (game.treeData) {
               restoreFromTreeData(game.treeData);
             } else {
@@ -12428,7 +12426,7 @@ ${chartSvg}</div>`
       const confirmText = document.getElementById('btn-coll-save-confirm');
 
       if (_savePendingGameId) {
-        // "Add to collection" mode — game already saved, just pick collections
+        // "Add to collection" mode, game already saved, just pick collections
         if (titleRow)     titleRow.style.display     = 'none';
         if (modalTitle)   modalTitle.textContent      = 'Add to collections';
         if (confirmText)  confirmText.textContent     = 'Add to collections';
@@ -12508,7 +12506,7 @@ ${chartSvg}</div>`
       if (saveConfBtn) saveConfBtn.disabled = true;
       try {
         if (_savePendingGameId) {
-          // "Add to collection" mode — game already saved, just link to collections
+          // "Add to collection" mode, game already saved, just link to collections
           if (_savePendingIds.size > 0 && authState.user) {
             await Promise.all([..._savePendingIds].map(cid =>
               apiColl('POST', `/${cid}/games`, { gameId: _savePendingGameId }).catch(() => {})
@@ -12544,7 +12542,7 @@ ${chartSvg}</div>`
 
     saveTitleEl?.addEventListener('keydown', e => { if (e.key === 'Enter') saveConfBtn?.click(); });
 
-    // "New collection…" inside save modal — close modal, open create modal
+    // "New collection…" inside save modal, close modal, open create modal
     document.getElementById('btn-coll-save-create-new')?.addEventListener('click', () => {
       const pgn   = _savePendingPgn;
       const title = saveTitleEl?.value.trim();
@@ -13077,11 +13075,11 @@ ${chartSvg}</div>`
           const s = data.stats;
           const accuracy = s.puzzlesAttempted > 0
             ? Math.round((s.puzzlesSolved / s.puzzlesAttempted) * 100) + '%'
-            : '—';
+            : '-';
           document.getElementById('profile-stat-elo').textContent    = s.puzzleElo !== null ? s.puzzleElo : '?';
           document.getElementById('profile-stat-solved').textContent = s.puzzlesSolved;
           document.getElementById('profile-stat-best-streak').textContent  = s.dailyStreakBest || 0;
-          document.getElementById('profile-stat-daily-streak').textContent = '—';
+          document.getElementById('profile-stat-daily-streak').textContent = '-';
           document.getElementById('profile-stat-accuracy').textContent = accuracy;
         }
 
@@ -13537,8 +13535,8 @@ ${chartSvg}</div>`
           }
           if (game.title) setGameTitle(game.title);
           markClean();
-          // Navigate to the shared position so the full board state — comment,
-          // Q&A thread, drawings and move highlights — renders immediately,
+          // Navigate to the shared position so the full board state, comment,
+          // Q&A thread, drawings and move highlights, renders immediately,
           // instead of only after the user steps through moves. When no ply is
           // given, re-navigate to the current node (end of the main line that
           // import/restore left us on) to force that same full render.

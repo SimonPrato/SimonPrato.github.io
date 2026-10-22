@@ -1,6 +1,6 @@
 # The original
 
-`index.html` here is Flygame v2.1 exactly as it was first written — one file,
+`index.html` here is Flygame v2.1 exactly as it was first written: one file,
 1,477 lines, everything inside a single `<script>` tag. It is kept because it is
 the point of the project, and it still runs:
 

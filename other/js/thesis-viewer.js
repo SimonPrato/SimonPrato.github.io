@@ -149,7 +149,7 @@
     setStatus('Loading document…');
     // disableAutoFetch: only fetch the byte ranges needed for the pages being
     // viewed (via HTTP Range requests) instead of streaming the whole file
-    // in the background — keeps initial load fast for a large PDF.
+    // in the background, keeps initial load fast for a large PDF.
     pdfjsLib.getDocument({ url: PDF_URL, disableAutoFetch: true }).promise.then(function (doc) {
         pdfDoc = doc;
         renderBatch();

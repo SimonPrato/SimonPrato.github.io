@@ -6,7 +6,7 @@
  * a manifest, a real progress signal, and `decode()` so the first draw of a
  * sprite never blocks the compositor.
  *
- * Backgrounds are deliberately *not* in the eager manifest — they are 1-1.6 MB
+ * Backgrounds are deliberately *not* in the eager manifest, they are 1-1.6 MB
  * each and only one is ever needed per session.
  */
 
@@ -30,7 +30,7 @@ const MANIFEST = {
   fly3L: 'img/Fliege_3.png',
   fly4L: 'img/Fliege_4.png',
 
-  // Gold fly (drops coins) — only left-facing art exists, so the right-facing
+  // Gold fly (drops coins), only left-facing art exists, so the right-facing
   // sprite is mirrored at draw time.
   gold1: 'img/Gold Fliege 1.png',
   gold2: 'img/Gold Fliege 2.png',

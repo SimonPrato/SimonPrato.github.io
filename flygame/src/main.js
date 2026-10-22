@@ -5,7 +5,7 @@
  * always advances in 1/60 s steps, rendering happens once per animation frame.
  * The original ran `setInterval(fn, 1)` and then called the update function
  * between one and thirteen times per tick depending on how far the wall clock
- * had drifted — which is why it played differently on every machine.
+ * had drifted, which is why it played differently on every machine.
  */
 
 import { loadAll } from './assets.js';
@@ -130,7 +130,7 @@ window.addEventListener('keydown', (e) => {
   }
   if (e.code === 'Enter' || e.code === 'NumpadEnter') {
     // Enter is the universal "continue". Activate whichever panel button has
-    // focus, falling back to the primary action — the original screen promised
+    // focus, falling back to the primary action, the original screen promised
     // "PRESS ENTER" and it should hold wherever focus happens to be.
     const panel = document.getElementById('panel');
     if (panel.hidden) return;
