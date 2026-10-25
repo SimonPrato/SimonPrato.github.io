@@ -1,5 +1,5 @@
 /**
- * Chess Puzzle Generator page: shows one puzzle at a time and lets the
+ * Mate-in-One Puzzle Generator page: shows one puzzle at a time and lets the
  * user solve it by tapping squares. A Web Worker searches for puzzles in
  * the background and keeps up to BUFFER_SIZE more ready.
  */
