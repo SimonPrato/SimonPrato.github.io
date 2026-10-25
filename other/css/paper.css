@@ -1,0 +1,21 @@
+.paper-meta {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin: -12px 0 32px;
+}
+
+.abstract p {
+    margin: 0 0 16px;
+}
+
+.paper-contact {
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.paper-contact a {
+    color: var(--text);
+}

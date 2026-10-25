@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PN Junctions with Arbitrary Doping Profiles</title>
+    
+    <!-- External Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+    <!-- Application Scripts -->
+    <script src="./js/constants.js"></script>
+    <script src="./js/mathUtils.js"></script>
+    <script src="./js/dopingProfile.js"></script>
+    <script src="./js/depletionCalculations.js"></script>
+    <script src="./js/plotting.js"></script>
+    <script src="./js/junction3d.js"></script>
+    <script src="./js/main.js"></script>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="./css/styles.css">
+
+    <!-- MathJax Configuration -->
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            extensions: ["tex2jax.js"],
+            jax: ["input/TeX","output/HTML-CSS"],
+            tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+        });
+    </script>
+</head>
+
+<body onload="plot()">
+    <nav class="breadcrumb"><a href="../">&larr; All projects</a></nav>
+    <h2>PN Junctions with Arbitrary Doping Profiles</h2>
+    
+    <!-- Introduction -->
+    <div class="intro-text">
+        <p>
+            In a pn junction, the width of a depletion zone depends on the applied voltage on the junction. 
+            In this approximation, it is assumed that there is a depletion width W around the transition from 
+            p to n where the charge carrier densities are negligible. Outside of the depletion width, the 
+            charge carrier densities are equal to the doping concentrations. The semiconductor is electrically 
+            neutral outside of the depletion width. Using this depletion approximation it is possible to 
+            calculate important properties of pn junctions.
+        </p>
+        
+        <p>The charge density distribution for an arbitrarily doped pn-junction is:</p>
+        <img src="./img/formula_charge_density.png" class="formula-image" alt="Charge density formula">
+        
+        <p>The charge density can be integrated to determine the electric field:</p>
+        <img src="./img/formula_electric_field.png" class="formula-image small" alt="Electric field formula">
+        
+        <p>The voltage V then derives from:</p>
+        <img src="./img/formula_voltage.png" class="formula-image small" alt="Voltage formula">
+        
+        <p>
+            The variables x<sub>n</sub> and x<sub>p</sub> denote the points in space at which the depletion 
+            region on the n-doped side starts and on the p-doped side ends. N(x) is the total doping 
+            concentration depending on the position x in the pn-junction in micrometers. It is calculated by 
+            subtracting the density of acceptors N<sub>A</sub>(x) from the density of donors N<sub>D</sub>(x).
+        </p>
+        
+        <p>
+            The entries below are used to describe this doping profile. Insert two functions dependent on x 
+            to plot the doping profiles and the resulting depletion width depending on the reverse-biased voltage. 
+            Then choose the interval of x, for which the depletion width shall be plotted. Finally, click on the 
+            Plot button, to display the inserted doping profiles and the resulting depletion width depending on 
+            the reverse bias voltage.
+        </p>
+    </div>
+    
+    <!-- Input Form -->
+    <form name="data" class="input-form">
+        <table class="input-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <p class="input-label">
+                            <i>N</i><sub>D</sub>(<i>x</i>)&nbsp;=&nbsp;
+                        </p>
+                    </td>
+                    <td>
+                        <input type="text" 
+                               name="f1" 
+                               class="input-field"
+                               value="1.1E21*H(x-5)"> 
+                        m<sup>-3</sup>
+                        <input id="question" 
+                               type="button" 
+                               class="help-button"
+                               value="?" 
+                               onclick="toggleHelp()">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="input-label">
+                            <i>N</i><sub>A</sub>(<i>x</i>)&nbsp;=&nbsp;
+                        </p>
+                    </td>
+                    <td>
+                        <input type="text" 
+                               name="f2" 
+                               class="input-field"
+                               value="1.1E21 - 1.1E21*H(x-5)"> 
+                        m<sup>-3</sup>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="plot-controls">
+            <p>
+                Plot depletion width from&nbsp;x&nbsp;=&nbsp;
+                <input type="text" name="x1" value="0"> µm 
+                to&nbsp;x&nbsp;=&nbsp;
+                <input type="text" name="x2" value="10"> µm
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="button" onclick="plot();" value="Plot">
+            </p>
+        </div>
+        
+        <div class="preset-buttons">
+            <input type="button" 
+                   value="Abrupt Junction" 
+                   onclick="loadPreset('abrupt')">
+            <input type="button" 
+                   value="Linearly Graded Junction" 
+                   onclick="loadPreset('graded')">
+        </div>
+    </form>
+    
+    <!-- Help Section -->
+    <div id="help"></div>
+    
+    <!-- Plots -->
+    <div class="plots-container">
+        <table>
+            <tbody>
+                <tr>
+                    <!-- Depletion Width Plot -->
+                    <td class="plot-section">
+                        <p class="plot-title">Depletion Width</p>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>[V]</td>
+                                    <td>
+                                        <div id="depletion_width" class="plot-div"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td class="plot-label">x [µm]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    
+                    <!-- Doping Profile Plot -->
+                    <td class="plot-section">
+                        <p class="plot-title">Doping Concentration</p>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>[m<sup>-3</sup>]</td>
+                                    <td>
+                                        <div id="doping_profile" class="plot-div"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td class="plot-label">x [µm]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <section class="junction-card" aria-labelledby="junction-heading">
+        <div class="junction-header">
+            <div>
+                <p class="junction-eyebrow">Inside the semiconductor</p>
+                <h3 id="junction-heading">PN junction in 3D</h3>
+            </div>
+            <button type="button" id="junction-reset">Reset view</button>
+        </div>
+        <p class="junction-description">Explore the doping profile and watch the depletion region expand with reverse voltage.</p>
+        <div class="junction-voltage">
+            <label for="junction-voltage-number">Reverse voltage [V]</label>
+            <input id="junction-voltage-number" type="number" step="any" aria-describedby="junction-range">
+            <input id="junction-voltage-slider" type="range" aria-label="Reverse voltage" step="any">
+            <small id="junction-range"></small>
+        </div>
+        <div class="junction-stage">
+            <canvas id="junction-canvas" tabindex="0" role="img" aria-label="Rotatable three-dimensional PN junction. Drag or use arrow keys to rotate." aria-describedby="junction-status junction-hint"></canvas>
+            <p id="junction-status" class="junction-status" role="status"></p>
+            <p id="junction-hint" class="junction-hint">Drag to rotate · Arrow keys also work</p>
+        </div>
+        <div class="junction-metrics" aria-live="polite">
+            <div><span>p-side depletion</span><strong id="junction-p-width">-</strong></div>
+            <div><span>Total width W</span><strong id="junction-total-width">-</strong></div>
+            <div><span>n-side depletion</span><strong id="junction-n-width">-</strong></div>
+        </div>
+        <div class="junction-legend">
+            <div class="junction-colorbar"></div>
+            <div class="junction-legend-labels"><span>p-type · acceptors</span><span>Compensated</span><span>n-type · donors</span></div>
+            <p id="junction-color-scale"></p>
+            <p><span class="junction-depletion-key"></span> Gold outlines mark the depletion region; doping remains present inside it.</p>
+        </div>
+        <p class="junction-note">Color represents net doping N<sub>D</sub> − N<sub>A</sub>, normalized to the largest magnitude in the plotted interval. Widths are interpolated from the calculator’s voltage curve. The transverse dimensions are illustrative.</p>
+    </section>
+</body>
+</html>
+

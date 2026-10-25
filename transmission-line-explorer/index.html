@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transmission Line Explorer | Simon Prato</title>
+<meta name="description" content="An interactive article about transmission lines: inductors, capacitors, resistors, open circuits and short circuits, with standing waves, field energy and Smith chart animations.">
+<link rel="stylesheet" href="./style.css">
+<script defer src="./physics.js"></script><script defer src="./app.js"></script>
+</head>
+<body>
+<div class="page">
+<header class="site-header"><a class="home" href="../">Simon Prato</a><a class="back" href="../">← All projects</a></header>
+<main>
+<div class="eyebrow">An interactive field guide</div>
+<div class="article-header"><h1>Transmission Line Explorer</h1>
+<p class="lead">A resistor can look bigger. An inductor can look like an open circuit. The energy still has to go somewhere. Follow the voltage, current and fields to see why.</p></div>
+<nav class="contents" aria-label="Table of contents"><span>Contents</span><div class="contents-layout"><div><p class="contents-label">Explore &amp; understand</p><ul><li><a href="#explorer">Adjustable explorer</a></li><li><a href="#theory">Equations &amp; reflection</a></li><li><a href="#assumptions">Delay &amp; model assumptions</a></li></ul></div><div><p class="contents-label">Five worked examples</p><ol><li><a href="#inductors">Inductors</a></li><li><a href="#capacitors">Capacitors</a></li><li><a href="#resistors">Resistors &amp; power</a></li><li><a href="#open-circuits">Open circuits</a></li><li><a href="#short-circuits">Short circuits</a></li></ol></div></div></nav>
+<section id="explorer">
+<div class="section-label">Start here</div><h2>Build your own line</h2>
+<p>Choose a load and adjust the line. Watch the voltage, current and input impedance change together. The five worked examples below explain the results.</p>
+<div id="explorer-sim" class="simulator" data-kind="custom" data-r="0" data-x="100" data-z0="100" data-length="0.125" data-adjustable="true"></div>
+<details class="reading-guide"><summary>How to read the animations</summary>
+<p>The graphs show signed instantaneous voltage <i>v</i> and current <i>i</i>. Solid lines are the totals. Enable “Traveling waves” to reveal the dashed forward and dotted reflected waves traveling in opposite directions. The pale envelopes show the peak magnitude at each position. Voltage is normalized to the incident peak voltage <i>A</i>; current to <i>A/Z₀</i>.</p>
+<p>Enable “Energy pockets” to reveal the shaded storage bands below each graph. They are always positive: electric energy follows <i>v²</i>, and magnetic energy follows <i>i²</i>. Both use the same fixed scale. A large voltage pocket identifies strong electric-field storage; a large current pocket identifies strong magnetic-field storage.</p>
+<p>The Smith chart is a <strong>phasor map</strong>, not a time plot. Its arc traces impedance from the load toward the input. “Scan line” moves the inspection point along that arc and marks the corresponding location on both wave graphs. The chart does not rotate just because time advances.</p>
+</details>
+</section>
+<section id="theory" class="foundation">
+<div class="section-label">The framework</div><h2>Equations &amp; reflection</h2>
+<p>All examples use an ideal, lossless line in sinusoidal steady state. Positive current flows from the input toward the load.</p>
+<details class="theory-detail"><summary>The equations behind every example</summary>
+<div class="detail-body">
+<p>A line has distributed inductance <i>L′</i> and capacitance <i>C′</i> per unit length. Its characteristic impedance, speed and electrical length are</p>
+<div class="equation">Z₀ = √(L′/C′), &nbsp; vₚ = 1/√(L′C′), &nbsp; θ = βℓ = 2πℓ/λ.</div>
+<p>A prime means “per unit length.” <i>Z₀</i> is the voltage-to-current ratio of one traveling wave; it is not a resistance that burns energy. For a load <i>Zₗ = R + jX</i>, the voltage reflection coefficient and input impedance are</p>
+<div class="equation">Γₗ = <span class="frac"><span>Zₗ − Z₀</span><span>Zₗ + Z₀</span></span>, &emsp; Zᵢₙ = Z₀ <span class="frac"><span>Zₗ cos θ + jZ₀ sin θ</span><span>Z₀ cos θ + jZₗ sin θ</span></span>.</div>
+<p>The sine-and-cosine form also handles quarter-wave lines cleanly. On the Smith chart, moving a distance <i>d</i> from the load toward the source gives</p>
+<div class="equation">Γ(d) = Γₗ e<sup>−j2βd</sup>, &emsp; Z(d) = Z₀ <span class="frac"><span>1 + Γ(d)</span><span>1 − Γ(d)</span></span>.</div>
+<p>The magnitude of Γ stays constant on a lossless line. Its phase rotates clockwise: a one-way distance of λ/8 rotates the reflection coefficient by 90°, because reflection includes a round trip.</p>
+<p>With <i>x = 0</i> at the input and <i>x = ℓ</i> at the load, the simulator uses peak phasors</p>
+<div class="equation">V(x) = A[e<sup>jβ(ℓ−x)</sup> + Γₗ e<sup>−jβ(ℓ−x)</sup>],<br>I(x) = <span class="frac"><span>A</span><span>Z₀</span></span>[e<sup>jβ(ℓ−x)</sup> − Γₗ e<sup>−jβ(ℓ−x)</sup>].</div>
+<p>The plotted waves are <i>Re{V(x)e<sup>j(ωt+φ₀)</sup>}</i> and <i>Re{I(x)e<sup>j(ωt+φ₀)</sup>}</i>. Each diagram chooses φ₀ so that 0° is the positive voltage peak at the point with the largest voltage amplitude. For a resistor or general load, other positions can peak at different phases. The minus sign in the reflected current is essential: its wave travels backward, while our positive current direction stays toward the load.</p>
+</div></details>
+<details class="theory-detail"><summary>Total reflection and phase shift</summary><div class="detail-body"><h3>Total reflection does not imply a 180° phase shift</h3>
+<p>An ideal reactive load absorbs no average power, so all incident power is reflected:</p>
+<div class="equation">Γₗ = <span class="frac"><span>jX − Z₀</span><span>jX + Z₀</span></span>, &emsp; |Γₗ| = 1, &emsp; Pᵣₑꜰ / Pꜰₒᵣʷ = |Γₗ|² = 1.</div>
+<p>This fixes the <strong>magnitude</strong> of the reflection coefficient, not its phase. For X = +Z₀, the reflected voltage shifts by +90°; for X = −Z₀, it shifts by −90°. A short circuit gives a 180° voltage reflection, while an open circuit gives a 0° voltage reflection. All four loads reflect all incident power.</p>
+<p>Energy is a positive quantity, so it has no voltage-like “reflection phase.” Reflected power travels in the opposite direction. With a signed power-flow coordinate pointing toward the load, its average contribution is negative:</p>
+<div class="equation">P̅ᵣₑꜰ,ₛᵢɡₙₑ𝒹 = −|Γₗ|² P̅ꜰₒᵣʷ.</div>
+<p>That reversal of flow is distinct from a 180° oscillation phase shift. The reflected wave’s voltage and current differ by 180° under our fixed current-direction convention, regardless of whether the load is reactive or resistive. The <strong>incident and reflected currents at the input</strong> differ by 180° in the λ/8, Xₗ = Z₀ example because the load reflection phase and round-trip propagation phase combine there.</p>
+</div></details>
+</section>
+<section id="inductors">
+<div class="section-label">01 / Magnetic storage</div><h2>Inductors: an open circuit at the input</h2>
+<p>An ideal inductor stores magnetic energy. Its impedance is <i>Zₗ = jXₗ = jωL</i>, so a lossless line terminated in it still presents a purely reactive impedance, except at poles where the input looks open. A lossless line cannot turn a purely reactive load into a dissipative resistor.</p>
+<div class="equation">Zᵢₙ = jZ₀ <span class="frac"><span>Xₗ + Z₀ tan θ</span><span>Z₀ − Xₗ tan θ</span></span>.</div>
+<p>For <strong>ℓ = λ/8 and Xₗ = Z₀</strong>, tan θ = 1 and the denominator vanishes. The input is a voltage antinode and a current node: <i>Zᵢₙ → ∞</i>. Try pausing when the voltage is largest, then advance the cycle by 90° to see the energy move into the current pockets.</p>
+<div class="simulator" id="inductor-sim" data-kind="inductor" data-r="0" data-x="100" data-z0="100" data-length="0.125"></div>
+<h3>Why the reflection phases do not add up to 180° at the load</h3>
+<p>At this load, Γᵥ = j and Γᵢ = −j. These are the changes to the reflected waves. The inductor responds to the <em>total</em> voltage and current. If the incident load voltage is A, then</p>
+<div class="equation">Vₗ = A(1 + j) = √2A e<sup>jπ/4</sup>,<br>Iₗ = (A/Z₀)(1 − j) = (√2A/Z₀)e<sup>−jπ/4</sup>.</div>
+<p>Total voltage therefore leads total current by 90°, exactly as required by <i>vₗ = L diₗ/dt</i>. The reflected wave’s voltage and current differ by 180° because it travels backward. At the input, the −90° current reflection and −90° round-trip propagation phase give a 180° difference between incident and reflected currents. They cancel, while the voltages add.</p>
+<h3>Where the energy lives</h3>
+<div class="equation">uᴱ(x,t) = ½C′v²(x,t), &emsp; uᴹ(x,t) = ½L′i²(x,t), &emsp; Wₗ(t) = ½Liₗ²(t).</div>
+<p>The line’s electric field balances the magnetic storage in <strong>both the line and the inductor</strong>. For this resonant standing wave, after choosing the time origin at maximum voltage,</p>
+<div class="equation">Wᴱ(t) = W₀ cos²(ωt),<br>Wᴹ,ₗᵢₙₑ(t) + Wₗ(t) = W₀ sin²(ωt).</div>
+<p>Their sum stays constant. Energy does not disappear; it alternates between the fields. This is parallel resonance as seen from the input. The animation depicts an established oscillation with stored energy. Starting it takes energy; real losses require power to maintain it. With no losses, the input accepts no average power.</p>
+<p>A series winding resistance changes the result. At λ/8, a load <i>R + jZ₀</i> gives <i>Zᵢₙ = 2Z₀²/R − jZ₀</i>. The input resistance becomes large when R is small, but finite; adding resistance also shifts the exact resonance.</p>
+</section>
+<section id="capacitors">
+<div class="section-label">02 / Electric storage</div><h2>Capacitors: the complementary case</h2>
+<p>An ideal capacitor stores electric energy, with <i>Zₗ = −jX꜀</i> and <i>X꜀ = 1/(ωC) &gt; 0</i>. Current leads voltage by 90°. The transformed impedance is</p>
+<div class="equation">Zᵢₙ = jZ₀ <span class="frac"><span>Z₀ tan θ − X꜀</span><span>Z₀ + X꜀ tan θ</span></span>.</div>
+<p>For <strong>ℓ = λ/8 and X꜀ = Z₀</strong>, the numerator is zero: <i>Zᵢₙ = 0</i>. The input is a voltage node and a current antinode. The voltage reflection coefficient is −j; after the round trip it becomes −1 at the input, so voltages cancel and currents add.</p>
+<div class="simulator" id="capacitor-sim" data-kind="capacitor" data-r="0" data-x="-100" data-z0="100" data-length="0.125"></div>
+<div class="equation">i꜀ = C dv꜀/dt, &emsp; W꜀ = ½Cv꜀².</div>
+<p>This is series resonance at the input. The line’s magnetic energy alternates with electric energy in the line and capacitor. A nonzero ideal voltage source connected directly across an ideal zero input impedance would demand unbounded current. These normalized plots instead specify a finite incident wave; a practical source has finite impedance and losses.</p>
+</section>
+<section id="resistors">
+<div class="section-label">03 / Dissipation &amp; transformation</div><h2>Resistors: a different ratio, the same energy balance</h2>
+<p>A resistor turns absorbed energy into heat. A transmission line changes the voltage-to-current ratio seen by the source. It can increase the input resistance without creating energy or increasing the actual resistor value.</p>
+<div class="equation">Zᵢₙ = Z₀ <span class="frac"><span>Rₗ + jZ₀ tan θ</span><span>Z₀ + jRₗ tan θ</span></span>, &emsp; Zᵢₙ(λ/4) = Z₀²/Rₗ.</div>
+<p>A 100 Ω quarter-wave line terminated in 50 Ω presents 200 Ω. At λ/8, the same load instead gives a complex input impedance:</p>
+<div class="equation">Zᵢₙ(λ/8) = <span class="frac"><span>2RₗZ₀²</span><span>Rₗ² + Z₀²</span></span> + j <span class="frac"><span>Z₀(Z₀² − Rₗ²)</span><span>Rₗ² + Z₀²</span></span> = 80 + j60 Ω.</div>
+<div class="simulator" id="resistor-sim" data-kind="resistor" data-r="50" data-x="0" data-z0="100" data-length="0.125"></div>
+<p>Here |Γ| = 1/3, so 1/9 of the incident power is reflected and 8/9 is absorbed. The line’s fields still store energy, but net power flows into the resistor. For the simulator’s incident peak voltage A,</p>
+<div class="equation">Pₗ = <span class="frac"><span>A²</span><span>2Z₀</span></span>(1 − |Γₗ|²) = ½Rₗ|Iₗ|².</div>
+<p>The graphs use peak phasors, hence the factor ½. A lossless line satisfies <i>Pᵢₙ = Pₗ</i>; a real line also loses power in its conductors and dielectric.</p>
+<h3>Can inserting the line make the resistor burn out?</h3>
+<p>It can change power for a general source, but not through length alone in the specific case of a <strong>100 Ω source resistance and a 100 Ω line</strong>. Let Vₛ be the source’s open-circuit RMS voltage. A direct 50 Ω load dissipates</p>
+<div class="equation">Pₗ = <span class="frac"><span>Vₛ²Rₗ</span><span>(Rₛ + Rₗ)²</span></span> = Vₛ²/450.</div>
+<p>With the λ/8 line, the total impedance is 180 + j60 Ω, so</p>
+<div class="equation">Pₗ = <span class="frac"><span>Vₛ² Re(Zᵢₙ)</span><span>|Rₛ + Zᵢₙ|²</span></span> = <span class="frac"><span>80Vₛ²</span><span>180² + 60²</span></span> = Vₛ²/450.</div>
+<p>This equality holds for <em>every</em> length when Rₛ = Z₀. The matched source launches fixed incident power and absorbs the returning reflection. In general,</p>
+<div class="equation">Pₗ = <span class="frac"><span>Vₛ²</span><span>4Z₀</span></span>(1 − |Γₗ|²) &nbsp; when Rₛ = Z₀.</div>
+<p>A 100 Ω source delivers its maximum available power to a 100 Ω input, not directly to 50 Ω. When Rₛ differs from Z₀, length-dependent interference can change the incident amplitude and load power. For example, Rₛ = 100 Ω, Rₗ = 50 Ω and Z₀ = √(100·50) ≈ 70.71 Ω make a quarter-wave line match the source. Load power rises from Vₛ²/450 to Vₛ²/400, a 12.5% increase. Whether a resistor fails depends on that power and its rating, cooling and duty cycle.</p>
+<p>In a parallel RLC circuit, resonance similarly cancels the inductor and capacitor currents: <i>ωC = 1/(ωL)</i> and <i>Zᵢₙ = R</i>. The source supplies the resistor’s heat loss while energy oscillates between L and C.</p>
+</section>
+<section id="open-circuits">
+<div class="section-label">04 / No load current</div><h2>Open circuits: a voltage antinode</h2>
+<p>An open termination requires <i>Iₗ = 0</i>. Its voltage reflection coefficient is +1, and its current reflection coefficient is −1. Voltage doubles at the load, while the incident and reflected currents cancel.</p>
+<div class="equation">Γₗ = +1, &emsp; Zᵢₙ = −jZ₀ cot θ.</div>
+<p>At <strong>λ/8</strong>, the input is −jZ₀: a capacitive impedance. A quarter-wave open line looks like a short circuit; a half-wave line repeats the open termination.</p>
+<div class="simulator" id="open-sim" data-kind="open" data-r="0" data-x="0" data-z0="100" data-length="0.125"></div>
+<p>No energy is dissipated in the open load. All incident power is reflected. Voltage antinodes have the largest electric-energy envelope, while current antinodes have the largest magnetic-energy envelope. Those antinodes are displaced by λ/4 when the line is long enough to contain both.</p>
+<p>“Open” at the termination does not mean current is zero everywhere. Current along the line charges and discharges its distributed capacitance.</p>
+</section>
+<section id="short-circuits">
+<div class="section-label">05 / No load voltage</div><h2>Short circuits: a current antinode</h2>
+<p>A perfect short requires <i>Vₗ = 0</i>. Its voltage reflection coefficient is −1 and its current reflection coefficient is +1. Voltage cancels at the load; current doubles.</p>
+<div class="equation">Γₗ = −1, &emsp; Zᵢₙ = jZ₀ tan θ.</div>
+<p>At <strong>λ/8</strong>, the input is +jZ₀: an inductive impedance. A quarter-wave shorted line looks open, and a half-wave line repeats the short circuit.</p>
+<div class="simulator" id="short-sim" data-kind="short" data-r="0" data-x="0" data-z0="100" data-length="0.125"></div>
+<p>The ideal short dissipates no power despite its finite current, because its voltage is zero. Energy remains in the line’s fields and travels back toward the source. A physical short has resistance and inductance, so it can dissipate power and depart from the ideal boundary condition.</p>
+</section>
+<section id="assumptions" class="closing"><div class="section-label">About the model</div><h2>Delay, phase and what the animation assumes</h2>
+<p>The termination does not change the propagation speed of the ideal line. A length λ/8 has a one-way delay T/8 and a round-trip delay T/4. The inductor or capacitor adds a frequency-dependent reflection phase; this can affect a reflected pulse’s timing and shape, without changing the line’s wave speed.</p>
+<p>The simulator is a single-frequency steady-state model, not a switch-on transient. Changing electrical length changes ℓ/λ; changing reactance edits its value at that frequency. Absolute L, C, frequency and physical length are not inferred. The energy pockets show line storage only; load energy is described in the relevant section.</p>
+<div class="equation">uᴱ / (½C′A²) = (v/A)², &emsp; uᴹ / (½C′A²) = (Z₀i/A)².</div>
+<p>Because L′ = Z₀²C′, both energy bands share a common normalization. Their full vertical scale is 4, the maximum squared wave amplitude for a passive load and a unit incident wave. Instantaneous voltage and current plots retain their signs; energy does not.</p>
+</section>
+</main>
+<footer><a href="../">← Back to projects</a></footer>
+</div>
+</body></html>

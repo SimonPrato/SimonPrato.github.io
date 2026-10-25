@@ -1,0 +1,337 @@
+/**
+ * Styles for PN Junction Calculator
+ */
+
+body {
+    margin: 20px;
+    line-height: 1.6;
+}
+
+/* Large screen layout with 350px side margins */
+@media (min-width: 1200px) {
+    body {
+        margin-left: 350px;
+        margin-right: 350px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+}
+
+h2 {
+    text-align: center;
+    color: var(--text);
+}
+
+/* Introduction text */
+.intro-text {
+    margin: 20px auto;
+    max-width: 800px;
+    text-align: justify;
+}
+
+/* Formula images */
+.formula-image {
+    display: block;
+    margin: 20px auto;
+    width: 300px;
+    height: auto;
+}
+
+.formula-image.small {
+    width: 150px;
+}
+
+/* Input form styling */
+.input-form {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.input-table {
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+.input-table td {
+    padding: 5px;
+}
+
+.input-label {
+    text-align: right;
+    margin: 0;
+    font-style: italic;
+}
+
+.input-field {
+    width: 500px;
+    padding: 5px;
+    border: solid blue 1px;
+    font-family: 'Courier New', monospace;
+}
+
+.help-button {
+    margin-left: 5px;
+}
+
+.plot-controls {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.plot-controls input[type="text"] {
+    width: 80px;
+    padding: 3px;
+    margin: 0 5px;
+}
+
+.preset-buttons {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.preset-buttons input[type="button"] {
+    margin: 5px;
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+/* Plot containers */
+.plots-container {
+    display: table;
+    margin: 0 auto;
+}
+
+.plots-container table {
+    margin: 0 auto;
+}
+
+.plot-section {
+    text-align: center;
+    padding: 10px;
+}
+
+.plot-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.plot-div {
+    width: 400px;
+    height: 300px;
+    padding: 0;
+    position: relative;
+}
+
+.plot-label {
+    text-align: center;
+    margin-top: 5px;
+}
+
+/* Help section */
+#help {
+    display: none; /* Hidden by default */
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#help table {
+    width: 100%;
+}
+
+#help ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+#help li {
+    margin: 5px 0;
+}
+
+/* Subscript and superscript in labels */
+sub {
+    font-size: 0.8em;
+    vertical-align: sub;
+}
+
+sup {
+    font-size: 0.8em;
+    vertical-align: super;
+}
+
+/* Button styling */
+button,
+input[type="button"] {
+    font-family: inherit;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button:hover,
+input[type="button"]:hover {
+    background-color: #45a049;
+}
+
+.help-button {
+    background-color: #2196F3;
+    padding: 5px 10px;
+    font-size: 12px;
+}
+
+.help-button:hover {
+    background-color: #0b7dda;
+}
+
+/* Interactive semiconductor view */
+.junction-card {
+    max-width: 800px;
+    margin: 48px auto 32px;
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--text);
+    box-sizing: border-box;
+}
+.junction-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+.junction-eyebrow {
+    margin: 0 0 4px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: bold;
+}
+.junction-header h3 { margin: 0; font-size: 1.1rem; }
+.junction-header button {
+    font: inherit;
+    font-size: 14px;
+    white-space: nowrap;
+}
+.junction-description { color: var(--muted); margin: 12px 0 22px; }
+.junction-voltage {
+    display: grid;
+    grid-template-columns: auto 110px minmax(80px, 1fr);
+    align-items: center;
+    gap: 10px 16px;
+    margin-bottom: 18px;
+}
+.junction-voltage label { font-size: 14px; font-weight: bold; }
+.junction-voltage input[type="number"] {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 5px;
+    font: inherit;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--bg);
+}
+.junction-voltage input[type="range"] { width: 100%; accent-color: var(--accent); }
+.junction-voltage small { grid-column: 1 / -1; color: var(--muted); }
+.junction-stage {
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--code-bg);
+}
+#junction-canvas {
+    display: block;
+    width: 100%;
+    height: 390px;
+    cursor: grab;
+    touch-action: none;
+    --junction-p-label: #b83a61;
+    --junction-n-label: #2869bc;
+    --junction-depletion-label: #77510e;
+    --junction-center-line: rgba(31, 42, 66, .65);
+}
+#junction-canvas:active { cursor: grabbing; }
+#junction-canvas:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; }
+.junction-status {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    right: 20px;
+    color: var(--muted);
+    font-size: 13px;
+    text-align: center;
+    pointer-events: none;
+}
+.junction-status:empty { display: none; }
+.junction-hint {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    margin: 0;
+    color: var(--muted);
+    text-align: center;
+    font-size: 11px;
+    pointer-events: none;
+}
+.junction-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 22px 0;
+    text-align: center;
+}
+.junction-metrics div + div { border-left: 1px solid var(--border); }
+.junction-metrics span { display: block; color: var(--muted); font-size: 12px; }
+.junction-metrics strong { display: block; font-size: 1.1rem; margin-top: 3px; }
+.junction-legend { max-width: 600px; margin: 0 auto; }
+.junction-colorbar {
+    height: 9px;
+    border-radius: 9px;
+    background: linear-gradient(90deg, #e1486e, #ebeff6 50%, #2b76e6);
+}
+.junction-legend-labels { display: flex; justify-content: space-between; gap: 8px; }
+.junction-legend-labels, .junction-legend p { font-size: 11px; color: var(--muted); }
+.junction-legend p { margin: 8px 0; text-align: center; }
+.junction-depletion-key {
+    display: inline-block;
+    width: 13px;
+    height: 9px;
+    border: 2px solid #b77912;
+    background: #fff1cc;
+    margin-right: 4px;
+    vertical-align: middle;
+}
+.junction-note { margin: 20px 0 0; font-size: 12px; color: var(--muted); }
+@media (max-width: 600px) {
+    .junction-card { padding: 16px; }
+    .junction-header h3 { font-size: 1.1rem; }
+    .junction-voltage { grid-template-columns: 1fr 100px; }
+    .junction-voltage input[type="range"] { grid-column: 1 / -1; }
+    #junction-canvas { height: 310px; }
+    .junction-metrics strong { font-size: 16px; }
+    .junction-legend-labels { font-size: 10px; }
+}
+
+
+@media (prefers-color-scheme: dark) {
+    #junction-canvas {
+        --junction-p-label: #f28aa5;
+        --junction-n-label: #85b6ff;
+        --junction-depletion-label: #e9ba5f;
+        --junction-center-line: rgba(234, 234, 234, .65);
+    }
+}

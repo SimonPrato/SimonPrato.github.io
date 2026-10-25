@@ -1,0 +1,130 @@
+'use strict';
+(() => {
+const P=window.TLPhysics,TAU=2*Math.PI;
+const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+let colors;
+function readColors(){const s=getComputedStyle(document.documentElement);colors={};for(const name of ['bg','panel','text','muted','line','grid','accent','voltage','current','forward','reflected','electric','magnetic'])colors[name]=s.getPropertyValue('--'+name).trim();}
+readColors();
+const fixedNames={inductor:'Inductor · Xₗ = Z₀',capacitor:'Capacitor · X꜀ = Z₀',resistor:'Resistor · Rₗ = Z₀/2',open:'Open load',short:'Short circuit',custom:'Adjustable example'};
+function fmt(n,d=2){if(Math.abs(n)<1e-8)n=0;return n.toLocaleString('en',{maximumFractionDigits:d});}
+function complex(z){if(!z)return '∞ Ω (open)';if(P.abs(z)<1e-8)return '0 Ω (short)';return fmt(z.re)+(Math.abs(z.im)<1e-8?'':(z.im<0?' − j':' + j')+fmt(Math.abs(z.im)))+' Ω';}
+function loadLabel(p){return p.kind==='open'?'Open (∞ Ω)':p.kind==='short'?'Short (0 Ω)':complex(P.C(p.r,p.x));}
+function setupCanvas(canvas,h){const width=canvas.clientWidth||320,dpr=Math.min(devicePixelRatio||1,2);if(canvas.width!==Math.round(width*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(width*dpr);canvas.height=Math.round(h*dpr);}const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,h);ctx.font='12px system-ui';ctx.lineWidth=1;return{ctx,w:width,h};}
+function line(ctx,points,color,width=1,dash=[]){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);ctx.beginPath();points.forEach((pt,i)=>i?ctx.lineTo(...pt):ctx.moveTo(...pt));ctx.stroke();ctx.setLineDash([]);}
+function text(ctx,s,x,y,align='left',color=colors.muted){ctx.fillStyle=color;ctx.textAlign=align;ctx.fillText(s,x,y);}
+class Simulator{
+constructor(root){this.root=root;this.id=root.id;this.params={kind:root.dataset.kind,r:+root.dataset.r,x:+root.dataset.x,z0:+root.dataset.z0,length:+root.dataset.length};this.adjustable=root.dataset.adjustable==='true';this.phase=0;this.q=1;this.playing=!reduced.matches;this.scan=false;this.components=false;this.energy=false;this.visible=false;this.lastOutput=0;
+root.innerHTML=`${this.adjustable?`
+<div class="parameter-groups">
+<fieldset class="parameter-group"><legend>Load</legend>
+<div class="field"><label for="${this.id}-model">Load type</label><select id="${this.id}-model" class="load-model"><option value="custom">General impedance · R + jX</option><option value="resistor">Resistor</option><option value="inductor">Inductor</option><option value="capacitor">Capacitor</option><option value="open">Open circuit</option><option value="short">Short circuit</option></select></div>
+<div class="load-values">
+<div class="field" data-field="r"><label for="${this.id}-r">Resistance R</label><div class="value-input"><input id="${this.id}-r" data-param="r" type="number" inputmode="decimal" min="0" max="1000000" step="any" value="0" aria-describedby="${this.id}-r-help"><span aria-hidden="true">Ω</span></div><small id="${this.id}-r-help">The part that dissipates power.</small></div>
+<div class="field" data-field="x"><label class="reactance-label" for="${this.id}-x">Reactance X</label><div class="value-input"><input id="${this.id}-x" data-param="x" type="number" inputmode="decimal" min="-1000000" max="1000000" step="any" value="100" aria-describedby="${this.id}-x-help"><span aria-hidden="true">Ω</span></div><small class="reactance-help" id="${this.id}-x-help">Positive: inductive. Negative: capacitive.</small></div>
+</div><p class="boundary-note" hidden></p>
+</fieldset>
+<fieldset class="parameter-group"><legend>Transmission line</legend>
+<div class="field"><label for="${this.id}-z0">Characteristic impedance Z₀</label><div class="value-input"><input id="${this.id}-z0" data-param="z0" type="number" inputmode="decimal" min="1" max="1000000" step="any" value="100"><span aria-hidden="true">Ω</span></div></div>
+<div class="field length-field"><label for="${this.id}-length">Electrical length ℓ</label><div class="value-input"><input id="${this.id}-length" data-param="length" type="number" inputmode="decimal" min="0" max="2" step="any" value="0.125" aria-describedby="${this.id}-length-help"><span aria-hidden="true">λ</span></div><small id="${this.id}-length-help">Length as a fraction of the wavelength.</small>
+<input class="length-range" type="range" min="0" max="2" step="0.001" value="0.125" aria-label="Adjust electrical length in wavelengths">
+<div class="length-shortcuts" aria-label="Common line lengths">${[['0','0'],['0.125','λ/8'],['0.25','λ/4'],['0.5','λ/2'],['1','λ']].map(([v,name])=>`<button type="button" data-length="${v}" aria-pressed="false">${name}</button>`).join('')}</div></div>
+</fieldset></div><div class="validation" role="alert" hidden></div>`:''}
+<div class="sim-title"><strong>${fixedNames[this.params.kind]}</strong><span class="fixed-values"></span></div>
+<div class="metrics" aria-live="polite"><div class="metric">Load Zₗ<output data-value="load"></output></div><div class="metric">Input Zᵢₙ<output data-value="input"></output></div><div class="metric">|Γₗ| / VSWR<output data-value="reflection"></output></div><div class="metric">Incident power absorbed<output data-value="absorption"></output></div></div>
+<svg data-chart="circuit" class="circuit" role="img" aria-label="Circuit schematic: a lossless transmission line terminated by a load"></svg><div class="plots"><div class="waves"><p class="plot-heading">Voltage · v/A</p><canvas data-chart="voltage" role="img" aria-label="Instantaneous voltage waves, peak envelope and electric energy along the line">Voltage waveform and electric-field energy pockets.</canvas><p class="plot-heading">Current · Z₀i/A</p><canvas data-chart="current" role="img" aria-label="Instantaneous current waves, peak envelope and magnetic energy along the line">Current waveform and magnetic-field energy pockets.</canvas></div><div class="smith"><p class="plot-heading">Smith chart · normalized to Z₀</p><canvas data-chart="smith" role="img" aria-label="Smith impedance chart, with load, input and a movable inspection point">Reflection coefficient and impedance transformed from load toward input.</canvas><p class="chart-caption">Transmission line: load → input<br>◇ Load &nbsp; □ Input &nbsp; ● Inspection<br>Upper half: inductive · lower half: capacitive<br>Clockwise toward source · one turn per λ/2</p><div class="inspection"><label for="${this.id}-position">Inspect: load → input<input id="${this.id}-position" type="range" min="0" max="1" step="0.001" value="1"></label><output class="distance"></output></div><p class="chart-caption">At inspection point: <span class="inspect-z"></span></p></div></div>
+<div class="legend"><span><i class="swatch"></i>Voltage total</span><span><i class="swatch current"></i>Current total</span><span class="legend-travel" hidden><i class="swatch forward"></i>Forward →</span><span class="legend-travel" hidden><i class="swatch reflected"></i>Reflected ←</span><span class="legend-energy" hidden><i class="swatch electric"></i>Electric energy</span><span class="legend-energy" hidden><i class="swatch magnetic"></i>Magnetic energy</span></div>
+<details class="display-settings"><summary>Wave &amp; display options</summary><div class="view-options"><label><input type="checkbox" data-option="components">Traveling waves</label><label><input type="checkbox" data-option="energy">Energy pockets</label><label><input type="checkbox" data-option="scan">Scan line on Smith chart</label></div></details>
+<div class="playback"><button class="play" type="button">${this.playing?'Pause':'Play'}</button><label class="phase-control" for="${this.id}-phase">Voltage phase<input id="${this.id}-phase" type="range" min="0" max="360" step="any" value="0"><span class="phase-value">0°</span></label></div>
+<p class="sim-note">${this.adjustable?'Adjustable parameters':'Fixed example · parameters stay unchanged'} · 0° = voltage peak at the strongest point · one cycle = 5 s</p>`;
+this.cCanvas=root.querySelector('[data-chart=circuit]');this.vCanvas=root.querySelector('[data-chart=voltage]');this.iCanvas=root.querySelector('[data-chart=current]');this.sCanvas=root.querySelector('[data-chart=smith]');this.phaseControl=root.querySelector('.phase-control input');this.position=root.querySelector('.inspection input');
+root.querySelector('.play').addEventListener('click',()=>{this.playing=!this.playing;root.querySelector('.play').textContent=this.playing?'Pause':'Play';});
+this.phaseControl.addEventListener('input',()=>{this.phase=+this.phaseControl.value*Math.PI/180;this.playing=false;root.querySelector('.play').textContent='Play';this.draw();});
+this.position.addEventListener('input',()=>{this.q=+this.position.value;this.scan=false;root.querySelector('[data-option=scan]').checked=false;this.draw();});
+root.querySelectorAll('[data-option]').forEach(e=>e.addEventListener('change',()=>{this[e.dataset.option]=e.checked;this.draw();}));
+if(this.adjustable){
+root.querySelector('.load-model').addEventListener('change',e=>this.preset(e.target.value));
+root.querySelectorAll('[data-param]').forEach(e=>{e.addEventListener('input',()=>this.edit());e.addEventListener('change',()=>{if(this.edit())this.syncInputs();});});
+root.querySelector('.length-range').addEventListener('input',e=>this.setLength(+e.target.value));
+root.querySelectorAll('[data-length]').forEach(e=>e.addEventListener('click',()=>this.setLength(+e.dataset.length)));
+this.syncInputs();}
+this.updateMetrics();new ResizeObserver(()=>this.draw()).observe(root);this.draw();}
+preset(kind){const z=this.params.z0;this.params={...this.params,kind,r:kind==='custom'?this.params.r:kind==='resistor'?z/2:0,x:kind==='custom'?this.params.x:kind==='inductor'?z:kind==='capacitor'?-z:0};this.syncInputs();this.updateMetrics();this.draw();}
+syncInputs(){const p=this.params,reactive=['inductor','capacitor'].includes(p.kind),boundary=['open','short'].includes(p.kind),general=p.kind==='custom';
+this.root.querySelector('.load-model').value=p.kind;
+this.root.querySelector('[data-field=r]').hidden=!general&&p.kind!=='resistor';this.root.querySelector('[data-field=x]').hidden=!general&&!reactive;
+const note=this.root.querySelector('.boundary-note');note.hidden=!boundary;note.textContent=p.kind==='open'?'An ideal open circuit: no load current, Zₗ → ∞.':'An ideal short circuit: no load voltage, Zₗ = 0.';
+this.root.querySelector('.reactance-label').textContent=p.kind==='inductor'?'Inductive reactance Xₗ':p.kind==='capacitor'?'Capacitive reactance X꜀':'Reactance X';
+this.root.querySelector('.reactance-help').textContent=p.kind==='inductor'?'Xₗ = ωL at the operating frequency.':p.kind==='capacitor'?'X꜀ = 1/(ωC); load impedance is −jX꜀.':'Positive: inductive. Negative: capacitive.';
+this.root.querySelector('[data-param=x]').min=general?-1000000:0;
+this.root.querySelectorAll('[data-param]').forEach(e=>{e.value=e.dataset.param==='x'&&p.kind==='capacitor'?Math.abs(p.x):p[e.dataset.param];e.removeAttribute('aria-invalid');});
+this.root.querySelector('.validation').hidden=true;this.syncLength();}
+syncLength(){this.root.querySelector('.length-range').value=this.params.length;this.root.querySelectorAll('[data-length]').forEach(e=>e.setAttribute('aria-pressed',String(Math.abs(+e.dataset.length-this.params.length)<1e-9)));}
+setLength(value){this.params.length=value;this.root.querySelector('[data-param=length]').value=value;this.syncLength();this.updateMetrics();this.draw();}
+edit(){const next={...this.params};let valid=true;
+this.root.querySelectorAll('[data-param]').forEach(e=>{if(!e.closest('[hidden]')){const v=e.valueAsNumber,bad=e.value===''||!e.checkValidity()||!Number.isFinite(v);e.setAttribute('aria-invalid',String(bad));if(bad)valid=false;else next[e.dataset.param]=e.dataset.param==='x'&&next.kind==='capacitor'?-v:v;}});
+const alert=this.root.querySelector('.validation');alert.hidden=valid;alert.textContent=valid?'':'Enter finite values: resistance and reactance magnitude ≥ 0, Z₀ ≥ 1 Ω, and length between 0 and 2λ. General reactance may be negative.';
+if(!valid)return false;this.params=next;this.syncLength();this.updateMetrics();this.draw();return true;}
+
+updateMetrics(){const p=this.params;this.reference=P.voltageReference(p);const g=P.gamma(p),mag=P.abs(g),z=P.impedance(P.atDistance(p,p.length),p.z0);this.root.querySelector('[data-value=load]').textContent=loadLabel(p);this.root.querySelector('[data-value=input]').textContent=complex(z);this.root.querySelector('[data-value=reflection]').textContent=fmt(mag,3)+' / '+(1-mag<1e-10?'∞':fmt((1+mag)/(1-mag)));this.root.querySelector('[data-value=absorption]').textContent=fmt(Math.max(0,1-mag*mag)*100,1)+'%';this.root.querySelector('.fixed-values').textContent='Z₀ = '+fmt(p.z0)+' Ω · ℓ = '+fmt(p.length,3)+'λ';this.root.querySelector('.sim-title strong').textContent=this.adjustable?'Adjustable example':fixedNames[p.kind];this.root.querySelector('.sim-note').textContent=(this.adjustable?'Adjustable parameters':'Fixed example · parameters stay unchanged')+' · 0° = voltage peak at the strongest point · one cycle = 5 s';}
+wavePlot(canvas,kind){const h=canvas.clientHeight||235,{ctx,w}=setupCanvas(canvas,h),left=43,right=w-12,top=15,bottom=147,mid=(top+bottom)/2,amp=(bottom-top)/4.4,energyTop=163,energyBottom=194,p=this.params,n=150;
+const X=f=>left+f*(right-left),Y=v=>mid-v*amp;
+for(const y of [-2,0,2]){line(ctx,[[left,Y(y)],[right,Y(y)]],colors.grid);text(ctx,String(y),left-8,Y(y)+4,'right');}
+line(ctx,[[left,top],[left,bottom]],colors.line);text(ctx,'Input',left,h-5);text(ctx,'Load',right,h-5,'right');text(ctx,'Transmission line',(left+right)/2,h-5,'center');text(ctx,'x/λ',left,h-23);text(ctx,fmt(p.length,3),right,h-23,'right');
+if(w>410)text(ctx,fmt(p.length/2,3),(left+right)/2,h-23,'center');
+const data=[];for(let k=0;k<=n;k++)data.push(P.waves(p,k/n,this.phase+this.reference.offset));
+const total=data.map((s,k)=>[X(k/n),Y(kind==='voltage'?s.vt:s.jt)]);
+const envelope=data.map(s=>P.abs(kind==='voltage'?s.v:s.i));for(const sign of [-1,1])line(ctx,envelope.map((a,k)=>[X(k/n),Y(sign*a)]),colors.muted,1.2,[4,5]);
+if(this.components){line(ctx,data.map((s,k)=>[X(k/n),Y(kind==='voltage'?s.vf:s.jf)]),colors.forward,1.9,[7,4]);line(ctx,data.map((s,k)=>[X(k/n),Y(kind==='voltage'?s.vr:s.jr)]),colors.reflected,1.9,[2,4]);}
+line(ctx,total,colors[kind],2.8);
+const pick=X(1-this.q);line(ctx,[[pick,top],[pick,this.energy?energyBottom:bottom]],colors.muted,1,[2,4]);
+if(this.energy){ctx.beginPath();ctx.moveTo(left,energyBottom);data.forEach((s,k)=>{const value=(kind==='voltage'?s.vt:s.jt)**2;ctx.lineTo(X(k/n),energyBottom-value/4*(energyBottom-energyTop));});ctx.lineTo(right,energyBottom);ctx.closePath();ctx.fillStyle=kind==='voltage'?colors.electric:colors.magnetic;ctx.fill();line(ctx,[[left,energyBottom],[right,energyBottom]],colors.line);text(ctx,'4',left-8,energyTop+4,'right');text(ctx,'0',left-8,energyBottom+4,'right');text(ctx,kind==='voltage'?'Electric energy ∝ v²':'Magnetic energy ∝ i²',left,energyTop-4,'left',colors.text);}
+}
+smithPlot(){const {ctx,w,h}=setupCanvas(this.sCanvas,this.sCanvas.clientHeight||320),cx=w/2,cy=h/2,rad=Math.min(w-52,h-58)/2;
+const xy=z=>[cx+z.re*rad,cy-z.im*rad];
+ctx.save();ctx.beginPath();ctx.arc(cx,cy,rad,0,TAU);ctx.clip();
+for(const r of [.2,.5,1,2,5]){const pts=[];for(let k=0;k<=160;k++){const x=Math.tan(-Math.PI/2+.002+(Math.PI-.004)*k/160);pts.push(xy(P.div(P.C(r-1,x),P.C(r+1,x))));}line(ctx,pts,colors.grid);}
+for(const x of [-5,-2,-1,-.5,-.2,.2,.5,1,2,5]){const pts=[];for(let k=0;k<=120;k++){const r=(k/120)/(1.001-k/120);pts.push(xy(P.div(P.C(r-1,x),P.C(r+1,x))));}line(ctx,pts,colors.grid);}
+line(ctx,[[cx-rad,cy],[cx+rad,cy]],colors.line);
+const arc=[];for(let k=0;k<=180;k++)arc.push(xy(P.atDistance(this.params,this.params.length*k/180)));ctx.restore();
+ctx.strokeStyle=colors.line;ctx.lineWidth=1;ctx.beginPath();ctx.arc(cx,cy,rad,0,TAU);ctx.stroke();line(ctx,arc,colors.accent,2.5);
+text(ctx,'+jX',cx,cy-rad-13,'center');text(ctx,'−jX',cx,cy+rad+24,'center');text(ctx,'0',cx-rad-9,cy+4,'right');text(ctx,'∞',cx+rad+8,cy+4);text(ctx,'1',cx+7,cy-8);
+for(const r of [.2,.5,2,5]){const x=cx+(r-1)/(r+1)*rad;text(ctx,String(r),x,cy+15,'center');}
+const load=xy(P.gamma(this.params)),input=xy(P.atDistance(this.params,this.params.length)),point=xy(P.atDistance(this.params,this.params.length*this.q));
+ctx.lineWidth=1.5;ctx.strokeStyle=colors.accent;ctx.fillStyle=colors.panel;ctx.beginPath();ctx.moveTo(load[0],load[1]-6);ctx.lineTo(load[0]+6,load[1]);ctx.lineTo(load[0],load[1]+6);ctx.lineTo(load[0]-6,load[1]);ctx.closePath();ctx.fill();ctx.stroke();ctx.fillRect(input[0]-4,input[1]-4,8,8);ctx.strokeRect(input[0]-4,input[1]-4,8,8);
+ctx.fillStyle=colors.current;ctx.beginPath();ctx.arc(point[0],point[1],3.5,0,TAU);ctx.fill();
+}
+circuitPlot(){
+const svg=this.cCanvas,w=svg.clientWidth||320,h=170,p=this.params,left=46,right=w-72,top=44,bottom=108,mid=(top+bottom)/2,center=(left+right)/2;
+svg.setAttribute('viewBox',`0 0 ${w} ${h}`);
+const stroke='fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"';
+const lead=(a,b)=>`<path d="M ${right} ${a} V ${b}" ${stroke}/>`;
+let symbol,loadName;
+if(this.adjustable){symbol=lead(top,53)+`<rect x="${right-13}" y="53" width="26" height="46" ${stroke}/><text x="${right}" y="80" text-anchor="middle">Zₗ</text>`+lead(99,bottom);loadName='';}
+else if(p.kind==='open'){symbol=`<circle cx="${right}" cy="${top}" r="3" ${stroke}/><circle cx="${right}" cy="${bottom}" r="3" ${stroke}/>`;loadName='open';}
+else if(p.kind==='short'){symbol=lead(top,bottom);loadName='short';}
+else if(p.kind==='inductor'){symbol=lead(top,52)+`<path d="M ${right} 52 ${Array.from({length:4},(_,k)=>`c -12 0 -12 12 0 12`).join(' ')}" ${stroke}/>`+lead(100,bottom);loadName='L';}
+else if(p.kind==='capacitor'){symbol=lead(top,69)+`<path d="M ${right-13} 69 H ${right+13} M ${right-13} 83 H ${right+13}" ${stroke}/>`+lead(83,bottom);loadName='C';}
+else {symbol=lead(top,53)+`<path d="M ${right} 53 l -6 4 12 8 -12 8 12 8 -12 8 6 4" ${stroke}/>`+lead(93,bottom);loadName='Rₗ';}
+svg.innerHTML=`<title>${this.adjustable?'General load impedance':'Fixed '+p.kind+' load'} on a lossless transmission line</title>
+<g fill="currentColor" font-family="Georgia, Times New Roman, serif" font-size="13">
+<text x="${left}" y="22" text-anchor="middle">Input</text><text x="${right}" y="22" text-anchor="middle">Load</text>
+<text x="${center}" y="22" text-anchor="middle" font-family="system-ui" font-size="12">Transmission line</text>
+<path d="M ${left+3} ${top} H ${right} M ${left+3} ${bottom} H ${right}" ${stroke}/>
+<circle cx="${left}" cy="${top}" r="3" ${stroke}/><circle cx="${left}" cy="${bottom}" r="3" ${stroke}/>
+<text x="${center}" y="81" text-anchor="middle">Z₀ = ${fmt(p.z0)} Ω</text>
+${symbol}${loadName?`<text x="${right+19}" y="81">${loadName}</text>`:''}
+<path d="M ${left} 126 V 143 M ${right} 126 V 143 M ${left} 135 H ${right} M ${left} 135 l 6 -3 M ${left} 135 l 6 3 M ${right} 135 l -6 -3 M ${right} 135 l -6 3" fill="none" stroke="currentColor" stroke-width=".8"/>
+<text x="${center}" y="158" text-anchor="middle">ℓ = ${fmt(p.length,3)}λ</text>
+</g>`;
+}
+
+draw(){this.vCanvas.style.height=this.iCanvas.style.height=this.energy?'235px':'185px';this.root.querySelectorAll('.legend-travel').forEach(e=>e.hidden=!this.components);this.root.querySelectorAll('.legend-energy').forEach(e=>e.hidden=!this.energy);this.circuitPlot();this.wavePlot(this.vCanvas,'voltage');this.wavePlot(this.iCanvas,'current');this.smithPlot();this.phaseControl.value=Math.round(this.phase*180/Math.PI)%360;this.root.querySelector('.phase-value').textContent=Math.round(this.phase*180/Math.PI)%360+'°';this.position.value=this.q;this.root.querySelector('.distance').textContent='d = '+fmt(this.q*this.params.length,3)+'λ';this.root.querySelector('.inspect-z').textContent=complex(P.impedance(P.atDistance(this.params,this.q*this.params.length),this.params.z0));}
+tick(dt){if(!this.visible)return;if(this.playing)this.phase=(this.phase+dt*TAU/5)%TAU;if(this.scan)this.q=(this.q+dt/8)%1;if(this.playing||this.scan)this.draw();}
+}
+const sims=[...document.querySelectorAll('.simulator')].map(el=>new Simulator(el));
+const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{const s=sims.find(s=>s.root===e.target);s.visible=e.isIntersecting;});},{rootMargin:'100px'});sims.forEach(s=>observer.observe(s.root));
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{readColors();sims.forEach(s=>s.draw());});
+reduced.addEventListener('change',()=>{if(reduced.matches)sims.forEach(s=>{s.playing=false;s.scan=false;s.root.querySelector('.play').textContent='Play';s.root.querySelector('[data-option=scan]').checked=false;});});
+let last=0;function frame(now){const dt=last?Math.min((now-last)/1000,.06):0;last=now;if(!document.hidden)sims.forEach(s=>s.tick(dt));requestAnimationFrame(frame);}requestAnimationFrame(frame);
+window.TLExplorers=sims;
+})();
