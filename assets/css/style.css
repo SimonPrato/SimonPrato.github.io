@@ -167,30 +167,8 @@ footer.site-footer a {
 
 .page-home {
     max-width: 1040px;
-}
 
-.home-intro {
-    margin-bottom: 56px;
 }
-
-.home-intro h1 {
-    font-size: 1.75rem;
-    letter-spacing: -0.02em;
-    margin: 0 0 8px;
-}
-
-.home-intro p {
-    color: var(--muted);
-    margin: 0 0 16px;
-    max-width: 560px;
-}
-
-.home-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
 .pill {
     display: inline-block;
     padding: 4px 12px;
