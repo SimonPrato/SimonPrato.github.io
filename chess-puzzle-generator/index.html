@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Puzzle Generator | Simon Prato</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="./css/styles.css?v=3">
+</head>
+<body>
+    <div class="page">
+        <header class="site-header">
+            <p class="site-title"><a href="../">Simon Prato</a></p>
+            <nav class="breadcrumb"><a href="../">&larr; Projects</a></nav>
+        </header>
+
+        <main>
+            <h1>Chess Puzzle Generator</h1>
+
+            <p>
+                Random mate-in-one puzzles, generated in your browser. Each side gets its king plus a random
+                selection of its other 15 standard pieces, placed on random squares. A position is kept when it
+                is legal and the side to move has a mate in one. While you solve, the next few puzzles are found
+                in the background.
+            </p>
+
+            <section class="trainer" aria-label="Puzzle">
+                <div class="trainer-head">
+                    <p class="prompt" id="prompt">Searching for a puzzle&hellip;</p>
+                    <span class="solved" id="solved">Solved: 0</span>
+                </div>
+
+                <div class="board-wrap">
+                    <div class="board" id="board" role="group" aria-label="Chess board"></div>
+                </div>
+
+                <p class="feedback" id="feedback" aria-live="polite"></p>
+
+                <div class="actions">
+                    <button class="primary" id="next" type="button" disabled>Next puzzle</button>
+                    <button id="reveal" type="button" disabled>Show solution</button>
+                    <button id="copy" type="button" disabled>Copy FEN</button>
+                    <a class="button-link" id="lichess" href="#" target="_blank" rel="noopener" aria-disabled="true">Analyze on Lichess</a>
+                </div>
+                <p class="queue" id="queue" aria-live="polite"></p>
+            </section>
+
+            <details class="settings">
+                <summary>Settings</summary>
+                <form class="controls" onsubmit="return false">
+                    <div class="control">
+                        <label for="side">Side to move</label>
+                        <select id="side">
+                            <option value="both" selected>Both</option>
+                            <option value="white">White</option>
+                            <option value="black">Black</option>
+                        </select>
+                    </div>
+                    <div class="control control-check">
+                        <label class="toggle">
+                            <input type="checkbox" id="unique">
+                            Only puzzles with exactly one mating move
+                        </label>
+                    </div>
+                    <div class="control">
+                        <label for="minPieces">Fewest pieces <span class="val" id="minVal">3</span></label>
+                        <input type="range" id="minPieces" min="3" max="32" step="1" value="3">
+                    </div>
+                    <div class="control">
+                        <label for="maxPieces">Most pieces <span class="val" id="maxVal">32</span></label>
+                        <input type="range" id="maxPieces" min="3" max="32" step="1" value="32">
+                    </div>
+                </form>
+                <p class="note">
+                    New settings apply from the next puzzle on. Piece counts include both kings.
+                </p>
+            </details>
+
+            <h2>Command-line version</h2>
+            <p>
+                The original generator is a Python script built on
+                <a href="https://python-chess.readthedocs.io/" target="_blank" rel="noopener">python-chess</a>.
+                It prints one puzzle per line as FEN, side to move, and the mating moves in SAN.
+            </p>
+<pre><code>pip install -r requirements.txt
+python generate.py -n 10 --unique --side white --show</code></pre>
+            <p class="note">
+                Download <a href="./generate.py" download>generate.py</a> and
+                <a href="./requirements.txt" download>requirements.txt</a>.
+            </p>
+        </main>
+    </div>
+
+    <script type="module" src="./js/main.js?v=3"></script>
+</body>
+</html>
