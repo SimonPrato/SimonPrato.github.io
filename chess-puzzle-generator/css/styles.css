@@ -141,7 +141,9 @@ main a {
     overflow: hidden;
     user-select: none;
     -webkit-user-select: none;
-    touch-action: manipulation;
+    /* Touches and drags on the board never scroll or zoom the page. */
+    touch-action: none;
+    -webkit-touch-callout: none;
 }
 
 .sq {
@@ -195,8 +197,6 @@ main a {
 
 .sq.movable {
     cursor: grab;
-    /* Let a drag start on a piece instead of scrolling the page. */
-    touch-action: none;
 }
 
 .sq.drag-origin .piece {

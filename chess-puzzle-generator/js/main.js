@@ -310,6 +310,10 @@ els.board.addEventListener('pointercancel', () => {
     if (puzzle) renderBoard();
 });
 
+// Backstop for browsers that ignore touch-action: keep a touch on the board
+// from scrolling the page.
+els.board.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+
 // Keyboard activation of a square (Enter/Space) arrives as a click with
 // detail 0; pointer clicks are already handled above.
 els.board.addEventListener('click', e => {
