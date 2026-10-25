@@ -8,9 +8,14 @@ import { squareName } from './generator.js';
 
 const NAMES = { k: 'king', q: 'queen', r: 'rook', b: 'bishop', n: 'knight', p: 'pawn' };
 const BUFFER_SIZE = 3;
+// Skipping more than COOLDOWN_PRESSES puzzles within COOLDOWN_WINDOW ms
+// locks the Next button for COOLDOWN_MS.
+const COOLDOWN_PRESSES = 3;
+const COOLDOWN_WINDOW = 5000;
+const COOLDOWN_MS = 5000;
 
-// Piece images: the "bold" set from Chess Coach, scaled down to 160 px.
-const pieceSrc = (color, type) => `./images/${color}${NAMES[type]}.png`;
+// Piece images: the Cburnett SVG set from Wikimedia Commons (CC BY-SA 3.0).
+const pieceSrc = (color, type) => `./images/${color}${NAMES[type]}.svg`;
 // Load all twelve up front so a new puzzle never waits on an image.
 for (const color of 'wb') for (const type in NAMES) new Image().src = pieceSrc(color, type);
 
@@ -18,7 +23,7 @@ const $ = id => document.getElementById(id);
 const els = {
     side: $('side'), unique: $('unique'),
     minPieces: $('minPieces'), maxPieces: $('maxPieces'), minVal: $('minVal'), maxVal: $('maxVal'),
-    board: $('board'), prompt: $('prompt'), feedback: $('feedback'), queue: $('queue'),
+    board: $('board'), prompt: $('prompt'), promptSub: $('promptSub'), turnKing: $('turnKing'), feedback: $('feedback'), queue: $('queue'),
     next: $('next'), reveal: $('reveal'), copy: $('copy'), lichess: $('lichess'),
     solved: $('solved'),
 };
@@ -33,6 +38,9 @@ let selected = null;
 let lastMove = null;
 let finished = false;
 let solvedCount = 0;
+let pressTimes = [];
+let cooldownUntil = 0;
+let cooldownTimer = null;
 
 // ---- Background generation ------------------------------------------------
 
@@ -66,16 +74,37 @@ worker.onerror = () => {
 };
 
 function nextPuzzle() {
-    if (!buffer.length) return;
+    if (!buffer.length || Date.now() < cooldownUntil) return;
+    const now = Date.now();
+    pressTimes = pressTimes.filter(t => now - t < COOLDOWN_WINDOW);
+    pressTimes.push(now);
+    if (pressTimes.length > COOLDOWN_PRESSES) {
+        pressTimes = [];
+        startCooldown();
+        return;
+    }
     show(buffer.shift());
     worker.postMessage({ type: 'more', id: runId, n: 1 });
     updateQueue();
 }
 
+function startCooldown() {
+    cooldownUntil = Date.now() + COOLDOWN_MS;
+    clearInterval(cooldownTimer);
+    cooldownTimer = setInterval(() => {
+        if (Date.now() >= cooldownUntil) clearInterval(cooldownTimer);
+        updateQueue();
+    }, 250);
+    setFeedback('Slow down! Give this one a try first.', 'bad');
+    updateQueue();
+}
+
 function updateQueue() {
     const n = buffer.length;
-    els.next.disabled = n === 0;
-    els.next.textContent = n === 0 && puzzle ? 'Searching…' : 'Next puzzle';
+    const wait = Math.ceil((cooldownUntil - Date.now()) / 1000);
+    els.next.disabled = n === 0 || wait > 0;
+    els.next.textContent = wait > 0 ? `Wait ${wait} s`
+        : n === 0 && puzzle ? 'Searching…' : 'Next puzzle';
     els.queue.textContent = !puzzle
         ? 'Searching for a puzzle…'
         : `${n} of ${BUFFER_SIZE} next puzzles ready${n < BUFFER_SIZE ? ', searching in the background' : ''}.`;
@@ -90,7 +119,11 @@ function show(p) {
     lastMove = null;
     finished = false;
     const mover = p.turn === 'w' ? 'White' : 'Black';
-    els.prompt.textContent = `${mover} to move. Find the mate in one.`;
+    els.prompt.textContent = `${mover} to move`;
+    els.promptSub.textContent = 'Find the mate in one.';
+    els.turnKing.src = pieceSrc(p.turn, 'k');
+    els.turnKing.alt = `${mover} king`;
+    els.turnKing.hidden = false;
     setFeedback('Drag a piece, or tap it and then its target square.', '');
     els.reveal.disabled = false;
     els.copy.disabled = false;
@@ -105,7 +138,7 @@ function setFeedback(text, kind) {
 }
 
 function renderBoard() {
-    const flip = puzzle.turn === 'b';
+    const flip = puzzle?.turn === 'b';
     const targets = new Set(selected
         ? chess.moves({ square: selected, verbose: true }).map(m => m.to)
         : []);
@@ -337,4 +370,7 @@ document.addEventListener('keydown', e => {
 });
 
 syncPieceLimits();
+// Draw an empty board while the first puzzle is found.
+chess = new Chess('8/8/8/8/8/8/8/8 w - - 0 1', { skipValidation: true });
+renderBoard();
 restartSearch();

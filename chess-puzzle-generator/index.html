@@ -5,23 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chess Puzzle Generator | Simon's Projects</title>
     <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="./css/styles.css?v=3">
+    <link rel="stylesheet" href="./css/styles.css?v=4">
 </head>
 <body>
-    <div class="page">
+    <div class="page page-chess">
         <main>
             <h1>Chess Puzzle Generator</h1>
 
-            <p>
-                Random mate-in-one puzzles, generated in your browser. Each side gets its king plus a random
-                selection of its other 15 standard pieces, placed on random squares. A position is kept when it
-                is legal and the side to move has a mate in one. While you solve, the next few puzzles are found
-                in the background.
-            </p>
-
             <section class="trainer" aria-label="Puzzle">
                 <div class="trainer-head">
-                    <p class="prompt" id="prompt">Searching for a puzzle&hellip;</p>
+                    <div class="turn" id="turn">
+                        <span class="turn-king"><img id="turnKing" src="./images/wking.svg" alt="" hidden></span>
+                        <div class="turn-text">
+                            <p class="prompt" id="prompt">Searching for a puzzle&hellip;</p>
+                            <p class="prompt-sub" id="promptSub"></p>
+                        </div>
+                    </div>
                     <span class="solved" id="solved">Solved: 0</span>
                 </div>
 
@@ -83,9 +82,22 @@ python generate.py -n 10 --unique --side white --show</code></pre>
                 Download <a href="./generate.py" download>generate.py</a> and
                 <a href="./requirements.txt" download>requirements.txt</a>.
             </p>
+
+            <h2>About</h2>
+            <p class="about">
+                Random mate-in-one puzzles, generated in your browser. Each side gets its king plus a random
+                selection of its other 15 standard pieces, placed on random squares. A position is kept when it
+                is legal and the side to move has a mate in one. While you solve, the next few puzzles are found
+                in the background.
+            </p>
+            <p class="note">
+                Chess pieces by Colin M.L. Burnett from
+                <a href="https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces" target="_blank" rel="noopener">Wikimedia Commons</a>,
+                licensed <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC BY-SA 3.0</a>.
+            </p>
         </main>
     </div>
 
-    <script type="module" src="./js/main.js?v=3"></script>
+    <script type="module" src="./js/main.js?v=4"></script>
 </body>
 </html>

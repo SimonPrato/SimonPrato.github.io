@@ -6,9 +6,10 @@
 :root {
     --panel-bg: #fafafa;
     --track: #e5e5e5;
-    --sq-light: #ececec;
-    --sq-dark: #b4b4b4;
-    --highlight: rgba(255, 196, 0, 0.45);
+    --sq-light: #f3e7d3;
+    --sq-dark: #b07a52;
+    --board-frame: #6b4428;
+    --highlight: rgba(255, 214, 64, 0.5);
     --good: #2f7d4f;
     --bad: #c0392b;
 }
@@ -17,9 +18,10 @@
     :root {
         --panel-bg: #181818;
         --track: #2a2a2a;
-        --sq-light: #d4d4d4;
-        --sq-dark: #9a9a9a;
-        --highlight: rgba(255, 196, 0, 0.5);
+        --sq-light: #e8d9c0;
+        --sq-dark: #a06c47;
+        --board-frame: #4a2e1a;
+        --highlight: rgba(255, 214, 64, 0.55);
         --good: #6cc08f;
         --bad: #f18a83;
     }
@@ -29,36 +31,102 @@ main a {
     color: inherit;
 }
 
+/* Wider page so the board can grow; prose keeps a readable line length. */
+.page-chess {
+    max-width: 960px;
+    padding-top: 32px;
+}
+
+.page-chess h1 {
+    width: var(--board-size);
+    margin: 0 auto 16px;
+}
+
+.page-chess main > :where(:not(.trainer, h1)) {
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.page-chess h2 {
+    margin-top: 40px;
+}
+
 /* Trainer */
 
 .trainer {
-    margin: 24px 0 16px;
+    margin: 0 0 24px;
 }
 
 .trainer-head {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 4px 16px;
-    margin-bottom: 10px;
+    align-items: center;
+    gap: 8px 16px;
+    width: var(--board-size);
+    margin: 0 auto 12px;
+}
+
+.turn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+/* Light disc so both kings stand out in light and dark mode. */
+.turn-king {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--sq-light);
+    box-shadow: inset 0 0 0 2px var(--sq-dark);
+}
+
+.turn-king img {
+    width: 82%;
+    height: 82%;
+    object-fit: contain;
+}
+
+.turn-text {
+    min-width: 0;
 }
 
 .prompt {
     margin: 0;
-    font-weight: 600;
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+}
+
+.prompt-sub {
+    margin: 2px 0 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.3;
 }
 
 .solved {
+    flex: none;
     font-size: 0.85rem;
     color: var(--muted);
     font-variant-numeric: tabular-nums;
 }
 
+.page-chess {
+    /* As large as fits: full width, but the whole board stays in view
+       below the title and turn indicator. */
+    --board-size: max(min(100%, 880px, calc(100svh - 190px)), min(100%, 320px));
+}
+
 .board-wrap {
-    /* Fit the viewport on short screens too, leaving room for the controls. */
-    width: min(100%, 560px, calc(100svh - 160px));
-    min-width: min(100%, 260px);
+    width: var(--board-size);
     margin: 0 auto;
     container-type: inline-size;
 }
@@ -67,8 +135,9 @@ main a {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     aspect-ratio: 1;
-    border: 1px solid var(--border);
-    border-radius: 4px;
+    border: max(4px, 1.4cqi) solid var(--board-frame);
+    border-radius: 6px;
+    box-shadow: 0 10px 30px rgba(60, 35, 15, 0.25);
     overflow: hidden;
     user-select: none;
     -webkit-user-select: none;
@@ -161,21 +230,22 @@ main a {
 
 .coord {
     position: absolute;
-    font-size: max(0.55rem, 2cqi);
-    font-weight: 600;
-    color: #1a1a1a;
-    opacity: 0.55;
+    font-size: max(0.6rem, 2.2cqi);
+    font-weight: 700;
+    color: var(--sq-dark);
     line-height: 1;
     pointer-events: none;
 }
+
+.sq.dark .coord { color: var(--sq-light); }
 
 .coord.file { right: 3px; bottom: 3px; }
 .coord.rank { left: 3px; top: 3px; }
 
 .feedback {
     min-height: 1.6em;
-    margin: 12px 0 8px;
-    font-size: 0.95rem;
+    margin: 14px 0 10px;
+    font-size: 1rem;
     text-align: center;
 }
 
@@ -371,5 +441,67 @@ pre {
 
 @media (max-width: 480px) {
     body { padding: 0 16px; }
-    .page { padding-top: 32px; }
+    .page { padding-top: 24px; }
+    .page-chess h1 { font-size: 1.3rem; margin-bottom: 12px; }
+    .turn { gap: 10px; }
+    .turn-king { width: 52px; height: 52px; }
+    .prompt { font-size: 1.4rem; }
+    .prompt-sub { font-size: 0.85rem; }
+}
+
+/* Wide screens and phones in landscape: controls beside the board. */
+@media (min-width: 1100px) and (min-aspect-ratio: 5/4) {
+    .page-chess {
+        --board-size: max(min(880px, calc(100svh - 120px), calc(100vw - 440px)), 480px);
+        max-width: 1280px;
+    }
+    .page-chess h1 { width: auto; }
+    .trainer {
+        display: grid;
+        grid-template-columns: auto minmax(300px, 1fr);
+        grid-template-rows: repeat(3, auto) 1fr;
+        gap: 0 32px;
+        align-items: start;
+    }
+    .trainer-head {
+        grid-column: 2;
+        width: auto;
+        flex-direction: column;
+        align-items: flex-start;
+        margin: 0;
+    }
+    .turn-king { width: 80px; height: 80px; }
+    .prompt { font-size: 2.25rem; }
+    .board-wrap { grid-column: 1; grid-row: 1 / span 4; }
+    .trainer > :not(.board-wrap):not(.trainer-head) { grid-column: 2; }
+    .feedback { text-align: left; margin-top: 24px; }
+    .actions { justify-content: flex-start; }
+    .queue { text-align: left; }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+    .page-chess {
+        --board-size: min(60vw, calc(100svh - 96px));
+        padding-top: 16px;
+    }
+    .page-chess h1 { width: auto; margin-bottom: 12px; }
+    .trainer {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-template-rows: repeat(3, auto) 1fr;
+        gap: 0 20px;
+        align-items: start;
+    }
+    .trainer-head {
+        grid-column: 2;
+        width: auto;
+        flex-direction: column;
+        align-items: flex-start;
+        margin: 0;
+    }
+    .board-wrap { grid-column: 1; grid-row: 1 / span 4; }
+    .trainer > :not(.board-wrap):not(.trainer-head) { grid-column: 2; }
+    .feedback { text-align: left; }
+    .actions { justify-content: flex-start; }
+    .queue { text-align: left; }
 }
